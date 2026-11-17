@@ -1,0 +1,28 @@
+{
+  "sample_file": "data/research/p12_3_expanded_universe.csv",
+  "issuers": 140,
+  "fact_rows": 222804,
+  "events": 13668,
+  "raw_sec_json_committed": false,
+  "raw_price_committed": false,
+  "source": "SEC submissions + companyfacts + local FINSABER price panel",
+  "run_command": "python -m tools.research.p12.sec_pit_pilot_v3 --sample data/research/p12_3_expanded_universe.csv --out data/research/p12_3; python -m tools.research.p12.add_event_windows; python -m tools.research.p12.validate_raw_filings",
+  "notes": "Latest companyfacts values are used only with accession ancestry; no latest-value backfill.",
+  "price_inputs": [
+    {
+      "file": "pit_data/finsaber_prices_raw.csv",
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f",
+      "bytes": 265180873
+    },
+    {
+      "file": "p9_1_support_resistance/spy.csv",
+      "sha256": "4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62",
+      "bytes": 189975
+    },
+    {
+      "file": "historical_universe/sp500_daily.csv",
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a",
+      "bytes": 5533628
+    }
+  ]
+}

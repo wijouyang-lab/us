@@ -1,0 +1,6 @@
+scope,issuers,rows,start,end,notes
+sample,140,222804,2009,2024,30 current + 100 expansion + 5 non-surviving + 5 foreign ADR
+accession_fact_panel,139,222804,2009,2024,10 required metrics; multiple tags/contexts
+filing_events,138,13668,2009,2024,8-K US; 6-K foreign
+version_history,139,67159,2009,2024,multi-accession groups only
+event_window_returns,138,13668,2009,2024,daily D0/D1/D5; foreign price missing

@@ -1,0 +1,141 @@
+ticker,cik,group,issuer_name,identity_status,price_symbol,notes
+AAPL,320193,US_CURRENT,Apple Inc.,CIK_VERIFIED_SUBMISSIONS,AAPL,fixed before financial results; CIK is primary identifier
+MSFT,789019,US_CURRENT,MICROSOFT CORP,CIK_VERIFIED_SUBMISSIONS,MSFT,fixed before financial results; CIK is primary identifier
+JNJ,200406,US_CURRENT,JOHNSON & JOHNSON,CIK_VERIFIED_SUBMISSIONS,JNJ,fixed before financial results; CIK is primary identifier
+JPM,19617,US_CURRENT,JPMORGAN CHASE & CO,CIK_VERIFIED_SUBMISSIONS,JPM,fixed before financial results; CIK is primary identifier
+XOM,34088,US_CURRENT,EXXON MOBIL CORP,CIK_VERIFIED_SUBMISSIONS,XOM,fixed before financial results; CIK is primary identifier
+PG,80424,US_CURRENT,PROCTER & GAMBLE Co,CIK_VERIFIED_SUBMISSIONS,PG,fixed before financial results; CIK is primary identifier
+KO,21344,US_CURRENT,COCA COLA CO,CIK_VERIFIED_SUBMISSIONS,KO,fixed before financial results; CIK is primary identifier
+WMT,104169,US_CURRENT,Walmart Inc.,CIK_VERIFIED_SUBMISSIONS,WMT,fixed before financial results; CIK is primary identifier
+CAT,18230,US_CURRENT,CATERPILLAR INC,CIK_VERIFIED_SUBMISSIONS,CAT,fixed before financial results; CIK is primary identifier
+HD,354950,US_CURRENT,"HOME DEPOT, INC.",CIK_VERIFIED_SUBMISSIONS,HD,fixed before financial results; CIK is primary identifier
+UNH,731766,US_CURRENT,UNITEDHEALTH GROUP INC,CIK_VERIFIED_SUBMISSIONS,UNH,fixed before financial results; CIK is primary identifier
+V,1403161,US_CURRENT,VISA INC.,CIK_VERIFIED_SUBMISSIONS,V,fixed before financial results; CIK is primary identifier
+DIS,1744489,US_CURRENT,Walt Disney Co,CIK_VERIFIED_SUBMISSIONS,DIS,fixed before financial results; CIK is primary identifier
+INTC,50863,US_CURRENT,INTEL CORP,CIK_VERIFIED_SUBMISSIONS,INTC,fixed before financial results; CIK is primary identifier
+CSCO,858877,US_CURRENT,"CISCO SYSTEMS, INC.",CIK_VERIFIED_SUBMISSIONS,CSCO,fixed before financial results; CIK is primary identifier
+IBM,51143,US_CURRENT,INTERNATIONAL BUSINESS MACHINES CORP,CIK_VERIFIED_SUBMISSIONS,IBM,fixed before financial results; CIK is primary identifier
+MMM,66740,US_CURRENT,3M CO,CIK_VERIFIED_SUBMISSIONS,MMM,fixed before financial results; CIK is primary identifier
+GE,40545,US_CURRENT,GENERAL ELECTRIC CO,CIK_VERIFIED_SUBMISSIONS,GE,fixed before financial results; CIK is primary identifier
+F,37996,US_CURRENT,FORD MOTOR CO,CIK_VERIFIED_SUBMISSIONS,F,fixed before financial results; CIK is primary identifier
+T,732717,US_CURRENT,AT&T INC.,CIK_VERIFIED_SUBMISSIONS,T,fixed before financial results; CIK is primary identifier
+PFE,78003,US_CURRENT,PFIZER INC,CIK_VERIFIED_SUBMISSIONS,PFE,fixed before financial results; CIK is primary identifier
+MRK,310158,US_CURRENT,"Merck & Co., Inc.",CIK_VERIFIED_SUBMISSIONS,MRK,fixed before financial results; CIK is primary identifier
+ABT,1800,US_CURRENT,ABBOTT LABORATORIES,CIK_VERIFIED_SUBMISSIONS,ABT,fixed before financial results; CIK is primary identifier
+PEP,77476,US_CURRENT,PEPSICO INC,CIK_VERIFIED_SUBMISSIONS,PEP,fixed before financial results; CIK is primary identifier
+COST,909832,US_CURRENT,COSTCO WHOLESALE CORP /NEW/,CIK_VERIFIED_SUBMISSIONS,COST,fixed before financial results; CIK is primary identifier
+ORCL,1341439,US_CURRENT,ORACLE CORP,CIK_VERIFIED_SUBMISSIONS,ORCL,fixed before financial results; CIK is primary identifier
+CRM,1108524,US_CURRENT,"Salesforce, Inc.",CIK_VERIFIED_SUBMISSIONS,CRM,fixed before financial results; CIK is primary identifier
+ADBE,796343,US_CURRENT,ADOBE INC.,CIK_VERIFIED_SUBMISSIONS,ADBE,fixed before financial results; CIK is primary identifier
+NFLX,1065280,US_CURRENT,NETFLIX INC,CIK_VERIFIED_SUBMISSIONS,NFLX,fixed before financial results; CIK is primary identifier
+NVDA,1045810,US_CURRENT,NVIDIA CORP,CIK_VERIFIED_SUBMISSIONS,NVDA,fixed before financial results; CIK is primary identifier
+MON,1110783,US_NON_SURVIVING,MONSANTO CO /NEW/,CIK_VERIFIED_SUBMISSIONS,MON,fixed before financial results; CIK is primary identifier
+CELG,816284,US_NON_SURVIVING,CELGENE CORP /DE/,CIK_VERIFIED_SUBMISSIONS,CELG,fixed before financial results; CIK is primary identifier
+RTN,1047122,US_NON_SURVIVING,RAYTHEON CO/,CIK_VERIFIED_SUBMISSIONS,RTN,fixed before financial results; CIK is primary identifier
+ETFC,1015780,US_NON_SURVIVING,E TRADE FINANCIAL CORP,CIK_VERIFIED_SUBMISSIONS,ETFC,fixed before financial results; CIK is primary identifier
+XLNX,743988,US_NON_SURVIVING,XILINX INC,CIK_VERIFIED_SUBMISSIONS,XLNX,fixed before financial results; CIK is primary identifier
+BP,313807,FOREIGN_ADR,BP PLC,CIK_VERIFIED_SUBMISSIONS,BP,fixed before financial results; CIK is primary identifier
+AZN,901832,FOREIGN_ADR,ASTRAZENECA PLC,CIK_VERIFIED_SUBMISSIONS,AZN,fixed before financial results; CIK is primary identifier
+SAP,1000184,FOREIGN_ADR,SAP SE,CIK_VERIFIED_SUBMISSIONS,SAP,fixed before financial results; CIK is primary identifier
+TM,1094517,FOREIGN_ADR,TOYOTA MOTOR CORP/,CIK_VERIFIED_SUBMISSIONS,TM,fixed before financial results; CIK is primary identifier
+SHOP,1594805,FOREIGN_ADR,SHOPIFY INC.,CIK_VERIFIED_SUBMISSIONS,SHOP,fixed before financial results; CIK is primary identifier
+AMZN,0001018724,US_CURRENT_EXPANSION,"Amazon.com, Inc. - Common Stock",CIK_VERIFIED_P6_2026,AMZN,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+AVGO,0001730168,US_CURRENT_EXPANSION,Broadcom Inc. - Common Stock,CIK_VERIFIED_P6_2026,AVGO,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TSLA,0001318605,US_CURRENT_EXPANSION,"Tesla, Inc.  - Common Stock",CIK_VERIFIED_P6_2026,TSLA,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+LLY,0000059478,US_CURRENT_EXPANSION,Eli Lilly and Company Common Stock,CIK_VERIFIED_P6_2026,LLY,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MU,0000723125,US_CURRENT_EXPANSION,"Micron Technology, Inc. - Common Stock",CIK_VERIFIED_P6_2026,MU,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+AMD,0000002488,US_CURRENT_EXPANSION,"Advanced Micro Devices, Inc. - Common Stock",CIK_VERIFIED_P6_2026,AMD,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ABBV,0001551152,US_CURRENT_EXPANSION,AbbVie Inc. Common Stock,CIK_VERIFIED_P6_2026,ABBV,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+PLTR,0001321655,US_CURRENT_EXPANSION,Palantir Technologies Inc. - Class A Common Stock,CIK_VERIFIED_P6_2026,PLTR,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+PM,0001413329,US_CURRENT_EXPANSION,Philip Morris International Inc Common Stock,CIK_VERIFIED_P6_2026,PM,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+AMAT,0000006951,US_CURRENT_EXPANSION,"Applied Materials, Inc. - Common Stock",CIK_VERIFIED_P6_2026,AMAT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+PANW,0001327567,US_CURRENT_EXPANSION,"Palo Alto Networks, Inc. - Common Stock",CIK_VERIFIED_P6_2026,PANW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TXN,0000097476,US_CURRENT_EXPANSION,Texas Instruments Incorporated - Common Stock,CIK_VERIFIED_P6_2026,TXN,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+LRCX,0000707549,US_CURRENT_EXPANSION,Lam Research Corporation - Common Stock,CIK_VERIFIED_P6_2026,LRCX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+RTX,0000101829,US_CURRENT_EXPANSION,RTX Corporation Common Stock,CIK_VERIFIED_P6_2026,RTX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TMO,0000097745,US_CURRENT_EXPANSION,Thermo Fisher Scientific Inc Common Stock,CIK_VERIFIED_P6_2026,TMO,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+AMGN,0000318154,US_CURRENT_EXPANSION,Amgen Inc. - Common Stock,CIK_VERIFIED_P6_2026,AMGN,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+CRWD,0001535527,US_CURRENT_EXPANSION,"CrowdStrike Holdings, Inc. - Class A Common Stock",CIK_VERIFIED_P6_2026,CRWD,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+LIN,0001707925,US_CURRENT_EXPANSION,Linde plc - Ordinary Shares,CIK_VERIFIED_P6_2026,LIN,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+DELL,0001571996,US_CURRENT_EXPANSION,Dell Technologies Inc. Class C Common Stock,CIK_VERIFIED_P6_2026,DELL,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ANET,0001596532,US_CURRENT_EXPANSION,"Arista Networks, Inc. Common Stock",CIK_VERIFIED_P6_2026,ANET,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+GEV,0001996810,US_CURRENT_EXPANSION,GE Vernova Inc. Common Stock,CIK_VERIFIED_P6_2026,GEV,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+GILD,0000882095,US_CURRENT_EXPANSION,"Gilead Sciences, Inc. - Common Stock",CIK_VERIFIED_P6_2026,GILD,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MCD,0000063908,US_CURRENT_EXPANSION,McDonald's Corporation Common Stock,CIK_VERIFIED_P6_2026,MCD,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ADI,0000006281,US_CURRENT_EXPANSION,"Analog Devices, Inc. - Common Stock",CIK_VERIFIED_P6_2026,ADI,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+KLAC,0000319201,US_CURRENT_EXPANSION,KLA Corporation  - Common Stock,CIK_VERIFIED_P6_2026,KLAC,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+APH,0000820313,US_CURRENT_EXPANSION,Amphenol Corporation Common Stock,CIK_VERIFIED_P6_2026,APH,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+VZ,0000732712,US_CURRENT_EXPANSION,Verizon Communications Inc. Common Stock,CIK_VERIFIED_P6_2026,VZ,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+QCOM,0000804328,US_CURRENT_EXPANSION,QUALCOMM Incorporated - Common Stock,CIK_VERIFIED_P6_2026,QCOM,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+UNP,0000100885,US_CURRENT_EXPANSION,Union Pacific Corporation Common Stock,CIK_VERIFIED_P6_2026,UNP,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+DE,0000315189,US_CURRENT_EXPANSION,Deere & Company Common Stock,CIK_VERIFIED_P6_2026,DE,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TMUS,0001283699,US_CURRENT_EXPANSION,"T-Mobile US, Inc. - Common Stock",CIK_VERIFIED_P6_2026,TMUS,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ISRG,0001035267,US_CURRENT_EXPANSION,"Intuitive Surgical, Inc. - Common Stock",CIK_VERIFIED_P6_2026,ISRG,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+DHR,0000313616,US_CURRENT_EXPANSION,Danaher Corporation Common Stock,CIK_VERIFIED_P6_2026,DHR,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TJX,0000109198,US_CURRENT_EXPANSION,"TJX Companies, Inc. (The) Common Stock",CIK_VERIFIED_P6_2026,TJX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SCCO,0001001838,US_CURRENT_EXPANSION,Southern Copper Corporation Common Stock,CIK_VERIFIED_P6_2026,SCCO,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SNDK,0002023554,US_CURRENT_EXPANSION,Sandisk Corporation - Common Stock When-Issued,CIK_VERIFIED_P6_2026,SNDK,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+UBER,0001543151,US_CURRENT_EXPANSION,"Uber Technologies, Inc. Common Stock",CIK_VERIFIED_P6_2026,UBER,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+BA,0000012927,US_CURRENT_EXPANSION,Boeing Company (The) Common Stock,CIK_VERIFIED_P6_2026,BA,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MRVL,0001835632,US_CURRENT_EXPANSION,"Marvell Technology, Inc. - Common Stock",CIK_VERIFIED_P6_2026,MRVL,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SPGI,0000064040,US_CURRENT_EXPANSION,S&P Global Inc. Common Stock,CIK_VERIFIED_P6_2026,SPGI,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+VRTX,0000875320,US_CURRENT_EXPANSION,Vertex Pharmaceuticals Incorporated - Common Stock,CIK_VERIFIED_P6_2026,VRTX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+LMT,0000936468,US_CURRENT_EXPANSION,Lockheed Martin Corporation Common Stock,CIK_VERIFIED_P6_2026,LMT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ETN,0001551182,US_CURRENT_EXPANSION,"Eaton Corporation, PLC Ordinary Shares",CIK_VERIFIED_P6_2026,ETN,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MDT,0001613103,US_CURRENT_EXPANSION,Medtronic plc. Ordinary Shares,CIK_VERIFIED_P6_2026,MDT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+BMY,0000014272,US_CURRENT_EXPANSION,Bristol-Myers Squibb Company Common Stock,CIK_VERIFIED_P6_2026,BMY,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SYK,0000310764,US_CURRENT_EXPANSION,Stryker Corporation Common Stock,CIK_VERIFIED_P6_2026,SYK,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+LOW,0000060667,US_CURRENT_EXPANSION,"Lowe's Companies, Inc. Common Stock",CIK_VERIFIED_P6_2026,LOW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+STX,0001137789,US_CURRENT_EXPANSION,Seagate Technology Holdings PLC - Ordinary Shares (Ireland),CIK_VERIFIED_P6_2026,STX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+BKNG,0001075531,US_CURRENT_EXPANSION,Booking Holdings Inc. - Common Stock,CIK_VERIFIED_P6_2026,BKNG,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SBUX,0000829224,US_CURRENT_EXPANSION,Starbucks Corporation - Common Stock,CIK_VERIFIED_P6_2026,SBUX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MCK,0000927653,US_CURRENT_EXPANSION,McKesson Corporation Common Stock,CIK_VERIFIED_P6_2026,MCK,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+WDC,0000106040,US_CURRENT_EXPANSION,Western Digital Corporation - Common Stock,CIK_VERIFIED_P6_2026,WDC,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ADP,0000008670,US_CURRENT_EXPANSION,"Automatic Data Processing, Inc. - Common Stock",CIK_VERIFIED_P6_2026,ADP,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+PH,0000076334,US_CURRENT_EXPANSION,Parker-Hannifin Corporation Common Stock,CIK_VERIFIED_P6_2026,PH,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+NOW,0001373715,US_CURRENT_EXPANSION,"ServiceNow, Inc. Common Stock",CIK_VERIFIED_P6_2026,NOW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MAR,0001048286,US_CURRENT_EXPANSION,Marriott International - Class A Common Stock,CIK_VERIFIED_P6_2026,MAR,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+HCA,0000860730,US_CURRENT_EXPANSION,"HCA Healthcare, Inc. Common Stock",CIK_VERIFIED_P6_2026,HCA,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MRNA,0001682852,US_CURRENT_EXPANSION,"Moderna, Inc. - Common Stock",CIK_VERIFIED_P6_2026,MRNA,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SNOW,0001640147,US_CURRENT_EXPANSION,Snowflake Inc. Common Stock,CIK_VERIFIED_P6_2026,SNOW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+GLW,0000024741,US_CURRENT_EXPANSION,Corning Incorporated Common Stock,CIK_VERIFIED_P6_2026,GLW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+CVS,0000064803,US_CURRENT_EXPANSION,CVS Health Corporation Common Stock,CIK_VERIFIED_P6_2026,CVS,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+GD,0000040533,US_CURRENT_EXPANSION,General Dynamics Corporation Common Stock,CIK_VERIFIED_P6_2026,GD,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+CSX,0000277948,US_CURRENT_EXPANSION,CSX Corporation - Common Stock,CIK_VERIFIED_P6_2026,CSX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+INTU,0000896878,US_CURRENT_EXPANSION,Intuit Inc. - Common Stock,CIK_VERIFIED_P6_2026,INTU,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+EMR,0000032604,US_CURRENT_EXPANSION,Emerson Electric Company Common Stock,CIK_VERIFIED_P6_2026,EMR,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+FTNT,0001262039,US_CURRENT_EXPANSION,"Fortinet, Inc. - Common Stock",CIK_VERIFIED_P6_2026,FTNT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+WM,0000823768,US_CURRENT_EXPANSION,"Waste Management, Inc. Common Stock",CIK_VERIFIED_P6_2026,WM,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MCO,0001059556,US_CURRENT_EXPANSION,Moody's Corporation Common Stock,CIK_VERIFIED_P6_2026,MCO,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+CTAS,0000723254,US_CURRENT_EXPANSION,Cintas Corporation - Common Stock,CIK_VERIFIED_P6_2026,CTAS,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+CDNS,0000813672,US_CURRENT_EXPANSION,"Cadence Design Systems, Inc. - Common Stock",CIK_VERIFIED_P6_2026,CDNS,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+APP,0001751008,US_CURRENT_EXPANSION,Applovin Corporation - Class A Common Stock,CIK_VERIFIED_P6_2026,APP,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+RCL,0000884887,US_CURRENT_EXPANSION,Royal Caribbean Cruises Ltd. Common Stock,CIK_VERIFIED_P6_2026,RCL,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SNPS,0000883241,US_CURRENT_EXPANSION,"Synopsys, Inc. - Common Stock",CIK_VERIFIED_P6_2026,SNPS,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ECL,0000031462,US_CURRENT_EXPANSION,Ecolab Inc. Common Stock,CIK_VERIFIED_P6_2026,ECL,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MELI,0001099590,US_CURRENT_EXPANSION,"MercadoLibre, Inc. - Common Stock",CIK_VERIFIED_P6_2026,MELI,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+SHW,0000089800,US_CURRENT_EXPANSION,Sherwin-Williams Company (The) Common Stock,CIK_VERIFIED_P6_2026,SHW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+FCX,0000831259,US_CURRENT_EXPANSION,"Freeport-McMoRan, Inc. Common Stock",CIK_VERIFIED_P6_2026,FCX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+PWR,0001050915,US_CURRENT_EXPANSION,"Quanta Services, Inc. Common Stock",CIK_VERIFIED_P6_2026,PWR,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MDLZ,0001103982,US_CURRENT_EXPANSION,"Mondelez International, Inc. - Class A Common Stock",CIK_VERIFIED_P6_2026,MDLZ,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+JCI,0000833444,US_CURRENT_EXPANSION,Johnson Controls International plc Ordinary Share,CIK_VERIFIED_P6_2026,JCI,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+HWM,0000004281,US_CURRENT_EXPANSION,Howmet Aerospace Inc. Common Stock,CIK_VERIFIED_P6_2026,HWM,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+HLT,0001585689,US_CURRENT_EXPANSION,Hilton Worldwide Holdings Inc. Common Stock,CIK_VERIFIED_P6_2026,HLT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ITW,0000049826,US_CURRENT_EXPANSION,Illinois Tool Works Inc. Common Stock,CIK_VERIFIED_P6_2026,ITW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+MSI,0000068505,US_CURRENT_EXPANSION,"Motorola Solutions, Inc. Common Stock",CIK_VERIFIED_P6_2026,MSI,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+VRT,0001674101,US_CURRENT_EXPANSION,"Vertiv Holdings, LLC Class A Common Stock",CIK_VERIFIED_P6_2026,VRT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+CL,0000021665,US_CURRENT_EXPANSION,Colgate-Palmolive Company Common Stock,CIK_VERIFIED_P6_2026,CL,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ROST,0000745732,US_CURRENT_EXPANSION,"Ross Stores, Inc. - Common Stock",CIK_VERIFIED_P6_2026,ROST,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+GM,0001467858,US_CURRENT_EXPANSION,General Motors Company Common Stock,CIK_VERIFIED_P6_2026,GM,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+NSC,0000702165,US_CURRENT_EXPANSION,Norfolk Southern Corporation Common Stock,CIK_VERIFIED_P6_2026,NSC,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+FDX,0001048911,US_CURRENT_EXPANSION,FedEx Corporation Common Stock,CIK_VERIFIED_P6_2026,FDX,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+RSG,0001060391,US_CURRENT_EXPANSION,"Republic Services, Inc. Common Stock",CIK_VERIFIED_P6_2026,RSG,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+NOC,0001133421,US_CURRENT_EXPANSION,Northrop Grumman Corporation Common Stock,CIK_VERIFIED_P6_2026,NOC,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+ORLY,0000898173,US_CURRENT_EXPANSION,"O'Reilly Automotive, Inc. - Common Stock",CIK_VERIFIED_P6_2026,ORLY,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TGT,0000027419,US_CURRENT_EXPANSION,Target Corporation Common Stock,CIK_VERIFIED_P6_2026,TGT,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+HON,0000773840,US_CURRENT_EXPANSION,Honeywell International Inc. - Common Stock,CIK_VERIFIED_P6_2026,HON,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+APD,0000002969,US_CURRENT_EXPANSION,"Air Products and Chemicals, Inc. Common Stock",CIK_VERIFIED_P6_2026,APD,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+GWW,0000277135,US_CURRENT_EXPANSION,"W.W. Grainger, Inc. Common Stock",CIK_VERIFIED_P6_2026,GWW,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+URI,0001067701,US_CURRENT_EXPANSION,"United Rentals, Inc. Common Stock",CIK_VERIFIED_P6_2026,URI,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+COR,0001140859,US_CURRENT_EXPANSION,"Cencora, Inc. Common Stock",CIK_VERIFIED_P6_2026,COR,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
+TDG,0001260221,US_CURRENT_EXPANSION,Transdigm Group Incorporated Common Stock,CIK_VERIFIED_P6_2026,TDG,"fixed rule: top 100 current US-GAAP COMMON by 2026-11-05 market cap, excluding P12.2 sample"
