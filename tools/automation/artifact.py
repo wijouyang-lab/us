@@ -47,4 +47,9 @@ def read_manifest(out: Path) -> dict:
         _safe_path(rel)
         if rel.startswith(".git") or "token" in rel.lower() or "credentials" in rel.lower():
             raise ValueError(f"SENSITIVE_PATH:{rel}")
+        src = out / "workspace" / rel
+        if src.is_symlink():
+            raise ValueError(f"SYMLINK_REJECTED:{rel}")
+        if src.exists() and out.resolve() not in src.resolve().parents:
+            raise ValueError(f"PATH_ESCAPE:{rel}")
     return m
