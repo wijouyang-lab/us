@@ -25,7 +25,12 @@ def push_state(store, root, branch):
             return True
         cmd(["git", "commit", "-m", "automation: persist task state [skip ci]"], root)
         r = subprocess.run(["git", "-c", "credential.helper=!gh auth git-credential", "push", "origin", branch], cwd=root, text=True, capture_output=True)
-        return r.returncode == 0
+        if r.returncode == 0:
+            return True
+        # Client error may be ambiguous: verify the remote ref actually contains HEAD.
+        local = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, text=True, capture_output=True)
+        remote = subprocess.run(["git", "ls-remote", "origin", f"refs/heads/{branch}"], cwd=root, text=True, capture_output=True)
+        return local.returncode == 0 and remote.returncode == 0 and remote.stdout.split()[:1] == [local.stdout.strip()]
     except Exception:
         return False
 
