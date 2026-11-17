@@ -133,7 +133,7 @@ def main() -> int:
         mark(store, task_id, "BLOCKED", f"BRANCH_GUARD:{current}", root, branch)
         return 1
     resume_code = False
-    reason = (existing or {}).get("last_review", {}).get("reason", "") if existing else ""
+    reason = ((existing or {}).get("last_review") or {}).get("reason", "") if existing else ""
     recoverable_reasons = {"BUSINESS_PUSH_FAILED", "PUBLISHING_STATE_PUSH_FAILED", "STATE_PERSIST_FAILED", "PR_QUERY_FAILED", "PR_CREATE_FAILED", "READY_PR_BLOCKED", "MULTIPLE_PR_BLOCKED"}
     recoverable = bool(existing) and (existing.get("status") == "PUBLISHING" or (existing.get("status") == "BLOCKED" and reason in recoverable_reasons))
     if recoverable:
