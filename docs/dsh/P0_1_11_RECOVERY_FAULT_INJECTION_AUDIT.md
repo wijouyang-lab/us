@@ -1,5 +1,7 @@
 # P0.1.11: Publisher Recovery, Unknown Commit and Fault-Injection Audit
 
+> Historical audit; superseded by P0.1.12. HEAD/CI here are not current.
+
 Date: 2026-11-17
 Branch: `deploy/dsh-automation-p0`
 HEAD: `dfd62af5a7b61f30c1ab12d1192205217bda0e18`
