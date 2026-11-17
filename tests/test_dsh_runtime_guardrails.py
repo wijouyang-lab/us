@@ -72,3 +72,42 @@ def test_branch_switch_during_run_is_rejected(tmp_path):
     o._current_branch = lambda: "main"
     with pytest.raises(RuntimeError, match="BRANCH_GUARD"):
         o._assert_branch("fix/t")
+
+
+def _repo(tmp_path):
+    _git(tmp_path, "init")
+    _git(tmp_path, "config", "user.email", "t@example.com")
+    _git(tmp_path, "config", "user.name", "t")
+    (tmp_path / "docs/research").mkdir(parents=True)
+    (tmp_path / "docs/research/in_allowed.md").write_text("a", encoding="utf-8")
+    (tmp_path / "outside.py").write_text("m", encoding="utf-8")
+    _git(tmp_path, "add", ".")
+    _git(tmp_path, "commit", "-m", "base")
+    return tmp_path
+
+
+def test_rename_from_allowed_to_forbidden_is_blocked(tmp_path):
+    repo = _repo(tmp_path)
+    _git(repo, "mv", "docs/research/in_allowed.md", "outside2.py")
+    paths = changed_paths(repo)
+    assert "docs/research/in_allowed.md" in paths and "outside2.py" in paths
+    with pytest.raises(ValueError, match="UNAUTHORIZED_PATH"):
+        validate_paths(paths)
+
+
+def test_rename_from_forbidden_to_allowed_is_blocked(tmp_path):
+    repo = _repo(tmp_path)
+    _git(repo, "mv", "outside.py", "docs/research/from_outside.md")
+    paths = changed_paths(repo)
+    assert "outside.py" in paths and "docs/research/from_outside.md" in paths
+    with pytest.raises(ValueError, match="UNAUTHORIZED_PATH"):
+        validate_paths(paths)
+
+
+def test_staged_rename_keeps_both_paths(tmp_path):
+    repo = _repo(tmp_path)
+    _git(repo, "mv", "docs/research/in_allowed.md", "docs/research/renamed.md")
+    _git(repo, "add", "-A")
+    paths = changed_paths(repo)
+    assert "docs/research/renamed.md" in paths and "docs/research/in_allowed.md" in paths
+    validate_paths(paths)

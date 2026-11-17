@@ -103,3 +103,27 @@ def test_pr_create_failure_is_terminal_fail(tmp_path, monkeypatch):
     task = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=False, require_protection=False).run_task("t4", "p", "fix/test", "feature/base")
     assert task["status"] == "FAIL"
     assert task["last_review"]["reason"] == "PR_CREATE_FAILED"
+
+
+def test_reviewer_timeout_is_blocked(tmp_path):
+    script = tmp_path / "slow_review.py"
+    script.write_text("import time; time.sleep(5)", encoding="utf-8")
+    r = run_review("diff", "task", cmd=[sys.executable, str(script)], timeout=0.2)
+    assert r["status"] == "BLOCKED"
+    assert r["reason"] == "REVIEWER_TIMEOUT"
+
+
+def test_task_timeout_persisted_not_running(tmp_path):
+    from tools.automation.orchestrator import Orchestrator
+    from tools.automation.state_store import TaskStore
+
+    class TimeoutRunner:
+        def run(self, prompt, log):
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text("timeout", encoding="utf-8")
+            return {"returncode": 124, "final": None, "timed_out": True}
+
+    store = TaskStore(tmp_path / "tasks.json")
+    task = Orchestrator(store, TimeoutRunner(), repo=tmp_path, dry_run=True, require_protection=False).run_task("t-timeout", "p", "fix/t-timeout", "main")
+    assert task["status"] in {"NEEDS_REVISION", "FAIL"}
+    assert store.load()["tasks"]["t-timeout"]["status"] != "RUNNING"

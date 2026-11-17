@@ -22,13 +22,14 @@ def changed_paths(repo: Path) -> list[str]:
         if not entry:
             continue
         xy, path = entry[:2], entry[3:]
-        if "R" in xy or "C" in xy:
-            # rename/copy: next NUL is the old path
-            i += 1
-        if path.startswith("automation/state/") or path.startswith("automation/logs/"):
-            continue
         paths.append(path)
-    return sorted(set(paths))
+        if "R" in xy or "C" in xy:
+            # In -z format the next NUL-terminated field is the original path.
+            if i < len(out) and out[i]:
+                paths.append(out[i])
+                i += 1
+    keep = [p for p in paths if not p.startswith("automation/state/") and not p.startswith("automation/logs/")]
+    return sorted(set(keep))
 
 
 def validate_paths(paths: list[str]) -> None:
