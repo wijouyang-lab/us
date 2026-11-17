@@ -80,7 +80,7 @@ def test_business_push_rejected_then_retry(tmp_path):
     repo, art, bindir, log = setup(tmp_path)
     bare = tmp_path / "remote.git"
     hook = bare / "hooks/pre-receive"
-    hook.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    hook.write_text("#!/bin/sh\nn=$(cat .push-count 2>/dev/null || echo 0)\nn=$((n+1))\necho $n > .push-count\nif [ $n -eq 1 ]; then exit 0; fi\nexit 1\n", encoding="utf-8")
     hook.chmod(0o755)
     r = run_publisher(repo, art, bindir, log, "no-pr")
     assert r.returncode == 1
