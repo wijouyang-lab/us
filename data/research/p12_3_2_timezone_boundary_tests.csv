@@ -1,0 +1,11 @@
+case,season,cik,metric,query,target_accession,expected_visible,actual_visible,known_at,status
+date_only_edt_eod,EDT,320193,TotalAssets,2009-07-22,0001193125-09-153165,True,True,2009-07-23 03:59:59+00:00,PASS
+date_only_edt_before,EDT,320193,TotalAssets,2009-07-23T03:59:58Z,0001193125-09-153165,False,False,,PASS
+date_only_edt_at,EDT,320193,TotalAssets,2009-07-23T03:59:59Z,0001193125-09-153165,True,True,2009-07-23 03:59:59+00:00,PASS
+acceptance_before,EDT,1800,Capex,2018-08-01T20:02:03Z,0001104659-18-048736,False,False,,PASS
+acceptance_after,EDT,1800,Capex,2018-08-01T20:02:04Z,0001104659-18-048736,True,True,2018-08-01 20:02:04+00:00,PASS
+naive_rejected,EDT,320193,TotalAssets,2009-07-22T12:00:00,0001193125-09-153165,False,False,,PASS
+all_periods_retained,EDT,320193,TotalAssets,2015-06-30,,True,True,rows=25;periods=25,PASS
+date_only_est_eod,EST,0000320193,TotalAssets,2010-01-25,0001193125-10-012091,True,True,2010-01-26 04:59:59+00:00,PASS
+date_only_est_before,EST,0000320193,TotalAssets,2010-01-26T04:59:58Z,0001193125-10-012091,False,False,,PASS
+date_only_est_at,EST,0000320193,TotalAssets,2010-01-26T04:59:59Z,0001193125-10-012091,True,True,2010-01-26 04:59:59+00:00,PASS

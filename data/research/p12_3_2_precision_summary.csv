@@ -1,0 +1,7 @@
+metric,value,status,notes
+total_fact_rows,222804,OK,P12.3 preserved
+acceptance_timestamp_rows,104360,OK,true acceptance timestamps unchanged
+filing_date_low_precision_rows,118444,READY_RESTRICTED,US/Eastern end-of-day only; no fabricated time
+date_only_asof_semantics,1,READY_RESTRICTED,YYYY-MM-DD means US/Eastern end of day
+naive_timestamp_rejected,1,OK,full timestamp must have explicit timezone
+timezone_boundary_tests,10,OK,"EDT/EST, before/at/after, acceptance, periods"
