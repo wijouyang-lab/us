@@ -59,6 +59,7 @@ def _check_workspace(out: Path) -> Path:
 def build_artifact(repo: Path, out: Path, manifest: dict, paths: list[str]) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     _root(out)
+    (out / "workspace").mkdir(parents=True, exist_ok=True)
     ws = _check_workspace(out)
     files, deletes = [], []
     for rel in paths:
