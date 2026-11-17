@@ -123,7 +123,7 @@ def main() -> int:
         return 1
     store = TaskStore(root / args.state)
     existing = store.load().get("tasks", {}).get(task_id)
-    if existing and existing.get("status") in {"REVIEW_PENDING", "PASS", "FAIL"}:
+    if existing and existing.get("status") in {"REVIEW_PENDING", "PASS"}:
         print(f"SKIP_TERMINAL:{existing['status']}")
         return 0
     current = cmd(["git", "rev-parse", "--abbrev-ref", "HEAD"], root).stdout.strip()
@@ -134,7 +134,8 @@ def main() -> int:
         return 1
     resume_code = False
     reason = (existing or {}).get("last_review", {}).get("reason", "") if existing else ""
-    recoverable = bool(existing) and (existing.get("status") == "PUBLISHING" or (existing.get("status") == "BLOCKED" and reason in {"STATE_PERSIST_FAILED_PUBLISHING", "PUBLISHING_STATE_PUSH_FAILED"}))
+    recoverable_reasons = {"BUSINESS_PUSH_FAILED", "PUBLISHING_STATE_PUSH_FAILED", "STATE_PERSIST_FAILED", "PR_QUERY_FAILED", "PR_CREATE_FAILED", "READY_PR_BLOCKED", "MULTIPLE_PR_BLOCKED"}
+    recoverable = bool(existing) and (existing.get("status") == "PUBLISHING" or (existing.get("status") == "BLOCKED" and reason in recoverable_reasons))
     if recoverable:
         if existing.get("agent_source_sha") != m["source_commit_sha"] or existing.get("artifact_digest") != digest:
             mark(store, task_id, "BLOCKED", "ARTIFACT_OR_SOURCE_MISMATCH", root, branch)
@@ -161,7 +162,7 @@ def main() -> int:
         task = store.load()["tasks"][task_id]
         store.update(task_id, status="PUBLISHING", attempts=task["attempts"] + 1, agent_source_sha=m["source_commit_sha"], base_commit_sha=m["base_commit_sha"], artifact_digest=digest, branch=branch, base_branch=base_branch)
         if not push_state(store, root, branch):
-            mark(store, task_id, "BLOCKED", "PUBLISHING_STATE_PUSH_FAILED", root, branch)
+            mark(store, task_id, "PUBLISHING", "PUBLISHING_STATE_PUSH_FAILED", root, branch)
             return 1
     try:
         if not resume_code:
@@ -187,10 +188,16 @@ def main() -> int:
                 cmd(["git", "commit", "-m", f"automation: DSH task {task_id} artifact {digest}"], root)
         published = cmd(["git", "rev-parse", "HEAD"], root).stdout.strip()
         store.update(task_id, published_sha=published)
-        cmd(["git", "-c", "credential.helper=!gh auth git-credential", "push", "-u", "origin", branch], root)
     except Exception as e:
         mark(store, task_id, "FAIL", f"PUBLISH_FAILED:{e}", root, branch)
         print(f"FAIL:{e}")
+        return 1
+    try:
+        cmd(["git", "-c", "credential.helper=!gh auth git-credential", "push", "-u", "origin", branch], root)
+    except Exception as e:
+        store.update(task_id, published_sha=published)
+        mark(store, task_id, "PUBLISHING", "BUSINESS_PUSH_FAILED", root, branch)
+        print(f"RECOVERABLE:BUSINESS_PUSH_FAILED:{e}")
         return 1
     try:
         prs_raw = cmd(["gh", "pr", "list", "--head", branch, "--base", base_branch, "--state", "open", "--json", "url,isDraft,headRefName,baseRefName"], root).stdout
@@ -224,9 +231,22 @@ def main() -> int:
         print(f"STATUS=REVIEW_PENDING PR={pr_url}")
         return 0
     except Exception as e:
-        status = "FAIL" if "PR_CREATE_FAILED" in str(e) else "BLOCKED"
-        mark(store, task_id, status, str(e), root, branch)
-        print(f"{status}:{e}")
+        text = str(e)
+        if "PR_CREATE_FAILED" in text or "DRAFT_PR_VERIFY_FAILED" in text:
+            mark(store, task_id, "PUBLISHING", "PR_CREATE_FAILED", root, branch)
+            print(f"RECOVERABLE:PR_CREATE_FAILED:{e}")
+        elif "MULTIPLE_OPEN_PRS" in text:
+            mark(store, task_id, "BLOCKED", "MULTIPLE_PR_BLOCKED", root, branch)
+            print(f"BLOCKED:MULTIPLE_PR_BLOCKED:{e}")
+        elif "NON_DRAFT" in text or "PR_REF_MISMATCH" in text:
+            mark(store, task_id, "BLOCKED", "READY_PR_BLOCKED", root, branch)
+            print(f"BLOCKED:READY_PR_BLOCKED:{e}")
+        elif "PR_QUERY_FAILED" in text or "pr list" in text.lower():
+            mark(store, task_id, "PUBLISHING", "PR_QUERY_FAILED", root, branch)
+            print(f"RECOVERABLE:PR_QUERY_FAILED:{e}")
+        else:
+            mark(store, task_id, "FAIL", "PERMANENT_PUBLISH_FAILURE", root, branch)
+            print(f"FAIL:PERMANENT_PUBLISH_FAILURE:{e}")
         return 1
 
 

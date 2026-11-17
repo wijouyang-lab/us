@@ -64,7 +64,7 @@ def run_publisher(repo, art, bindir, log, mode):
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX mock gh integration")
-@pytest.mark.parametrize("mode,expected,status", [("existing", 0, "REVIEW_PENDING"), ("ready", 1, "BLOCKED"), ("multiple", 1, "BLOCKED"), ("queryfail", 1, "BLOCKED"), ("createfail", 1, "FAIL")])
+@pytest.mark.parametrize("mode,expected,status", [("existing", 0, "REVIEW_PENDING"), ("ready", 1, "BLOCKED"), ("multiple", 1, "BLOCKED"), ("queryfail", 1, "PUBLISHING"), ("createfail", 1, "PUBLISHING")])
 def test_draft_pr_modes(tmp_path, mode, expected, status):
     repo, art, bindir, log = setup(tmp_path)
     r = run_publisher(repo, art, bindir, log, mode)
@@ -73,3 +73,43 @@ def test_draft_pr_modes(tmp_path, mode, expected, status):
     assert state["tasks"]["t"]["status"] == status
     creates = [line for line in log.read_text().splitlines() if line == "pr create"]
     assert len(creates) == (1 if mode in {"createfail"} else 0)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX hook/mock gh integration")
+def test_business_push_rejected_then_retry(tmp_path):
+    repo, art, bindir, log = setup(tmp_path)
+    bare = tmp_path / "remote.git"
+    hook = bare / "hooks/pre-receive"
+    hook.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    hook.chmod(0o755)
+    r = run_publisher(repo, art, bindir, log, "no-pr")
+    assert r.returncode == 1
+    state = json.loads((repo / "automation/state/tasks.json").read_text())
+    assert state["tasks"]["t"]["status"] == "PUBLISHING"
+    assert state["tasks"]["t"]["last_review"]["reason"] == "BUSINESS_PUSH_FAILED"
+    hook.unlink()
+    r2 = run_publisher(repo, art, bindir, log, "no-pr")
+    assert r2.returncode == 0, r2.stdout + r2.stderr
+    subjects = subprocess.check_output(["git", "log", "origin/fix/t", "--format=%s"], cwd=repo, text=True).splitlines()
+    assert len([s for s in subjects if s.startswith("automation: DSH task")]) == 1
+    creates = [line for line in log.read_text().splitlines() if line == "pr create"]
+    assert len(creates) == 1
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX mock gh integration")
+def test_pr_query_failure_retry(tmp_path):
+    repo, art, bindir, log = setup(tmp_path)
+    assert run_publisher(repo, art, bindir, log, "queryfail").returncode == 1
+    assert json.loads((repo / "automation/state/tasks.json").read_text())["tasks"]["t"]["status"] == "PUBLISHING"
+    assert run_publisher(repo, art, bindir, log, "no-pr").returncode == 0
+    assert json.loads((repo / "automation/state/tasks.json").read_text())["tasks"]["t"]["status"] == "REVIEW_PENDING"
+    assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX mock gh integration")
+def test_pr_create_failure_retry(tmp_path):
+    repo, art, bindir, log = setup(tmp_path)
+    assert run_publisher(repo, art, bindir, log, "createfail").returncode == 1
+    assert json.loads((repo / "automation/state/tasks.json").read_text())["tasks"]["t"]["status"] == "PUBLISHING"
+    assert run_publisher(repo, art, bindir, log, "no-pr").returncode == 0
+    assert json.loads((repo / "automation/state/tasks.json").read_text())["tasks"]["t"]["status"] == "REVIEW_PENDING"
