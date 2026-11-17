@@ -29,7 +29,7 @@ def test_publisher_temp_remote_and_idempotent_pr(tmp_path):
     source = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
     (repo / "docs/research/new.md").write_text("new", encoding="utf-8")
     art = tmp_path / "agent-artifact"
-    build_artifact(repo, art, {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": source, "base_commit_sha": source, "status": "AGENT_COMPLETE"}, ["docs/research/new.md"])
+    build_artifact(repo, art, {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": source, "base_commit_sha": source, "status": "AGENT_COMPLETE", "timed_out": False, "tests_returncode": 0}, ["docs/research/new.md"])
     bindir = tmp_path / "bin"; bindir.mkdir()
     gh = bindir / "gh"
     gh.write_text("#!/bin/sh\nif [ \"$1 $2\" = \"pr list\" ]; then echo '[]'; exit 0; fi\nif [ \"$1 $2\" = \"pr create\" ]; then echo 'https://example/pr/1'; exit 0; fi\nif [ \"$1 $2\" = \"pr view\" ]; then echo '{\"url\":\"https://example/pr/1\",\"isDraft\":true,\"headRefName\":\"fix/t\",\"baseRefName\":\"main\"}'; exit 0; fi\nexit 1\n", encoding="utf-8")

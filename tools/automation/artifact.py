@@ -10,7 +10,7 @@ from pathlib import Path
 from tools.automation.changes import ALLOWED
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
 
-REQUIRED = {"task_id", "branch", "base_branch", "source_commit_sha", "base_commit_sha", "status", "files", "deletes"}
+REQUIRED = {"task_id", "branch", "base_branch", "source_commit_sha", "base_commit_sha", "status", "files", "deletes", "timed_out", "tests_returncode"}
 OPTIONAL = {"final", "timed_out", "tests_returncode", "tests_tail", "error"}
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
@@ -113,6 +113,10 @@ def read_manifest(out: Path) -> dict:
             raise ValueError("SOURCE_SHA_INVALID")
     if m["status"] != "AGENT_COMPLETE":
         raise ValueError(f"AGENT_NOT_COMPLETE:{m['status']}")
+    if type(m["timed_out"]) is not bool or m["timed_out"] is not False:
+        raise ValueError("TIMED_OUT_INVALID")
+    if type(m["tests_returncode"]) is not int or isinstance(m["tests_returncode"], bool) or m["tests_returncode"] != 0:
+        raise ValueError("TESTS_RETURNCODE_INVALID")
     if not isinstance(m["files"], list) or not isinstance(m["deletes"], list):
         raise ValueError("MANIFEST_SCHEMA_INVALID")
     ws = _check_workspace(root)

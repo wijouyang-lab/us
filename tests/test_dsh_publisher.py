@@ -14,7 +14,7 @@ def _artifact(tmp_path, path="docs/research/a.md", status="AGENT_COMPLETE", body
     f = out / "workspace" / path
     f.parent.mkdir(parents=True, exist_ok=True)
     f.write_bytes(body)
-    m = {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": "a" * 40, "base_commit_sha": "b" * 40, "status": status, "files": [{"path": path, "sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)}], "deletes": []}
+    m = {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": "a" * 40, "base_commit_sha": "b" * 40, "status": status, "timed_out": False, "tests_returncode": 0, "files": [{"path": path, "sha256": hashlib.sha256(body).hexdigest(), "bytes": len(body)}], "deletes": []}
     out.mkdir(exist_ok=True)
     (out / "manifest.json").write_text(json.dumps(m), encoding="utf-8")
     return out
@@ -78,4 +78,22 @@ def test_manifest_source_required(tmp_path):
     m["source_commit_sha"] = ""
     (out / "manifest.json").write_text(json.dumps(m), encoding="utf-8")
     with pytest.raises(ValueError, match="SOURCE_COMMIT_MISSING|SOURCE_SHA_INVALID"):
+        read_manifest(out)
+
+
+def test_missing_timed_out_rejected(tmp_path):
+    out = _artifact(tmp_path)
+    m = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    del m["timed_out"]
+    (out / "manifest.json").write_text(json.dumps(m), encoding="utf-8")
+    with pytest.raises(ValueError, match="MANIFEST_SCHEMA_INVALID"):
+        read_manifest(out)
+
+
+def test_wrong_tests_returncode_type_rejected(tmp_path):
+    out = _artifact(tmp_path)
+    m = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    m["tests_returncode"] = True
+    (out / "manifest.json").write_text(json.dumps(m), encoding="utf-8")
+    with pytest.raises(ValueError, match="TESTS_RETURNCODE_INVALID"):
         read_manifest(out)

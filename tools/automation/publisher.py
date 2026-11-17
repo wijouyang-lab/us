@@ -18,13 +18,16 @@ def cmd(args, cwd, check=True):
 
 
 def push_state(store, root, branch):
-    store.save(store.load())
-    cmd(["git", "add", "automation/state/tasks.json"], root)
-    if cmd(["git", "diff", "--cached", "--quiet"], root, check=False).returncode == 0:
-        return True
-    cmd(["git", "commit", "-m", "automation: persist task state [skip ci]"], root)
-    r = subprocess.run(["git", "-c", "credential.helper=!gh auth git-credential", "push", "origin", branch], cwd=root, text=True, capture_output=True)
-    return r.returncode == 0
+    try:
+        store.save(store.load())
+        cmd(["git", "add", "automation/state/tasks.json"], root)
+        if cmd(["git", "diff", "--cached", "--quiet"], root, check=False).returncode == 0:
+            return True
+        cmd(["git", "commit", "-m", "automation: persist task state [skip ci]"], root)
+        r = subprocess.run(["git", "-c", "credential.helper=!gh auth git-credential", "push", "origin", branch], cwd=root, text=True, capture_output=True)
+        return r.returncode == 0
+    except Exception:
+        return False
 
 
 def mark(store, task_id, status, reason, root, branch, **extra):
@@ -33,6 +36,7 @@ def mark(store, task_id, status, reason, root, branch, **extra):
     if not ok:
         store.update(task_id, last_review={"reason": "STATE_PERSIST_FAILED", "original": reason, **extra})
         store.save(store.load())
+        print("STATE_PERSIST_FAILED:REMOTE_NOT_SAVED")
     return ok
 
 
@@ -71,7 +75,7 @@ def main() -> int:
     if (m["task_id"], m["branch"], m["base_branch"]) != (task_id, branch, base_branch):
         print("BLOCKED:MANIFEST_INPUT_MISMATCH")
         return 1
-    if m.get("timed_out") is True or m.get("tests_returncode", 0) != 0:
+    if m["timed_out"] is not False or m["tests_returncode"] != 0:
         print("BLOCKED:AGENT_NOT_CLEAN")
         return 1
     digest = artifact_digest(Path(args.artifact))
