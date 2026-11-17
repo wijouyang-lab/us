@@ -169,7 +169,9 @@ filings counted: 29,118
 fact rows: 59,897
 ```
 
-Coverage is per issuer and year; it is not a market-wide panel.
+Quarterly coverage is in p12_2_quarterly_coverage.csv (2,056 issuer-periods).
+
+Coverage is per issuer and year/quarter; it is not a market-wide panel.
 
 ---
 

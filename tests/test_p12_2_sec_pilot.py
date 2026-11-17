@@ -56,6 +56,8 @@ def test_pit_quality_and_annual_coverage():
     assert q["foreign_events_price_missing"]["status"] == "DATA_BLOCKED"
     annual = _rows(P / "p12_2_annual_coverage.csv")
     assert len(annual) == 590
+    quarterly = _rows(P / "p12_2_quarterly_coverage.csv")
+    assert len(quarterly) == 2056
     assert annual[0]["year"] == "2009"
     assert annual[-1]["year"] == "2024"
 
