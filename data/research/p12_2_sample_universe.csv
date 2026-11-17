@@ -1,0 +1,41 @@
+ticker,cik,group,issuer_name,identity_status,price_symbol,notes
+AAPL,0000320193,US_CURRENT,Apple Inc.,CIK_VERIFIED_SUBMISSIONS,AAPL,fixed before financial results; CIK is primary identifier
+MSFT,0000789019,US_CURRENT,MICROSOFT CORP,CIK_VERIFIED_SUBMISSIONS,MSFT,fixed before financial results; CIK is primary identifier
+JNJ,0000200406,US_CURRENT,JOHNSON & JOHNSON,CIK_VERIFIED_SUBMISSIONS,JNJ,fixed before financial results; CIK is primary identifier
+JPM,0000019617,US_CURRENT,JPMORGAN CHASE & CO,CIK_VERIFIED_SUBMISSIONS,JPM,fixed before financial results; CIK is primary identifier
+XOM,0000034088,US_CURRENT,EXXON MOBIL CORP,CIK_VERIFIED_SUBMISSIONS,XOM,fixed before financial results; CIK is primary identifier
+PG,0000080424,US_CURRENT,PROCTER & GAMBLE Co,CIK_VERIFIED_SUBMISSIONS,PG,fixed before financial results; CIK is primary identifier
+KO,0000021344,US_CURRENT,COCA COLA CO,CIK_VERIFIED_SUBMISSIONS,KO,fixed before financial results; CIK is primary identifier
+WMT,0000104169,US_CURRENT,Walmart Inc.,CIK_VERIFIED_SUBMISSIONS,WMT,fixed before financial results; CIK is primary identifier
+CAT,0000018230,US_CURRENT,CATERPILLAR INC,CIK_VERIFIED_SUBMISSIONS,CAT,fixed before financial results; CIK is primary identifier
+HD,0000354950,US_CURRENT,"HOME DEPOT, INC.",CIK_VERIFIED_SUBMISSIONS,HD,fixed before financial results; CIK is primary identifier
+UNH,0000731766,US_CURRENT,UNITEDHEALTH GROUP INC,CIK_VERIFIED_SUBMISSIONS,UNH,fixed before financial results; CIK is primary identifier
+V,0001403161,US_CURRENT,VISA INC.,CIK_VERIFIED_SUBMISSIONS,V,fixed before financial results; CIK is primary identifier
+DIS,0001744489,US_CURRENT,Walt Disney Co,CIK_VERIFIED_SUBMISSIONS,DIS,fixed before financial results; CIK is primary identifier
+INTC,0000050863,US_CURRENT,INTEL CORP,CIK_VERIFIED_SUBMISSIONS,INTC,fixed before financial results; CIK is primary identifier
+CSCO,0000858877,US_CURRENT,"CISCO SYSTEMS, INC.",CIK_VERIFIED_SUBMISSIONS,CSCO,fixed before financial results; CIK is primary identifier
+IBM,0000051143,US_CURRENT,INTERNATIONAL BUSINESS MACHINES CORP,CIK_VERIFIED_SUBMISSIONS,IBM,fixed before financial results; CIK is primary identifier
+MMM,0000066740,US_CURRENT,3M CO,CIK_VERIFIED_SUBMISSIONS,MMM,fixed before financial results; CIK is primary identifier
+GE,0000040545,US_CURRENT,GENERAL ELECTRIC CO,CIK_VERIFIED_SUBMISSIONS,GE,fixed before financial results; CIK is primary identifier
+F,0000037996,US_CURRENT,FORD MOTOR CO,CIK_VERIFIED_SUBMISSIONS,F,fixed before financial results; CIK is primary identifier
+T,0000732717,US_CURRENT,AT&T INC.,CIK_VERIFIED_SUBMISSIONS,T,fixed before financial results; CIK is primary identifier
+PFE,0000078003,US_CURRENT,PFIZER INC,CIK_VERIFIED_SUBMISSIONS,PFE,fixed before financial results; CIK is primary identifier
+MRK,0000310158,US_CURRENT,"Merck & Co., Inc.",CIK_VERIFIED_SUBMISSIONS,MRK,fixed before financial results; CIK is primary identifier
+ABT,0000001800,US_CURRENT,ABBOTT LABORATORIES,CIK_VERIFIED_SUBMISSIONS,ABT,fixed before financial results; CIK is primary identifier
+PEP,0000077476,US_CURRENT,PEPSICO INC,CIK_VERIFIED_SUBMISSIONS,PEP,fixed before financial results; CIK is primary identifier
+COST,0000909832,US_CURRENT,COSTCO WHOLESALE CORP /NEW/,CIK_VERIFIED_SUBMISSIONS,COST,fixed before financial results; CIK is primary identifier
+ORCL,0001341439,US_CURRENT,ORACLE CORP,CIK_VERIFIED_SUBMISSIONS,ORCL,fixed before financial results; CIK is primary identifier
+CRM,0001108524,US_CURRENT,"Salesforce, Inc.",CIK_VERIFIED_SUBMISSIONS,CRM,fixed before financial results; CIK is primary identifier
+ADBE,0000796343,US_CURRENT,ADOBE INC.,CIK_VERIFIED_SUBMISSIONS,ADBE,fixed before financial results; CIK is primary identifier
+NFLX,0001065280,US_CURRENT,NETFLIX INC,CIK_VERIFIED_SUBMISSIONS,NFLX,fixed before financial results; CIK is primary identifier
+NVDA,0001045810,US_CURRENT,NVIDIA CORP,CIK_VERIFIED_SUBMISSIONS,NVDA,fixed before financial results; CIK is primary identifier
+MON,0001110783,US_NON_SURVIVING,MONSANTO CO /NEW/,CIK_VERIFIED_SUBMISSIONS,MON,fixed before financial results; CIK is primary identifier
+CELG,0000816284,US_NON_SURVIVING,CELGENE CORP /DE/,CIK_VERIFIED_SUBMISSIONS,CELG,fixed before financial results; CIK is primary identifier
+RTN,0001047122,US_NON_SURVIVING,RAYTHEON CO/,CIK_VERIFIED_SUBMISSIONS,RTN,fixed before financial results; CIK is primary identifier
+ETFC,0001015780,US_NON_SURVIVING,E TRADE FINANCIAL CORP,CIK_VERIFIED_SUBMISSIONS,ETFC,fixed before financial results; CIK is primary identifier
+XLNX,0000743988,US_NON_SURVIVING,XILINX INC,CIK_VERIFIED_SUBMISSIONS,XLNX,fixed before financial results; CIK is primary identifier
+BP,0000313807,FOREIGN_ADR,BP PLC,CIK_VERIFIED_SUBMISSIONS,BP,fixed before financial results; CIK is primary identifier
+AZN,0000901832,FOREIGN_ADR,ASTRAZENECA PLC,CIK_VERIFIED_SUBMISSIONS,AZN,fixed before financial results; CIK is primary identifier
+SAP,0001000184,FOREIGN_ADR,SAP SE,CIK_VERIFIED_SUBMISSIONS,SAP,fixed before financial results; CIK is primary identifier
+TM,0001094517,FOREIGN_ADR,TOYOTA MOTOR CORP/,CIK_VERIFIED_SUBMISSIONS,TM,fixed before financial results; CIK is primary identifier
+SHOP,0001594805,FOREIGN_ADR,SHOPIFY INC.,CIK_VERIFIED_SUBMISSIONS,SHOP,fixed before financial results; CIK is primary identifier

@@ -1,0 +1,14 @@
+metric,value,status,notes
+sample_issuers,40,PILOT_SAMPLE,fixed before financial results
+issuers_fetched,40,OK,SEC submissions+facts HTTP success
+cik_ticker_mapping,40,READY_RESTRICTED,CIK primary; ticker label only
+fact_rows,59897,READY_RESTRICTED,accession-level as-filed facts; includes amendments
+filing_events,4808,READY_RESTRICTED,8-K for US issuers; 6-K for foreign ADR
+8k_events,2752,READY_RESTRICTED,filing/acceptance timestamps; exact press-release time not guaranteed
+6k_foreign_events,2056,PARTIAL,foreign ADR; not comparable to 8-K disclosure
+8k_acceptance_missing,0,OK,acceptance datetime available
+multi_accession_groups,18097,PARTIAL,same CIK/metric/tag/unit/period with >1 accession; not all are restatements
+events_with_reaction_return,2706,PARTIAL,daily close-to-close; no intraday
+foreign_events_price_missing,2056,DATA_BLOCKED,foreign ADRs absent from local price panel
+price_tickers_matched,35,PARTIAL,daily adjusted close only
+full_market_claim,0,DATA_BLOCKED,40-issuer pilot only
