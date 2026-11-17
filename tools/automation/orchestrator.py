@@ -8,7 +8,6 @@ import subprocess
 from pathlib import Path
 
 from tools.automation.changes import changed_paths, commit_diff, stage_allowed, validate_paths
-from tools.automation.review import run_review
 from tools.automation.state_store import TaskStore
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
 
@@ -115,11 +114,7 @@ class Orchestrator:
             pr_url = pr.stdout.strip().splitlines()[-1] if pr.stdout.strip() else ""
         else:
             pr_url = task["pr_url"]
-        review = run_review(staged, prompt, author="dsh", reviewer="codex")
-        if review["status"] == "BLOCKED":
-            status = "BLOCKED"
-        elif review["status"] == "PASS":
-            status = "PASS"
-        else:
-            status = "NEEDS_REVISION" if task["attempts"] < task["max_attempts"] else "FAIL"
-        return self._status(task_id, status, pr_url=pr_url, last_log=str(log), last_review=review)
+        # DSH never approves its own PR. The terminal automation state is
+        # REVIEW_PENDING; a separate ChatGPT review acts on the GitHub PR.
+        review = {"status": "REVIEW_PENDING", "reviewer": "chatgpt", "reason": "AWAITING_INDEPENDENT_PR_REVIEW"}
+        return self._status(task_id, "REVIEW_PENDING", pr_url=pr_url, last_log=str(log), last_review=review)
