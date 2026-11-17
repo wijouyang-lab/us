@@ -84,7 +84,7 @@ def test_repair_loop_stops_at_three(tmp_path):
     store = TaskStore(tmp_path / "tasks.json")
     o = Orchestrator(store, object(), repo=tmp_path, dry_run=True)
     calls = []
-    def fake(task_id, prompt, branch):
+    def fake(task_id, prompt, branch, base_branch="main"):
         calls.append(prompt)
         return {"status": "NEEDS_REVISION", "last_review": {"reason": "fix"}}
     o.run_task = fake
