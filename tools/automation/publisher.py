@@ -54,6 +54,27 @@ def apply_file(root: Path, src: Path, rel: str):
             os.unlink(tmp)
 
 
+def recovery_range_ok(root: Path, code: str, head: str) -> bool:
+    """Only expected state commits may follow the artifact business commit."""
+    if code == head:
+        return True
+    shas = cmd(["git", "rev-list", "--reverse", f"{code}..{head}"], root).stdout.splitlines()
+    for sha in shas:
+        parents = cmd(["git", "rev-list", "--parents", "-n", "1", sha], root).stdout.split()
+        subject = cmd(["git", "show", "-s", "--format=%s", sha], root).stdout.strip()
+        if len(parents) > 2 or not subject.startswith("automation: persist task state"):
+            return False
+    changed = cmd(["git", "diff", "--name-only", code, head], root).stdout.splitlines()
+    return all(p.startswith("automation/state/") for p in changed)
+
+
+def state_only_ok(root: Path, source: str, head: str) -> bool:
+    if source == head:
+        return True
+    changed = cmd(["git", "diff", "--name-only", source, head], root).stdout.splitlines()
+    return all(p.startswith("automation/state/") for p in changed)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--artifact", default="agent-artifact")
@@ -95,7 +116,9 @@ def main() -> int:
         mark(store, task_id, "BLOCKED", f"BRANCH_GUARD:{current}", root, branch)
         return 1
     resume_code = False
-    if existing and existing.get("status") == "PUBLISHING":
+    reason = (existing or {}).get("last_review", {}).get("reason", "") if existing else ""
+    recoverable = bool(existing) and (existing.get("status") == "PUBLISHING" or (existing.get("status") == "BLOCKED" and reason in {"STATE_PERSIST_FAILED_PUBLISHING", "PUBLISHING_STATE_PUSH_FAILED"}))
+    if recoverable:
         if existing.get("agent_source_sha") != m["source_commit_sha"] or existing.get("artifact_digest") != digest:
             mark(store, task_id, "BLOCKED", "ARTIFACT_OR_SOURCE_MISMATCH", root, branch)
             return 1
@@ -104,11 +127,12 @@ def main() -> int:
             return 1
         code = cmd(["git", "log", "-1", "--format=%H", f"--grep=artifact {digest}", head], root).stdout.strip()
         if code:
+            if not recovery_range_ok(root, code, head):
+                mark(store, task_id, "BLOCKED", "UNKNOWN_COMMIT_AFTER_ARTIFACT", root, branch)
+                return 1
             resume_code = True
-            head = code
         else:
-            changed = cmd(["git", "diff", "--name-only", existing["agent_source_sha"], head], root).stdout.splitlines()
-            if any(not p.startswith("automation/state/") for p in changed):
+            if not state_only_ok(root, existing["agent_source_sha"], head):
                 mark(store, task_id, "BLOCKED", "PUBLISHING_UNRECOGNIZED_COMMIT", root, branch)
                 return 1
     else:
@@ -120,7 +144,7 @@ def main() -> int:
         task = store.load()["tasks"][task_id]
         store.update(task_id, status="PUBLISHING", attempts=task["attempts"] + 1, agent_source_sha=m["source_commit_sha"], base_commit_sha=m["base_commit_sha"], artifact_digest=digest, branch=branch, base_branch=base_branch)
         if not push_state(store, root, branch):
-            mark(store, task_id, "BLOCKED", "STATE_PERSIST_FAILED_PUBLISHING", root, branch)
+            mark(store, task_id, "BLOCKED", "PUBLISHING_STATE_PUSH_FAILED", root, branch)
             return 1
     try:
         if not resume_code:
