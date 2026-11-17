@@ -84,12 +84,12 @@ A separate `dsh-install-verify` job was added:
 Local targeted:
 
 ```text
-37 passed, 3 skipped
+37 passed, 4 skipped
 ```
 
 Skips are Windows-only POSIX symlink/process-group tests.
 
-Full CI to be recorded on final commit.
+Full CI: 1394 passed, 1 skipped. Independent `dsh-install-verify` job succeeded: 542 packages, version 0.2.0-rc.2, scrub marker present.
 
 ## 7. Remaining blockers
 
@@ -108,7 +108,7 @@ ARTIFACT_SCHEMA_VERIFIED
 SOURCE_COMMIT_BOUND
 PUBLISHER_STATE_DURABLE
 PR_CREATION_IDEMPOTENT
-DSH_INSTALL_CI_VERIFIED: PENDING
+DSH_INSTALL_CI_VERIFIED
 CODE_SECURITY_TESTED
 DSH_CLOUD_TASK_NOT_EXECUTED
 CHATGPT_REVIEW_PENDING
