@@ -9,6 +9,7 @@ filing_events,13668,READY_RESTRICTED,8-K for US issuers; 6-K for foreign ADR
 8k_acceptance_missing,0,OK,acceptance datetime available
 multi_accession_groups,67159,PARTIAL,same CIK/metric/tag/unit/period with >1 accession; not all are restatements
 events_with_reaction_return,10930,PARTIAL,daily D0/D1/D5; no intraday; foreign price missing
-foreign_events_price_missing,2675,DATA_BLOCKED,foreign ADRs absent from local price panel
+foreign_events_price_missing,2056,DATA_BLOCKED,foreign ADRs absent from local price panel
 price_tickers_matched,125,PARTIAL,daily adjusted close only
-full_market_claim,0,DATA_BLOCKED,40-issuer pilot only
+full_market_claim,0,DATA_BLOCKED,140-issuer pilot only
+us_events_price_missing,619,PARTIAL,US events without complete daily price window
