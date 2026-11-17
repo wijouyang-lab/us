@@ -1,4 +1,4 @@
-"""Run DSH headless and persist NDJSON logs."""
+"""Run DSH headless with a scrubbed child environment and persisted logs."""
 from __future__ import annotations
 
 import json
@@ -7,6 +7,30 @@ import shutil
 import signal
 import subprocess
 from pathlib import Path
+
+# Only launch/runtime facts needed by DSH. GitHub write credentials are never
+# included; DSH's own subprocess tool also scrubs credential-shaped names.
+BASE_ALLOW = {
+    "PATH", "HOME", "USERPROFILE", "HOMEDRIVE", "HOMEPATH", "APPDATA", "LOCALAPPDATA",
+    "SYSTEMROOT", "WINDIR", "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL", "LC_CTYPE",
+    "TERM", "SHELL", "USER", "LOGNAME", "PYTHONPATH",
+    "HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY", "http_proxy", "https_proxy", "no_proxy",
+    "DEEPSEEK_BASE_URL", "DEEPSEEK_MODEL", "DSH_HOME",
+}
+MODEL_AUTH = {"DEEPSEEK_API_KEY"}
+
+
+def child_env() -> dict[str, str]:
+    env = {k: v for k, v in os.environ.items() if k in BASE_ALLOW}
+    # Model auth is provided only to the DSH process. DSH subprocess tools scrub
+    # credential-shaped variables before spawning shell commands.
+    for k in MODEL_AUTH:
+        if os.environ.get(k):
+            env[k] = os.environ[k]
+    # Explicitly drop all GitHub write credentials.
+    for k in ("GH_TOKEN", "GITHUB_TOKEN", "GITHUB_ENTERPRISE_TOKEN", "CODEX_CMD"):
+        env.pop(k, None)
+    return env
 
 
 class HeadlessRunner:
@@ -23,7 +47,7 @@ class HeadlessRunner:
         kwargs = {"start_new_session": True} if os.name != "nt" else {}
         proc = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            text=True, encoding="utf-8", errors="replace", **kwargs,
+            text=True, encoding="utf-8", errors="replace", env=child_env(), **kwargs,
         )
         timed_out = False
         try:

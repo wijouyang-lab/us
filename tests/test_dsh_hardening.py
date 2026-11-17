@@ -1,3 +1,4 @@
+import json
 import subprocess
 import sys
 import textwrap
@@ -167,3 +168,43 @@ def test_deployment_plan_targets_main_and_dispatch():
     wf = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
     assert "workflow_dispatch" in wf
     assert "gh pr merge" not in wf
+
+
+def test_headless_child_env_excludes_github_credentials(tmp_path, monkeypatch):
+    monkeypatch.setenv("GH_TOKEN", "ghs_fake")
+    monkeypatch.setenv("GITHUB_TOKEN", "ghp_fake")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-fake")
+    script = tmp_path / "envcheck.py"
+    script.write_text(
+        "import json,os; print(json.dumps({'type':'final','text':json.dumps({"
+        "'gh': bool(os.environ.get('GH_TOKEN')), 'github': bool(os.environ.get('GITHUB_TOKEN')), "
+        "'key': bool(os.environ.get('DEEPSEEK_API_KEY'))})}))",
+        encoding="utf-8",
+    )
+    out = HeadlessRunner([sys.executable, str(script)]).run("x", tmp_path / "log.ndjson")
+    payload = json.loads(out["final"])
+    assert payload["gh"] is False
+    assert payload["github"] is False
+    assert payload["key"] is True
+
+
+def test_checkout_does_not_persist_credentials():
+    text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert "persist-credentials: false" in text
+    assert "@deepseek-ai/dsh@0.2.0-rc.2" in text
+
+
+def test_failed_dsh_does_not_publish(tmp_path):
+    from tools.automation.orchestrator import Orchestrator
+    from tools.automation.state_store import TaskStore
+
+    class FailRunner:
+        def run(self, prompt, log):
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text("failed", encoding="utf-8")
+            return {"returncode": 1, "final": None, "timed_out": False}
+
+    store = TaskStore(tmp_path / "tasks.json")
+    task = Orchestrator(store, FailRunner(), repo=tmp_path, dry_run=True, require_protection=False).run_task("t-fail", "p", "fix/t-fail", "main")
+    assert task["status"] in {"NEEDS_REVISION", "FAIL"}
+    assert task["pr_url"] == ""

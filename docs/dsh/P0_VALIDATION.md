@@ -35,20 +35,15 @@ Session: `session-0229ccc2-acbc-4099-a7ea-17e826cdc008`
 
 ## Reviewer status
 
-`codex` is not installed in this local environment. The independent-review
-adapter is implemented and tested with a mock reviewer command. Without a
-configured `CODEX_CMD`, production review returns:
-
-```text
-NEEDS_REVISION / REVIEWER_UNAVAILABLE
-```
-
-It never auto-passes.
+Codex CLI is not required. DSH is the only execution agent. A successful Draft
+PR ends `REVIEW_PENDING`; ChatGPT reviews the PR externally. No mock review is
+used as a production PASS.
 
 ## GitHub configuration still required
 
-- `DEEPSEEK_API_KEY` secret for headless.
-- `CODEX_CMD` repository variable for a real independent reviewer.
+- `DEEPSEEK_API_KEY` secret for headless model auth.
+- checkout `persist-credentials: false`.
+- no `CODEX_CMD`.
 - human authorization before any merge.
 
 ## Not enabled

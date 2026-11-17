@@ -114,7 +114,8 @@ class Orchestrator:
             self._assert_branch(branch)
         except (ValueError, RuntimeError, subprocess.CalledProcessError) as e:
             return self._status(task_id, "BLOCKED", last_log=str(log), last_review={"reason": str(e)})
-        run(["git", "push", "-u", "origin", branch], self.repo)
+        # Outer-only, per-command credential helper; never persisted in .git/config.
+        run(["git", "-c", "credential.helper=!gh auth git-credential", "push", "-u", "origin", branch], self.repo)
         task = self.store.load()["tasks"][task_id]
         if not task.get("pr_url"):
             pr = run(["gh", "pr", "create", "--draft", "--base", base_branch, "--head", branch, "--title", f"DSH: {task_id}", "--body", f"Automated DSH task: {task_id}"], self.repo, check=False)

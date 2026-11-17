@@ -27,3 +27,15 @@ Result: **actual headless execution succeeded**.
 
 This proof covers the CLI/auth path only. It does not prove a GitHub-hosted run;
 the GitHub workflow requires `DEEPSEEK_API_KEY` and `CODEX_CMD` to be configured.
+
+
+## P0.1.5 update
+
+The production runner now passes a minimal child environment:
+
+- no `GH_TOKEN`, `GITHUB_TOKEN`, `GITHUB_ENTERPRISE_TOKEN` or `CODEX_CMD`;
+- only model/runtime facts (`DEEPSEEK_API_KEY`, `DSH_HOME`, PATH/HOME/locale);
+- DSH subprocess tools additionally scrub credential-shaped names;
+- checkout uses `persist-credentials: false`;
+- GitHub push is performed only by the outer Orchestrator after DSH exits,
+  using a temporary per-command credential helper.

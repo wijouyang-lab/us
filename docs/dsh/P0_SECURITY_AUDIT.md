@@ -25,9 +25,13 @@ No `id-token: write`, no `packages`, no `issues`.
 
 ## Secrets
 
-- `DEEPSEEK_API_KEY` passed only as an env var; never echoed.
-- `GITHUB_TOKEN` passed only to `gh`/git.
-- `CODEX_CMD` is a command variable, not a printed key.
+- `DEEPSEEK_API_KEY` is passed only to the DSH child env; DSH subprocess tools
+  scrub credential-shaped names. It is never echoed.
+- `GH_TOKEN`/`GITHUB_TOKEN` are never passed to DSH.
+- checkout uses `persist-credentials: false`; no token in `.git/config`.
+- outer push uses a per-command `credential.helper=!gh auth git-credential`,
+  not a persisted credential.
+- no `CODEX_CMD` production dependency (single-agent DSH mode).
 - Logs may contain model text; they are uploaded as workflow artifacts and are
   not committed by default. State commit only includes `automation/state` and
   `automation/logs`.
@@ -51,7 +55,8 @@ No `id-token: write`, no `packages`, no `issues`.
 
 - `contents: write` is required to push task branches; it could push main if a
   future change removed the guard. The guard is tested.
-- A repository variable `CODEX_CMD` could point to a self-review stub; the
-  independent reviewer identity is enforced in code, but not cryptographically.
+- ChatGPT PR review is external; DSH never claims PASS.
+- `.protected=true` alone is not enough: direct pushes, force pushes, required
+  CI checks and required human review still need separate verification.
 - GitHub Actions is not a trusted execution boundary for secrets; use a
   short-lived token and rotate `DEEPSEEK_API_KEY`.

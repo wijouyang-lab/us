@@ -73,13 +73,15 @@ Writes are atomic (`tempfile` + `os.replace`).
 
 ## Required GitHub configuration
 
-- secret `DEEPSEEK_API_KEY` (DSH headless).
-- repository variable `CODEX_CMD` for the independent reviewer command.
+- secret `DEEPSEEK_API_KEY` (DSH headless model auth only).
+- `GITHUB_TOKEN` is never passed to DSH; checkout uses `persist-credentials: false`.
+- no `CODEX_CMD`; ChatGPT reviews the PR externally.
 - `GITHUB_TOKEN` default permissions: contents write, pull-requests write.
 - No merge queue or auto-merge.
 
-If `CODEX_CMD` is unset, the review returns `NEEDS_REVISION` with
-`REVIEWER_UNAVAILABLE`; it never auto-passes.
+DSH exits before the outer Orchestrator uses GitHub write credentials. DSH
+cannot see `GH_TOKEN`/`GITHUB_TOKEN`; a successful PR ends `REVIEW_PENDING`, not
+PASS.
 
 ## Headless run
 
