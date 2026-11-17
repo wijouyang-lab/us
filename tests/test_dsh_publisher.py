@@ -40,7 +40,7 @@ def test_artifact_rejects_traversal_and_symlink_and_git(tmp_path):
         f.symlink_to("/etc/passwd")
     except (OSError, NotImplementedError):
         pytest.skip("symlink unavailable")
-    with pytest.raises(ValueError, match="SENSITIVE_PATH|UNAUTHORIZED_PATH|INVALID"):
+    with pytest.raises(ValueError, match="SENSITIVE_PATH|UNAUTHORIZED_PATH|INVALID|SYMLINK"):
         read_manifest(out)
 
 
