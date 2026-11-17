@@ -1,4 +1,4 @@
-"""Publisher job: validate artifact, apply files safely, push, create/reuse Draft PR."""
+"""Publisher job: validate artifact, apply safely, push, reuse/create Draft PR."""
 from __future__ import annotations
 
 import argparse
@@ -26,10 +26,18 @@ def push_state(store, task_id, root, branch):
     return r.returncode == 0
 
 
+def mark(store, task_id, status, reason, root, branch):
+    store.update(task_id, status=status, last_review={"reason": reason})
+    if not push_state(store, task_id, root, branch):
+        store.update(task_id, last_review={"reason": "STATE_PERSIST_FAILED", "original": reason})
+        store.save(store.load())
+        return False
+    return True
+
+
 def apply_file(root: Path, src: Path, rel: str):
     target = _check_parents(root, rel)
     target.parent.mkdir(parents=True, exist_ok=True)
-    # Re-check after mkdir; then atomic replace in the same directory.
     target = _check_parents(root, rel)
     fd, tmp = tempfile.mkstemp(dir=target.parent, prefix=".dsh-publish-")
     try:
@@ -55,30 +63,33 @@ def main() -> int:
         return 1
     store = TaskStore(root / args.state)
     existing = store.load().get("tasks", {}).get(m["task_id"])
-    if existing and existing.get("status") in {"REVIEW_PENDING", "PASS"}:
+    if existing and existing.get("status") in {"REVIEW_PENDING", "PASS", "FAIL"}:
         print(f"SKIP_TERMINAL:{existing['status']}")
         return 0
     store.enqueue(m["task_id"], "", m["branch"])
     current = cmd(["git", "rev-parse", "--abbrev-ref", "HEAD"], root).stdout.strip()
     source = cmd(["git", "rev-parse", "HEAD"], root).stdout.strip()
     if current in {"main", "master"} or current != m["branch"]:
-        store.update(m["task_id"], status="BLOCKED", last_review={"reason": f"BRANCH_GUARD:{current}"})
+        mark(store, m["task_id"], "BLOCKED", f"BRANCH_GUARD:{current}", root, m["branch"])
         return 1
     if source != m["source_commit_sha"]:
-        store.update(m["task_id"], status="BLOCKED", last_review={"reason": "SOURCE_COMMIT_MISMATCH", "expected": m["source_commit_sha"], "actual": source})
-        push_state(store, m["task_id"], root, m["branch"])
+        mark(store, m["task_id"], "BLOCKED", "SOURCE_COMMIT_MISMATCH", root, m["branch"])
         print("BLOCKED:SOURCE_COMMIT_MISMATCH")
         return 1
-    # Validate all target paths and hashes BEFORE any change.
     try:
         for f in m["files"]:
             _check_parents(root, f["path"])
         for rel in m["deletes"]:
             _check_parents(root, rel)
     except Exception as e:
-        store.update(m["task_id"], status="BLOCKED", last_review={"reason": str(e)})
+        mark(store, m["task_id"], "BLOCKED", str(e), root, m["branch"])
         return 1
     store.update(m["task_id"], status="PUBLISHING", last_review={"reason": "PUBLISHING"})
+    if not push_state(store, m["task_id"], root, m["branch"]):
+        store.update(m["task_id"], last_review={"reason": "STATE_PERSIST_FAILED", "original": "PUBLISHING"})
+        store.save(store.load())
+        print("STATE_PERSIST_FAILED:PUBLISHING")
+        return 1
     try:
         for f in m["files"]:
             apply_file(root, Path(args.artifact) / "workspace" / f["path"], f["path"])
@@ -94,30 +105,42 @@ def main() -> int:
         cmd(["git", "commit", "-m", f"automation: DSH task {m['task_id']}"], root)
         cmd(["git", "-c", "credential.helper=!gh auth git-credential", "push", "-u", "origin", m["branch"]], root)
     except Exception as e:
-        store.update(m["task_id"], status="FAIL", last_review={"reason": f"PUBLISH_FAILED:{e}"})
-        push_state(store, m["task_id"], root, m["branch"])
+        mark(store, m["task_id"], "FAIL", f"PUBLISH_FAILED:{e}", root, m["branch"])
         print(f"FAIL:{e}")
         return 1
     try:
-        prs = cmd(["gh", "pr", "list", "--head", m["branch"], "--base", m["base_branch"], "--state", "open", "--json", "url,isDraft"], root).stdout
-        pr_list = json.loads(prs or "[]")
-        if pr_list:
-            pr_url = pr_list[0]["url"]
+        prs_raw = cmd(["gh", "pr", "list", "--head", m["branch"], "--base", m["base_branch"], "--state", "open", "--json", "url,isDraft"], root).stdout
+        prs = json.loads(prs_raw or "[]")
+        if len(prs) > 1:
+            raise RuntimeError("MULTIPLE_OPEN_PRS")
+        if prs:
+            if not prs[0].get("isDraft"):
+                raise RuntimeError("NON_DRAFT_PR_EXISTS")
+            pr_url = prs[0]["url"]
         else:
             pr = subprocess.run(["gh", "pr", "create", "--draft", "--base", m["base_branch"], "--head", m["branch"], "--title", f"DSH: {m['task_id']}", "--body", f"Automated DSH task {m['task_id']}; independent review pending."], cwd=root, text=True, capture_output=True)
             if pr.returncode != 0:
                 raise RuntimeError(f"PR_CREATE_FAILED:{pr.stderr[-1000:]}")
             pr_url = pr.stdout.strip().splitlines()[-1]
+            view = subprocess.run(["gh", "pr", "view", pr_url, "--json", "url,isDraft"], cwd=root, text=True, capture_output=True)
+            if view.returncode != 0 or not json.loads(view.stdout).get("isDraft"):
+                raise RuntimeError("DRAFT_PR_VERIFY_FAILED")
         store.update(m["task_id"], status="REVIEW_PENDING", pr_url=pr_url, last_review={"reviewer": "chatgpt", "reason": "AWAITING_INDEPENDENT_PR_REVIEW"})
         if not push_state(store, m["task_id"], root, m["branch"]):
-            store.update(m["task_id"], last_review={"reviewer": "chatgpt", "reason": "STATE_PERSIST_FAILED"})
-            print("STATE_PERSIST_FAILED")
+            store.update(m["task_id"], last_review={"reason": "STATE_PERSIST_FAILED", "pr_url": pr_url})
+            store.save(store.load())
+            print("STATE_PERSIST_FAILED:PR_EXISTS")
             return 1
         print(f"STATUS=REVIEW_PENDING PR={pr_url}")
         return 0
     except Exception as e:
-        store.update(m["task_id"], status="FAIL", last_review={"reason": f"PR_FAILED:{e}"})
-        push_state(store, m["task_id"], root, m["branch"])
+        if "PR_CREATE_FAILED" in str(e):
+            status = "FAIL"
+        elif "PR" in str(e) or "DRAFT" in str(e):
+            status = "BLOCKED"
+        else:
+            status = "FAIL"
+        mark(store, m["task_id"], status, str(e), root, m["branch"])
         print(f"FAIL:{e}")
         return 1
 

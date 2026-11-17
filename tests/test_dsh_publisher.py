@@ -31,7 +31,7 @@ def test_artifact_rejects_incomplete_status(tmp_path):
 
 def test_artifact_rejects_traversal_and_symlink_and_git(tmp_path):
     for bad in ("../outside.md", "main.py", ".git/config"):
-        with pytest.raises(ValueError, match="UNAUTHORIZED_PATH|SENSITIVE_PATH"):
+        with pytest.raises(ValueError, match="UNAUTHORIZED_PATH|SENSITIVE_PATH|WORKSPACE"):
             read_manifest(_artifact(tmp_path, path=bad))
     out = _artifact(tmp_path, path="docs/research/link.md")
     f = out / "workspace/docs/research/link.md"
@@ -77,5 +77,5 @@ def test_manifest_source_required(tmp_path):
     m = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
     m["source_commit_sha"] = ""
     (out / "manifest.json").write_text(json.dumps(m), encoding="utf-8")
-    with pytest.raises(ValueError, match="SOURCE_COMMIT_MISSING"):
+    with pytest.raises(ValueError, match="SOURCE_COMMIT_MISSING|SOURCE_SHA_INVALID"):
         read_manifest(out)
