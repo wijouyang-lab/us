@@ -1,5 +1,7 @@
 # P0.1.15: Cross-Run Publisher Recovery Audit
 
+> Historical audit; superseded by P0.1.16.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `c81ea0958914bb54705b636ebd244ebeaa3fd8dc`
