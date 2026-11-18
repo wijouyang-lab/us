@@ -1,15 +1,15 @@
 name: Test
 
-# 璁┿€屽叏閲忓洖褰掗€氳繃銆嶈繖涓熀绾挎湁寮哄埗鏈哄埗锛堟鍓?9 涓?workflow 鏃犱竴璺?pytest锛夈€?
-# 鍙傝€?docs/HANDOVER.md:120 鈥斺€?鍏ㄩ噺娴嬭瘯蹇呴』鐢?Python 3.12锛坰can.py 鍚?3.11 鏃犳硶瑙ｆ瀽鐨?
-# f-string 鍙嶆枩鏉狅級锛學indows 鏈満鍙﹂渶 PYTHONUTF8=1锛涜繖閲岀粺涓€鍦?workflow 绾у０鏄庛€?
+# 鐠佲斂鈧苯鍙忛柌蹇撴礀瑜版帡鈧俺绻冮妴宥堢箹娑擃亜鐔€缁炬寧婀佸鍝勫煑閺堝搫鍩楅敍鍫燁劃閸?9 娑?workflow 閺冪姳绔寸捄?pytest閿涘鈧?
+# 閸欏倽鈧?docs/HANDOVER.md:120 閳ユ柡鈧?閸忋劑鍣哄ù瀣槸韫囧懘銆忛悽?Python 3.12閿涘澃can.py 閸?3.11 閺冪姵纭剁憴锝嗙€介惃?
+# f-string 閸欏秵鏋╅弶鐙呯礆閿涘indows 閺堫剚婧€閸欙箓娓?PYTHONUTF8=1閿涙稖绻栭柌宀€绮烘稉鈧崷?workflow 缁狙冿紣閺勫簺鈧?
 #
-# 娉ㄦ剰锛歜ot 鐨?chore(dashboard) 鎻愪氦甯?[skip ci]锛孏itHub 瀵?push 浜嬩欢浼氭嵁姝よ烦杩囨湰 workflow銆?
-# 鍔熻兘鍒嗘敮涔熻Е鍙戝叏閲忓洖褰掞紝閬垮厤鍙緷璧?PR synchronize 浜嬩欢锛涗富鍒嗘敮鐨勬暟鎹埛鏂颁粛琚?[skip ci] 鎺掗櫎銆?
+# 濞夈劍鍓伴敍姝渙t 閻?chore(dashboard) 閹绘劒姘︾敮?[skip ci]閿涘瓘itHub 鐎?push 娴滃娆㈡导姘祦濮濄倛鐑︽潻鍥ㄦ拱 workflow閵?
+# 閸旂喕鍏橀崚鍡樻暜娑旂喕袝閸欐垵鍙忛柌蹇撴礀瑜版帪绱濋柆鍨帳閸欘亙绶风挧?PR synchronize 娴滃娆㈤敍娑楀瘜閸掑棙鏁惃鍕殶閹诡喖鍩涢弬棰佺矝鐞?[skip ci] 閹烘帡娅庨妴?
 #
-# 闅愬紡渚濊禆锛氬涓墠绔祴璇曠敤 subprocess.run(["node", ...])锛堝 test_macro_panel_frontend.py:39銆?
-# test_model_usage.py:165銆乼est_market_indicators.py:282锛夈€倁buntu-latest 鑷甫 Node锛屾棤闇€瀹夎锛?
-# 鑻ュ皢鏉ユ崲 runner 闀滃儚锛岄渶鏄惧紡瀹夎銆?
+# 闂呮劕绱℃笟婵婄閿涙艾顦挎稉顏勫缁旑垱绁寸拠鏇犳暏 subprocess.run(["node", ...])閿涘牆顩?test_macro_panel_frontend.py:39閵?
+# test_model_usage.py:165閵嗕辜est_market_indicators.py:282閿涘鈧€乥untu-latest 閼奉亜鐢?Node閿涘本妫ら棁鈧€瑰顥婇敍?
+# 閼汇儱鐨㈤弶銉﹀床 runner 闂€婊冨剼閿涘矂娓堕弰鎯х础鐎瑰顥婇妴?
 
 on:
   push:
@@ -35,8 +35,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-production.txt
-          pip install pytest pyyaml
+          pip install -r requirements-production.lock
 
       - name: Run tests
         run: python -m pytest tests/ -v
@@ -78,3 +77,4 @@ jobs:
         run: npm ci --prefix dsh-runtime --ignore-scripts --no-audit --no-fund
       - name: Verify real DSH subprocess environment scrub
         run: node tools/automation/dsh_subprocess_probe.mjs
+

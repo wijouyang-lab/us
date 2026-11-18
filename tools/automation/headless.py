@@ -1,4 +1,4 @@
-"""Run DSH headless with a scrubbed child environment and persisted logs."""
+"""Run DSH headless with a scrubbed child environment and bounded streaming output."""
 from __future__ import annotations
 
 import json
@@ -6,10 +6,9 @@ import os
 import shutil
 import signal
 import subprocess
+import threading
 from pathlib import Path
 
-# Only launch/runtime facts needed by DSH. GitHub write credentials are never
-# included; DSH's own subprocess tool also scrubs credential-shaped names.
 BASE_ALLOW = {
     "PATH", "HOME", "USERPROFILE", "HOMEDRIVE", "HOMEPATH", "APPDATA", "LOCALAPPDATA",
     "SYSTEMROOT", "WINDIR", "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL", "LC_CTYPE",
@@ -18,29 +17,41 @@ BASE_ALLOW = {
     "DEEPSEEK_BASE_URL", "DEEPSEEK_MODEL", "DSH_HOME",
 }
 MODEL_AUTH = {"DEEPSEEK_API_KEY"}
-MAX_OUTPUT_CHARS = 200_000
+MAX_OUTPUT_BYTES = 200_000
 
 
 def child_env() -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if k in BASE_ALLOW}
-    # Model auth is provided only to the DSH process. DSH subprocess tools scrub
-    # credential-shaped variables before spawning shell commands.
     for k in MODEL_AUTH:
         if os.environ.get(k):
             env[k] = os.environ[k]
-    # Explicitly drop all GitHub write credentials.
     for k in ("GH_TOKEN", "GITHUB_TOKEN", "GITHUB_ENTERPRISE_TOKEN", "CODEX_CMD"):
         env.pop(k, None)
     return env
 
 
+def _kill_tree(proc: subprocess.Popen) -> None:
+    if os.name != "nt":
+        try:
+            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+        except (ProcessLookupError, PermissionError, OSError):
+            pass
+    else:
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True)
+    try:
+        proc.kill()
+    except OSError:
+        pass
+
+
 class HeadlessRunner:
-    def __init__(self, dsh_cmd: list[str] | None = None, timeout: int = 1800):
+    def __init__(self, dsh_cmd: list[str] | None = None, timeout: int = 1800, max_output_bytes: int = MAX_OUTPUT_BYTES):
         if dsh_cmd is None:
             binary = shutil.which("dsh") or shutil.which("dsh.cmd") or "dsh"
             dsh_cmd = [binary, "--profile", "headless", "--json"]
         self.dsh_cmd = dsh_cmd
         self.timeout = timeout
+        self.max_output_bytes = max_output_bytes
 
     def run(self, prompt: str, log_path: Path) -> dict:
         log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -48,30 +59,57 @@ class HeadlessRunner:
         kwargs = {"start_new_session": True} if os.name != "nt" else {}
         proc = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            text=True, encoding="utf-8", errors="replace", env=child_env(), **kwargs,
+            env=child_env(), **kwargs,
         )
+        chunks: list[bytes] = []
+        total = 0
+        exceeded = False
+        lock = threading.Lock()
+
+        def _reader():
+            nonlocal total, exceeded
+            while True:
+                chunk = proc.stdout.read(4096) if proc.stdout else b""
+                if not chunk:
+                    break
+                with lock:
+                    if total >= self.max_output_bytes:
+                        exceeded = True
+                        _kill_tree(proc)
+                        break
+                    keep = chunk[: self.max_output_bytes - total]
+                    chunks.append(keep)
+                    total += len(keep)
+                    if len(chunk) > len(keep):
+                        exceeded = True
+                        _kill_tree(proc)
+                        break
+
+        thread = threading.Thread(target=_reader, daemon=True)
+        thread.start()
         timed_out = False
         try:
-            output, _ = proc.communicate(timeout=self.timeout)
+            proc.wait(timeout=self.timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
-            if os.name != "nt":
-                try:
-                    os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-                except ProcessLookupError:
-                    pass
-            else:
-                proc.kill()
-            try:
-                output, _ = proc.communicate(timeout=5)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                output, _ = proc.communicate()
-        output = (output or "")[:MAX_OUTPUT_CHARS]
+            _kill_tree(proc)
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            _kill_tree(proc)
+        thread.join(timeout=5)
+        try:
+            if proc.stdout:
+                proc.stdout.close()
+        except OSError:
+            pass
+        output = b"".join(chunks).decode("utf-8", errors="replace")
+        if not exceeded:
+            output = output[: self.max_output_bytes]
         log_path.write_text(output, encoding="utf-8")
         final = None
         session_id = None
-        for line in (output or "").splitlines():
+        for line in output.splitlines():
             try:
                 ev = json.loads(line)
             except json.JSONDecodeError:
@@ -80,5 +118,10 @@ class HeadlessRunner:
                 session_id = ev.get("sessionId")
             if ev.get("type") == "final":
                 final = ev.get("text", "")
-        rc = 124 if timed_out else proc.returncode
-        return {"returncode": rc, "final": final, "session_id": session_id, "log": str(log_path), "timed_out": timed_out, "final_event": final is not None}
+        if exceeded:
+            rc = 125
+        elif timed_out:
+            rc = 124
+        else:
+            rc = proc.returncode
+        return {"returncode": rc, "final": final, "session_id": session_id, "log": str(log_path), "timed_out": timed_out, "output_limit_exceeded": exceeded, "final_event": final is not None}

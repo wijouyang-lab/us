@@ -133,3 +133,10 @@ def test_publisher_blocks_without_oidc(monkeypatch, tmp_path):
     monkeypatch.delenv("DSH_OIDC_TOKEN", raising=False)
     monkeypatch.delenv("DSH_OIDC_JWKS_FILE", raising=False)
     assert workflow_context_ok() is False
+
+def test_python_lock_is_fully_pinned():
+    from pathlib import Path
+    lines = [x for x in Path("requirements-production.lock").read_text(encoding="utf-8").splitlines() if x and not x.startswith("#")]
+    assert lines
+    assert all("==" in x for x in lines)
+    assert any(x.startswith("pandas==") for x in lines)

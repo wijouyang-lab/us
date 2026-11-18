@@ -1,4 +1,4 @@
-name: DSH Headless Task
+﻿name: DSH Headless Task
 
 on:
   workflow_dispatch:
@@ -116,7 +116,7 @@ jobs:
           dsh-runtime/node_modules/.bin/dsh --version
           echo "$PWD/dsh-runtime/node_modules/.bin" >> "$GITHUB_PATH"
       - name: Install project test dependencies
-        run: python -m pip install -r requirements-production.txt
+        run: python -m pip install -r requirements-production.lock
       - name: DSH agent (no GitHub write token)
         env:
           TASK_ID: ${{ inputs.task_id }}
@@ -184,5 +184,6 @@ jobs:
         run: python -m tools.automation.publisher --artifact agent-artifact --task-id "$TASK_ID" --branch "$TASK_BRANCH" --base-branch "$BASE_BRANCH"
       - name: Draft PR only - no auto-merge
         run: echo "PR is draft-only; merging is intentionally disabled; human authorization is required."
+
 
 
