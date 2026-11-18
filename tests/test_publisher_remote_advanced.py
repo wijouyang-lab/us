@@ -66,7 +66,9 @@ def call(repo, store, bin_dir):
 @pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
 def test_state_push_client_error_remote_advanced_contains_commit(tmp_path):
     repo, store, bare = setup(tmp_path)
-    advance(bare, tmp_path, lambda d: d["tasks"]["t"].setdefault("last_review", {}).update({"reason": "advanced"}))
+    def _advance_state(d):
+        d["tasks"]["t"]["last_review"] = {"reason": "advanced"}
+    advance(bare, tmp_path, _advance_state)
     assert call(repo, store, wrapper(tmp_path)) is True
 
 
