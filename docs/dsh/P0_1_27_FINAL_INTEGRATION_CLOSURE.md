@@ -1,5 +1,7 @@
 # P0.1.27: Final Integration Closure Audit
 
+> Historical audit; superseded by P0.1.28.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `7661e77db89864ece74dc4f03aa7817f06c22128`
