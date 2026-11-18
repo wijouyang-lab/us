@@ -223,7 +223,7 @@ def test_three_job_isolation_permissions():
     assert jobs["agent"]["needs"] == ["preflight", "dsh-install-verify"]
     assert jobs["publisher"]["needs"] == "agent"
     assert jobs["agent"]["permissions"] == {"contents": "read"}
-    assert jobs["publisher"]["permissions"] == {"contents": "write", "pull-requests": "write"}
+    assert jobs["publisher"]["permissions"] == {"contents": "write", "pull-requests": "write", "id-token": "write"}
     text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
     assert "persist-credentials: false" in text
     assert "CODEX_CMD" not in text

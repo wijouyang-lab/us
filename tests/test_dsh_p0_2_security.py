@@ -118,3 +118,18 @@ def test_workflow_context_required(monkeypatch):
     monkeypatch.setenv("GITHUB_REPOSITORY", "wijouyang-lab/us")
     monkeypatch.setenv("GITHUB_WORKFLOW", "Wrong")
     assert workflow_context_ok() is False
+
+def test_oidc_signature_and_claim_rejection():
+    import json, os, subprocess
+    from tools.automation.oidc import verify_token
+    out = json.loads(subprocess.check_output(["node", "tools/automation/oidc_test_token.mjs"], text=True))
+    assert verify_token(out["token"], out["jwks"])["ok"] is True
+    assert verify_token(out["token"][:-4] + "AAAA", out["jwks"])["ok"] is False
+    assert verify_token("x.y.z", out["jwks"])["ok"] is False
+
+
+def test_publisher_blocks_without_oidc(monkeypatch, tmp_path):
+    from tools.automation.publisher import workflow_context_ok
+    monkeypatch.delenv("DSH_OIDC_TOKEN", raising=False)
+    monkeypatch.delenv("DSH_OIDC_JWKS_FILE", raising=False)
+    assert workflow_context_ok() is False

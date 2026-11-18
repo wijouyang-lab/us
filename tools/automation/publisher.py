@@ -11,6 +11,7 @@ from pathlib import Path
 from tools.automation.artifact import _check_parents, artifact_digest, read_manifest
 from tools.automation.state_store import STATUSES, TaskStore
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
+from tools.automation.oidc import oidc_context
 
 
 def cmd(args, cwd, check=True):
@@ -196,6 +197,8 @@ def state_only_ok(root: Path, source: str, head: str) -> bool:
 
 
 def workflow_context_ok():
+    if not oidc_context().get("ok"):
+        return False
     return (
         os.environ.get("GITHUB_ACTIONS") == "true"
         and os.environ.get("GITHUB_REPOSITORY") == "wijouyang-lab/us"

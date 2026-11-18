@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """pytest compatibility layer plus trusted workflow-context test fixture."""
+import json
 import os
+import subprocess
+import tempfile
 
 import pytest
 
@@ -23,8 +26,30 @@ SCRIPT_TESTS = [
 collect_ignore = SCRIPT_TESTS
 
 
+_OIDC = None
+
+
+def _oidc_material():
+    global _OIDC
+    if _OIDC is None:
+        out = subprocess.check_output(
+            ["node", os.path.join(REPO_ROOT, "tools/automation/oidc_test_token.mjs")],
+            text=True,
+        )
+        data = json.loads(out)
+        d = tempfile.mkdtemp()
+        path = os.path.join(d, "jwks.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(data["jwks"], fh)
+        _OIDC = (data["token"], path)
+    return _OIDC
+
+
 @pytest.fixture(autouse=True)
 def _trusted_test_context(monkeypatch):
+    token, path = _oidc_material()
+    monkeypatch.setenv("DSH_OIDC_TOKEN", token)
+    monkeypatch.setenv("DSH_OIDC_JWKS_FILE", path)
     # CLI tests exercise Publisher behavior, not GitHub's runner. Production
     # requires these values from the workflow; missing-context tests delete them.
     for key, value in {
