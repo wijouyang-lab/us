@@ -50,7 +50,7 @@ def run(repo, art, bindir, log, mode, extra_path=None):
     if extra_path:
         path = f"{extra_path}:{path}"
     env = dict(os.environ, PATH=path, PYTHONPATH=str(ROOT), GH_MODE=mode, GH_LOG=str(log))
-    cmd = [sys.executable, str(Path(__file__).with_name("publisher_cli.py")), "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"]
+    cmd = [sys.executable, "-c", "from tools.automation import publisher; raise SystemExit(publisher._publish_main())", "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"]
     return subprocess.run(cmd, cwd=repo, env=env, text=True, capture_output=True)
 
 
@@ -182,4 +182,5 @@ def test_unknown_commit_after_artifact_blocked_fresh_clone(tmp_path):
     assert "unknown business change" in subjects
     assert sum(1 for x in subjects if x == "automation: persist task state [skip ci]") >= 1
     assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1
+
 

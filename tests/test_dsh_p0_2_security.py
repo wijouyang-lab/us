@@ -252,3 +252,37 @@ def test_real_model_gate_defaults_disabled():
     assert "DEEPSEEK_API_KEY" not in preflight
     publisher = wf.split("  publisher:", 1)[1]
     assert "DEEPSEEK_API_KEY" not in publisher
+
+def test_oidc_redirect_does_not_forward_bearer(monkeypatch):
+    import http.server, threading, urllib.request
+    from tools.automation import oidc
+    hits = []
+    class Target(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            hits.append(self.headers.get("Authorization"))
+            self.send_response(200); self.end_headers(); self.wfile.write(b'{"value":"x"}')
+        def log_message(self, *a): pass
+    t = http.server.HTTPServer(("127.0.0.1", 0), Target)
+    threading.Thread(target=t.serve_forever, daemon=True).start()
+    target = f"http://127.0.0.1:{t.server_port}/target"
+    class Source(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(302); self.send_header("Location", target); self.end_headers()
+        def log_message(self, *a): pass
+    s = http.server.HTTPServer(("127.0.0.1", 0), Source)
+    threading.Thread(target=s.serve_forever, daemon=True).start()
+    monkeypatch.setattr(oidc, "_valid_oidc_request_url", lambda url: True)
+    monkeypatch.setenv("ACTIONS_ID_TOKEN_REQUEST_URL", f"http://127.0.0.1:{s.server_port}/src")
+    monkeypatch.setenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN", "test-bearer")
+    try:
+        try:
+            oidc._fetch_actions_token()
+        except Exception:
+            pass
+        assert hits == []
+    finally:
+        s.shutdown(); t.shutdown()
+
+def test_no_executable_publisher_test_entry():
+    from pathlib import Path
+    assert not Path("tests/publisher_cli.py").exists()
