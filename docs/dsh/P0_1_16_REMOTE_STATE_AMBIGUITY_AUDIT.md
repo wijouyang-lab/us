@@ -1,5 +1,7 @@
 # P0.1.16: Remote State Ambiguity and Draft Terminal Recovery Audit
 
+> Historical audit; superseded by P0.1.17.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `5929c1dd0f0ef91de42c6dbdb066788cae9af5ca`
