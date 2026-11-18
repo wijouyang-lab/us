@@ -1,5 +1,7 @@
 # P0.1.23: Remote Ancestry and State Integrity Tests Audit
 
+> Historical audit; superseded by P0.1.24.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `f3a86b905839ce42a3908fb393e4532dd25e185f`
