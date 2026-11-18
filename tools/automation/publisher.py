@@ -63,13 +63,15 @@ def _valid_url(value):
     return port is None or 0 <= port <= 65535
 
 
-def push_state(store, root, branch, task_id):
+def push_state(store, root, branch, task_id, force_remote_check=False):
     try:
         store.save(store.load())
         cmd(["git", "add", "automation/state/tasks.json"], root)
         if cmd(["git", "diff", "--cached", "--quiet"], root, check=False).returncode == 0:
-            return True
-        cmd(["git", "commit", "-m", "automation: persist task state [skip ci]"], root)
+            if not force_remote_check:
+                return True
+        else:
+            cmd(["git", "commit", "-m", "automation: persist task state [skip ci]"], root)
         r = subprocess.run(["git", "-c", "credential.helper=!gh auth git-credential", "push", "origin", branch], cwd=root, text=True, capture_output=True)
         if r.returncode == 0:
             return True
