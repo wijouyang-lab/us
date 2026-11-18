@@ -1,5 +1,7 @@
 # P0.2.4: Final Security Closure Audit
 
+> Historical audit; superseded by P0.2.5. Final P0.2.4 PR HEAD was aa902409; CI 44328763595.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `748265dc3434939afbb696305ca0f7c6507dbdf1`
