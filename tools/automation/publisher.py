@@ -65,7 +65,6 @@ def _valid_url(value):
 
 def push_state(store, root, branch, task_id, force_remote_check=False):
     try:
-        store.save(store.load())
         cmd(["git", "add", "automation/state/tasks.json"], root)
         if cmd(["git", "diff", "--cached", "--quiet"], root, check=False).returncode == 0:
             if not force_remote_check:
