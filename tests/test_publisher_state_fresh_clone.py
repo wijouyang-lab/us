@@ -146,3 +146,32 @@ def test_review_pending_state_push_accepted_client_error_fresh_clone(tmp_path):
     r2 = run(f, art, bindir, log, "existing")
     assert r2.returncode == 0
     assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX fresh-clone integration")
+def test_unknown_commit_after_artifact_blocked_fresh_clone(tmp_path):
+    import shutil
+    repo, art, bindir, log = setup(tmp_path)
+    bare = tmp_path / "remote.git"
+    hook = bare / "hooks/pre-receive"
+    hook.write_text("#!/bin/sh\nn=$(cat .push-count 2>/dev/null || echo 0)\nn=$((n+1))\necho $n > .push-count\nif [ $n -le 2 ]; then exit 0; fi\nexit 1\n", encoding="utf-8")
+    hook.chmod(0o755)
+    assert run(repo, art, bindir, log, "no-pr").returncode == 1
+    hook.unlink()
+    b = tmp_path / "b_unknown"
+    subprocess.run(["git", "clone", "-b", "fix/t", str(bare), str(b)], check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@example.com"], cwd=b, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=b, check=True)
+    (b / "unknown.txt").write_text("unknown", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=b, check=True)
+    subprocess.run(["git", "commit", "-m", "unknown business change"], cwd=b, check=True)
+    subprocess.run(["git", "push", "origin", "fix/t"], cwd=b, check=True)
+    shutil.rmtree(repo)
+    f = fresh(bare, tmp_path)
+    r = run(f, art, bindir, log, "existing")
+    assert r.returncode != 0 and "BLOCKED:UNKNOWN_COMMIT_AFTER_ARTIFACT" in r.stdout
+    state = json.loads((f / "automation/state/tasks.json").read_text())
+    assert state["tasks"]["t"]["status"] == "BLOCKED"
+    assert state["tasks"]["t"]["last_review"]["reason"] == "UNKNOWN_COMMIT_AFTER_ARTIFACT"
+    subjects = subprocess.check_output(["git", "log", "origin/fix/t", "--format=%s"], cwd=f, text=True).splitlines()
+    assert len([x for x in subjects if x.startswith("automation: DSH task")]) == 1
+    assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1

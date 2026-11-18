@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -249,10 +250,19 @@ def add_followup(b, kind):
     elif kind == "rename":
         subprocess.run(["git", "mv", "automation/state/tasks.json", "automation/state/other.json"], cwd=b, check=True)
         subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    elif kind == "copy":
+        (b / "automation/state/source.json").write_text("{\"copy\": true}\n", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+        shutil.copy2(b / "automation/state/source.json", b / "automation/state/copied.json")
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+        raw = subprocess.check_output(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "-M", "-C", "--find-copies-harder", "HEAD~1", "HEAD"], cwd=b, text=True)
+        assert "C" in raw
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
-@pytest.mark.parametrize("kind,expected", [("valid", True), ("empty", False), ("nonstate", False), ("bad_subject", False), ("transient", False), ("merge", False), ("rename", False)])
+@pytest.mark.parametrize("kind,expected", [("valid", True), ("empty", False), ("nonstate", False), ("bad_subject", False), ("transient", False), ("merge", False), ("rename", False), ("copy", False)])
 def test_remote_advanced_followup_commit_checks(tmp_path, kind, expected):
     repo, store, bare = setup(tmp_path)
     b = clone_b(bare, tmp_path)
