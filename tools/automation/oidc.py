@@ -25,10 +25,26 @@ def verify_token(token: str, jwks: dict, expected: dict | None = None) -> dict:
         return {"ok": False, "error": "OIDC_VERIFIER_INVALID"}
 
 
+def _valid_oidc_request_url(url: str) -> bool:
+    from urllib.parse import urlparse
+    try:
+        p = urlparse(url)
+        port = p.port
+    except ValueError:
+        return False
+    return (
+        p.scheme == "https"
+        and p.hostname == "pipelines.actions.githubusercontent.com"
+        and port in (None, 443)
+        and not p.username
+        and not p.password
+    )
+
+
 def _fetch_actions_token() -> str:
     url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL", "")
     bearer = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN", "")
-    if not url or not bearer:
+    if not url or not bearer or not _valid_oidc_request_url(url):
         return ""
     import urllib.parse
     import urllib.request
@@ -37,7 +53,12 @@ def _fetch_actions_token() -> str:
         url + separator + urllib.parse.urlencode({"audience": "dsh-publisher"}),
         headers={"Authorization": f"Bearer {bearer}"},
     )
-    with urllib.request.urlopen(req, timeout=15) as resp:
+    # Refuse redirects so the bearer token cannot be forwarded to another host.
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, *args, **kwargs):
+            return None
+    opener = urllib.request.build_opener(NoRedirect)
+    with opener.open(req, timeout=15) as resp:
         return json.loads(resp.read().decode("utf-8")).get("value", "")
 
 

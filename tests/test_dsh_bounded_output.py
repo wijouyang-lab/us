@@ -59,3 +59,19 @@ def test_grandchild_is_terminated_when_parent_exits(tmp_path):
     else:
         os.kill(pid, 9)
         raise AssertionError("grandchild survived")
+
+import os as _os
+import pytest
+
+@pytest.mark.skipif(_os.name == "nt", reason="POSIX killpg")
+def test_kill_failure_is_reported(monkeypatch):
+    from tools.automation import headless
+    class P:
+        pid = 123
+        def kill(self):
+            pass
+    def denied(*args, **kwargs):
+        raise PermissionError("denied")
+    monkeypatch.setattr(headless.os, "killpg", denied)
+    monkeypatch.setattr(headless.os, "getpgid", lambda pid: 123)
+    assert headless._kill_tree(P(), 123) is False

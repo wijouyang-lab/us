@@ -211,7 +211,7 @@ def workflow_context_ok():
     )
 
 
-def main() -> int:
+def _publish_main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--artifact", default="agent-artifact")
     ap.add_argument("--state", default="automation/state/tasks.json")
@@ -220,12 +220,6 @@ def main() -> int:
     ap.add_argument("--branch", required=True)
     ap.add_argument("--base-branch", required=True)
     args = ap.parse_args()
-    if not globals().get("_TEST_HARNESS"):
-        if not workflow_context_ok():
-            print("BLOCKED:WORKFLOW_CONTEXT_UNVERIFIED")
-            return 3
-        print("BLOCKED:LOCK_NOT_IMPLEMENTED")
-        return 3
     root = Path(args.repo).resolve()
     try:
         task_id = validate_task_id(args.task_id)
@@ -377,6 +371,14 @@ def main() -> int:
             mark(store, task_id, "FAIL", "PERMANENT_PUBLISH_FAILURE", root, branch)
             print(f"FAIL:PERMANENT_PUBLISH_FAILURE:{e}")
         return 1
+
+
+def main() -> int:
+    if not workflow_context_ok():
+        print("BLOCKED:WORKFLOW_CONTEXT_UNVERIFIED")
+        return 3
+    print("BLOCKED:LOCK_NOT_IMPLEMENTED")
+    return 3
 
 
 if __name__ == "__main__":

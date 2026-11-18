@@ -203,3 +203,19 @@ def test_test_harness_not_in_production_entrypoints():
     assert "publisher_cli" not in workflow
     assert "publisher_cli" not in agent
     assert "_TEST_HARNESS" not in (Path("tools/automation/agent_task.py").read_text(encoding="utf-8"))
+
+def test_production_main_locks_after_valid_context(monkeypatch):
+    from tools.automation import publisher
+    monkeypatch.setattr(publisher, "workflow_context_ok", lambda: True)
+    assert publisher.main() == 3
+    source = (__import__("pathlib").Path("tools/automation/publisher.py")).read_text(encoding="utf-8")
+    assert "_TEST_HARNESS" not in source
+    assert "globals()" not in source
+
+def test_oidc_request_url_origin_protection(monkeypatch):
+    from tools.automation.oidc import _valid_oidc_request_url
+    assert _valid_oidc_request_url("https://pipelines.actions.githubusercontent.com/x")
+    assert not _valid_oidc_request_url("http://pipelines.actions.githubusercontent.com/x")
+    assert not _valid_oidc_request_url("https://evil.example/x")
+    assert not _valid_oidc_request_url("https://user:pass@pipelines.actions.githubusercontent.com/x")
+    assert not _valid_oidc_request_url("https://pipelines.actions.githubusercontent.com:8443/x")

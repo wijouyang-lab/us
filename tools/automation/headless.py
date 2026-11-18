@@ -33,18 +33,24 @@ def child_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     return env
 
 
-def _kill_tree(proc: subprocess.Popen, pgid: int | None = None) -> None:
+def _kill_tree(proc: subprocess.Popen, pgid: int | None = None) -> bool:
+    ok = True
     if os.name != "nt":
         try:
             os.killpg(pgid or os.getpgid(proc.pid), signal.SIGKILL)
-        except (ProcessLookupError, PermissionError, OSError):
+        except ProcessLookupError:
             pass
+        except (PermissionError, OSError):
+            ok = False
     else:
-        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True)
+        r = subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True)
+        if r.returncode != 0 and proc.poll() is None:
+            ok = False
     try:
         proc.kill()
     except OSError:
         pass
+    return ok
 
 
 class HeadlessRunner:
@@ -74,10 +80,11 @@ class HeadlessRunner:
         chunks: list[bytes] = []
         total = 0
         exceeded = False
+        kill_failed = False
         lock = threading.Lock()
 
         def _reader():
-            nonlocal total, exceeded
+            nonlocal total, exceeded, kill_failed
             while True:
                 chunk = proc.stdout.read(4096) if proc.stdout else b""
                 if not chunk:
@@ -85,14 +92,14 @@ class HeadlessRunner:
                 with lock:
                     if total >= self.max_output_bytes:
                         exceeded = True
-                        _kill_tree(proc, pgid)
+                        kill_failed = (not _kill_tree(proc, pgid)) or kill_failed
                         break
                     keep = chunk[: self.max_output_bytes - total]
                     chunks.append(keep)
                     total += len(keep)
                     if len(chunk) > len(keep):
                         exceeded = True
-                        _kill_tree(proc, pgid)
+                        kill_failed = (not _kill_tree(proc, pgid)) or kill_failed
                         break
 
         thread = threading.Thread(target=_reader, daemon=True)
@@ -102,12 +109,12 @@ class HeadlessRunner:
             proc.wait(timeout=self.timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
-            _kill_tree(proc, pgid)
+            kill_failed = (not _kill_tree(proc, pgid)) or kill_failed
         try:
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            _kill_tree(proc, pgid)
-        _kill_tree(proc, pgid)
+            kill_failed = (not _kill_tree(proc, pgid)) or kill_failed
+        kill_failed = (not _kill_tree(proc, pgid)) or kill_failed
         thread.join(timeout=5)
         reader_alive = thread.is_alive()
         try:
@@ -134,8 +141,8 @@ class HeadlessRunner:
             rc = 125
         elif timed_out:
             rc = 124
-        elif reader_alive:
+        elif reader_alive or kill_failed:
             rc = 126
         else:
             rc = proc.returncode
-        return {"returncode": rc, "final": final, "session_id": session_id, "log": str(log_path), "timed_out": timed_out, "output_limit_exceeded": exceeded, "cleanup_failed": reader_alive, "final_event": final is not None}
+        return {"returncode": rc, "final": final, "session_id": session_id, "log": str(log_path), "timed_out": timed_out, "output_limit_exceeded": exceeded, "cleanup_failed": reader_alive or kill_failed, "final_event": final is not None}
