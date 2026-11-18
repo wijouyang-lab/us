@@ -1,21 +1,21 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-18T05:17:11Z",
+  "generated_at": "2026-11-18T12:02:23Z",
   "fear_greed": {
-    "score": 25.17,
+    "score": 25.45,
     "rating": "fear",
-    "timestamp": "2026-11-18T01:00:00+00:00",
+    "timestamp": "2026-11-18T11:45:01+00:00",
     "subindicators": {
       "market_momentum_sp500": {
         "score": 5.2,
         "rating": "extreme fear"
       },
       "stock_price_strength": {
-        "score": 36.6,
+        "score": 33.6,
         "rating": "fear"
       },
       "stock_price_breadth": {
-        "score": 44.6,
+        "score": 37.6,
         "rating": "fear"
       },
       "put_call_options": {
@@ -23,8 +23,8 @@
         "rating": "extreme fear"
       },
       "market_volatility_vix": {
-        "score": 17.81,
-        "rating": "extreme fear"
+        "score": 29.73,
+        "rating": "fear"
       },
       "junk_bond_demand": {
         "score": 49.6,
@@ -38,12 +38,12 @@
     "history_30d": [
       {
         "date": "2026-11-18",
-        "score": 25.17,
+        "score": 25.45,
         "rating": "fear"
       },
       {
         "date": "2026-11-17",
-        "score": 25.17,
+        "score": 25.45,
         "rating": "fear"
       },
       {
@@ -152,37 +152,37 @@
     "next_meeting": "2026-12-09",
     "current_target": "3.75%-4.00%",
     "effr": 3.88,
-    "trade_date": "2026-11-16",
+    "trade_date": "2026-11-17",
     "probabilities": {
-      "hike_25bp": 95.5,
-      "hike_50bp": 4.5
+      "hike_25bp": 96.9,
+      "hike_50bp": 3.1
     },
     "meetings": [
       {
         "date": "2026-12-09",
         "contract": "ZQZ6",
         "probabilities": {
-          "hike_25bp": 95.5,
-          "hike_50bp": 4.5
+          "hike_25bp": 96.9,
+          "hike_50bp": 3.1
         }
       },
       {
         "date": "2027-01-27",
         "contract": "ZQF7",
         "probabilities": {
-          "hike_25bp": 25.3,
-          "hike_50bp": 71.4,
-          "hike_75bp": 3.3
+          "hike_25bp": 30.1,
+          "hike_50bp": 67.7,
+          "hike_75bp": 2.1
         }
       },
       {
         "date": "2027-03-17",
         "contract": "ZQH7",
         "probabilities": {
-          "hike_25bp": 8.1,
-          "hike_50bp": 40.1,
-          "hike_75bp": 49.5,
-          "hike_100bp": 2.3
+          "hike_25bp": 11.4,
+          "hike_50bp": 44.4,
+          "hike_75bp": 42.9,
+          "hike_100bp": 1.3
         }
       }
     ],
