@@ -9,7 +9,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def setup(tmp_path):
+def setup(tmp_path, extra=None):
     from tools.automation.state_store import TaskStore
     bare = tmp_path / "remote.git"
     subprocess.run(["git", "init", "--bare", str(bare)], check=True, capture_output=True)
@@ -21,7 +21,10 @@ def setup(tmp_path):
     (repo / "base.txt").write_text("base", encoding="utf-8")
     store = TaskStore(repo / "automation/state/tasks.json")
     store.enqueue("t", "prompt", "fix/t")
-    store.update("t", status="PUBLISHING", agent_source_sha="a" * 40, base_commit_sha="b" * 40, artifact_digest="c" * 64, branch="fix/t", base_branch="main")
+    fields = {"status": "PUBLISHING", "agent_source_sha": "a" * 40, "base_commit_sha": "b" * 40, "artifact_digest": "c" * 64, "branch": "fix/t", "base_branch": "main"}
+    if extra:
+        fields.update(extra)
+    store.update("t", **fields)
     subprocess.run(["git", "add", "."], cwd=repo, check=True)
     subprocess.run(["git", "commit", "-m", "base"], cwd=repo, check=True)
     subprocess.run(["git", "branch", "-M", "main"], cwd=repo, check=True)
@@ -72,26 +75,64 @@ def test_state_push_client_error_remote_advanced_contains_commit(tmp_path):
     assert call(repo, store, wrapper(tmp_path)) is True
 
 
+NEGATIVE_CASES = [
+    "malformed", "top_array", "tasks_missing", "task_missing", "task_id_mismatch",
+    "identity", "source", "base", "branch", "base_branch", "bad_status",
+    "rollback", "published_deleted", "published_replaced", "published_format",
+    "published_missing", "pr_url_replaced", "pr_url_format", "pr_url_missing",
+]
+
+
 @pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
-@pytest.mark.parametrize("case", ["malformed", "top_array", "tasks_missing", "task_missing", "identity", "bad_status", "pr_url_missing"])
+@pytest.mark.parametrize("case", NEGATIVE_CASES)
 def test_remote_json_negative(tmp_path, case):
-    repo, store, bare = setup(tmp_path)
+    extra = {}
+    if case in {"published_deleted", "published_replaced"}:
+        extra["published_sha"] = "d" * 40
+    if case == "rollback":
+        extra.update(status="REVIEW_PENDING", pr_url="https://github.com/wijouyang-lab/us/pull/1")
+    if case == "pr_url_replaced":
+        extra["pr_url"] = "https://github.com/wijouyang-lab/us/pull/1"
+    repo, store, bare = setup(tmp_path, extra)
 
     def mutate(d):
         t = d.get("tasks", {}).get("t")
         if case == "malformed":
-            d.clear()
-            d["bad"] = True
+            d.clear(); d["bad"] = True
         elif case == "top_array":
             d.clear(); d["tasks"] = []
         elif case == "tasks_missing":
             d.pop("tasks", None)
         elif case == "task_missing":
             d["tasks"].pop("t", None)
+        elif case == "task_id_mismatch":
+            t["task_id"] = "other"
         elif case == "identity":
             t["artifact_digest"] = "d" * 64
+        elif case == "source":
+            t["agent_source_sha"] = "e" * 40
+        elif case == "base":
+            t["base_commit_sha"] = "e" * 40
+        elif case == "branch":
+            t["branch"] = "fix/other"
+        elif case == "base_branch":
+            t["base_branch"] = "release"
         elif case == "bad_status":
             t["status"] = "UNKNOWN"
+        elif case == "rollback":
+            t["status"] = "PUBLISHING"
+        elif case == "published_deleted":
+            t.pop("published_sha", None)
+        elif case == "published_replaced":
+            t["published_sha"] = "e" * 40
+        elif case == "published_format":
+            t["published_sha"] = "bad"
+        elif case == "published_missing":
+            t["published_sha"] = "e" * 40
+        elif case == "pr_url_replaced":
+            t["pr_url"] = "https://github.com/wijouyang-lab/us/pull/2"
+        elif case == "pr_url_format":
+            t["pr_url"] = "not-a-url"
         elif case == "pr_url_missing":
             t["status"] = "REVIEW_PENDING"; t.pop("pr_url", None)
         else:
@@ -109,3 +150,29 @@ def test_remote_json_negative(tmp_path, case):
     else:
         advance(bare, tmp_path, mutate)
     assert call(repo, store, wrapper(tmp_path)) is False
+
+
+def fail_wrapper(tmp_path, command):
+    d = tmp_path / "failbin"; d.mkdir()
+    s = d / "git"
+    s.write_text(f"""#!/bin/sh
+for a in "$@"; do
+  if [ "$a" = "{command}" ]; then exit 1; fi
+  if [ "$a" = push ]; then /usr/bin/git "$@"; exit 1; fi
+done
+exec /usr/bin/git "$@"
+""", encoding="utf-8")
+    s.chmod(0o755)
+    return d
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
+@pytest.mark.parametrize("command", ["fetch", "show", "rev-list", "merge-base"])
+def test_git_command_failure_closed(tmp_path, command):
+    repo, store, bare = setup(tmp_path)
+
+    def _advance_state(d):
+        d["tasks"]["t"]["last_review"] = {"reason": "advanced"}
+
+    advance(bare, tmp_path, _advance_state)
+    assert call(repo, store, fail_wrapper(tmp_path, command)) is False
