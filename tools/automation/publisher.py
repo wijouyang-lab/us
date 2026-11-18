@@ -195,6 +195,19 @@ def state_only_ok(root: Path, source: str, head: str) -> bool:
     return all(_one_commit_state_only(root, sha) for sha in shas)
 
 
+def workflow_context_ok():
+    return (
+        os.environ.get("GITHUB_ACTIONS") == "true"
+        and os.environ.get("GITHUB_REPOSITORY") == "wijouyang-lab/us"
+        and os.environ.get("GITHUB_WORKFLOW") == "DSH Headless Task"
+        and os.environ.get("GITHUB_JOB") == "publisher"
+        and os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
+        and os.environ.get("GITHUB_REF", "").startswith("refs/heads/deploy/dsh-automation-p0")
+        and (os.environ.get("GITHUB_RUN_ID") or "").isdigit()
+        and os.environ.get("DSH_WORKFLOW_CONTEXT") == "publisher"
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--artifact", default="agent-artifact")
@@ -204,6 +217,9 @@ def main() -> int:
     ap.add_argument("--branch", required=True)
     ap.add_argument("--base-branch", required=True)
     args = ap.parse_args()
+    if not workflow_context_ok():
+        print("BLOCKED:WORKFLOW_CONTEXT_UNVERIFIED")
+        return 3
     root = Path(args.repo).resolve()
     if os.environ.get("DSH_REQUIRE_LOCK") == "1":
         print("BLOCKED:LOCK_NOT_IMPLEMENTED")

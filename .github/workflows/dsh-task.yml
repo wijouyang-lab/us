@@ -32,7 +32,8 @@ permissions:
   actions: read
 
 concurrency:
-  group: dsh-publisher-${{ inputs.branch }}
+  group: dsh-task-${{ inputs.branch }}
+  queue: max
   cancel-in-progress: false
 
 jobs:
@@ -178,6 +179,7 @@ jobs:
           TASK_BRANCH: ${{ inputs.branch }}
           BASE_BRANCH: ${{ inputs.base_branch }}
           DSH_REQUIRE_LOCK: "1"
+          DSH_WORKFLOW_CONTEXT: publisher
         run: python -m tools.automation.publisher --artifact agent-artifact --task-id "$TASK_ID" --branch "$TASK_BRANCH" --base-branch "$BASE_BRANCH"
       - name: Draft PR only - no auto-merge
         run: echo "PR is draft-only; merging is intentionally disabled; human authorization is required."

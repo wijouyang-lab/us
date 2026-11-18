@@ -41,7 +41,8 @@ def test_workflow_has_no_raw_log_upload_and_dry_gate():
     assert "dsh-log-" not in text
     assert "DRY_RUN_VALIDATION_ONLY" in text
     assert 'if: inputs.dry_run == false' in text
-    assert "dsh-publisher-${{ inputs.branch }}" in text
+    assert "dsh-task-${{ inputs.branch }}" in text
+    assert "queue: max" in text
 
 
 def test_base_branch_only_main():
@@ -93,10 +94,12 @@ def test_preflight_protected_without_rules_blocks(monkeypatch):
 def test_lock_gate_and_action_pinning():
     wf = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
     assert 'DSH_REQUIRE_LOCK: "1"' in wf
+    assert "DSH_WORKFLOW_CONTEXT: publisher" in wf
     assert "BLOCKED:LOCK_NOT_IMPLEMENTED" in (ROOT / "tools/automation/publisher.py").read_text(encoding="utf-8")
-    for line in wf.splitlines():
-        if "uses:" in line:
-            assert "@" in line and len(line.split("@", 1)[1].split()[0]) == 40
+    for path in (".github/workflows/dsh-task.yml", ".github/workflows/test.yml"):
+        for line in (ROOT / path).read_text(encoding="utf-8").splitlines():
+            if "uses:" in line:
+                assert "@" in line and len(line.split("@", 1)[1].split()[0]) == 40
 
 
 def test_locked_dsh_runtime_assets_exist():
@@ -106,3 +109,12 @@ def test_locked_dsh_runtime_assets_exist():
     lock = json.loads((ROOT / "dsh-runtime/package-lock.json").read_text(encoding="utf-8-sig"))
     assert lock["packages"]["node_modules/@deepseek-ai/dsh"]["version"] == "0.2.0-rc.2"
     assert (ROOT / "tools/automation/dsh_subprocess_probe.mjs").exists()
+
+def test_workflow_context_required(monkeypatch):
+    from tools.automation.publisher import workflow_context_ok
+    for key in list(("GITHUB_REPOSITORY", "GITHUB_WORKFLOW", "GITHUB_JOB", "GITHUB_RUN_ID", "DSH_WORKFLOW_CONTEXT")):
+        monkeypatch.delenv(key, raising=False)
+    assert workflow_context_ok() is False
+    monkeypatch.setenv("GITHUB_REPOSITORY", "wijouyang-lab/us")
+    monkeypatch.setenv("GITHUB_WORKFLOW", "Wrong")
+    assert workflow_context_ok() is False
