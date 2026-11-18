@@ -1,5 +1,7 @@
 # P0.2.1: DSH Headless Automation Security Audit
 
+> Historical audit; superseded by P0.2.2.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `1f6b12afab1ac52e668726bae8a3ee2728eb693b`
