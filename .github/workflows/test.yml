@@ -1,4 +1,4 @@
-﻿name: Test
+name: Test
 
 # 璁┿€屽叏閲忓洖褰掗€氳繃銆嶈繖涓熀绾挎湁寮哄埗鏈哄埗锛堟鍓?9 涓?workflow 鏃犱竴璺?pytest锛夈€?
 # 鍙傝€?docs/HANDOVER.md:120 鈥斺€?鍏ㄩ噺娴嬭瘯蹇呴』鐢?Python 3.12锛坰can.py 鍚?3.11 鏃犳硶瑙ｆ瀽鐨?
@@ -51,6 +51,7 @@ jobs:
     permissions:
       contents: read
     steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
