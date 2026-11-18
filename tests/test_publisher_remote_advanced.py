@@ -190,3 +190,88 @@ def test_cat_file_failure_closed(tmp_path):
     subprocess.run(["git", "push", "origin", "fix/t"], cwd=repo, check=True)
     advance(bare, tmp_path, lambda d: d["tasks"]["t"].update({"published_sha": base}))
     assert call(repo, store, fail_wrapper(tmp_path, "cat-file")) is False
+
+
+def clone_b(bare, tmp_path):
+    b = tmp_path / "b_extra"
+    subprocess.run(["git", "clone", "-b", "fix/t", str(bare), str(b)], check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@example.com"], cwd=b, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=b, check=True)
+    return b
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
+def test_published_sha_object_exists_but_not_in_history(tmp_path):
+    repo, store, bare = setup(tmp_path)
+    orphan = subprocess.check_output(["git", "commit-tree", "HEAD^{tree}", "-m", "orphan"], cwd=repo, text=True).strip()
+    store.update("t", published_sha=orphan)
+    subprocess.run(["git", "add", "."], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=repo, check=True)
+    subprocess.run(["git", "push", "origin", "fix/t"], cwd=repo, check=True)
+    assert subprocess.run(["git", "cat-file", "-e", f"{orphan}^{{commit}}"], cwd=repo).returncode == 0
+    b = clone_b(bare, tmp_path)
+    p = b / "automation/state/tasks.json"
+    d = json.loads(p.read_text()); d["tasks"]["t"]["last_review"] = {"reason": "advanced"}
+    p.write_text(json.dumps(d), encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=b, check=True)
+    subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    subprocess.run(["git", "push", "origin", "fix/t"], cwd=b, check=True)
+    assert call(repo, store, wrapper(tmp_path)) is False
+
+
+def add_followup(b, kind):
+    if kind == "valid":
+        return
+    if kind == "empty":
+        subprocess.run(["git", "commit", "--allow-empty", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    elif kind == "nonstate":
+        (b / "bad.txt").write_text("bad", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    elif kind == "bad_subject":
+        (b / "automation/state/tasks.json").write_text("{}", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "human change"], cwd=b, check=True)
+    elif kind == "transient":
+        (b / "bad.txt").write_text("bad", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+        (b / "bad.txt").unlink()
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    elif kind == "merge":
+        subprocess.run(["git", "switch", "-c", "side"], cwd=b, check=True)
+        (b / "side.txt").write_text("side", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+        subprocess.run(["git", "switch", "fix/t"], cwd=b, check=True)
+        subprocess.run(["git", "merge", "--no-ff", "side", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    elif kind == "rename":
+        subprocess.run(["git", "mv", "automation/state/tasks.json", "automation/state/other.json"], cwd=b, check=True)
+        subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
+@pytest.mark.parametrize("kind,expected", [("valid", True), ("empty", False), ("nonstate", False), ("bad_subject", False), ("transient", False), ("merge", False), ("rename", False)])
+def test_remote_advanced_followup_commit_checks(tmp_path, kind, expected):
+    repo, store, bare = setup(tmp_path)
+    b = clone_b(bare, tmp_path)
+    add_followup(b, kind)
+    subprocess.run(["git", "push", "origin", "fix/t"], cwd=b, check=True)
+    assert call(repo, store, wrapper(tmp_path)) is expected
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
+def test_remote_advanced_fork_history_rejected(tmp_path):
+    repo, store, bare = setup(tmp_path)
+    store.update("t", last_review={"reason": "local"})
+    subprocess.run(["git", "add", "."], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=repo, check=True)
+    b = clone_b(bare, tmp_path)
+    p = b / "automation/state/tasks.json"
+    d = json.loads(p.read_text()); d["tasks"]["t"]["last_review"] = {"reason": "remote"}
+    p.write_text(json.dumps(d), encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=b, check=True)
+    subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
+    subprocess.run(["git", "push", "origin", "fix/t"], cwd=b, check=True)
+    assert call(repo, store, wrapper(tmp_path)) is False
