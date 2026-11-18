@@ -1,10 +1,10 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-18T10:17:29Z",
+  "generated_at": "2026-11-18T10:32:58Z",
   "fear_greed": {
-    "score": 26.61,
+    "score": 26.22,
     "rating": "fear",
-    "timestamp": "2026-11-18T09:59:46+00:00",
+    "timestamp": "2026-11-18T10:14:46+00:00",
     "subindicators": {
       "market_momentum_sp500": {
         "score": 5.2,
@@ -23,7 +23,7 @@
         "rating": "extreme fear"
       },
       "market_volatility_vix": {
-        "score": 37.84,
+        "score": 35.14,
         "rating": "fear"
       },
       "junk_bond_demand": {
@@ -38,7 +38,7 @@
     "history_30d": [
       {
         "date": "2026-11-18",
-        "score": 26.61,
+        "score": 26.22,
         "rating": "fear"
       },
       {
@@ -148,46 +148,8 @@
       }
     ]
   },
-  "fedwatch": {
-    "next_meeting": "2026-12-09",
-    "current_target": "3.75%-4.00%",
-    "effr": 3.88,
-    "trade_date": "2026-11-17",
-    "probabilities": {
-      "hike_25bp": 96.9,
-      "hike_50bp": 3.1
-    },
-    "meetings": [
-      {
-        "date": "2026-12-09",
-        "contract": "ZQZ6",
-        "probabilities": {
-          "hike_25bp": 96.9,
-          "hike_50bp": 3.1
-        }
-      },
-      {
-        "date": "2027-01-27",
-        "contract": "ZQF7",
-        "probabilities": {
-          "hike_25bp": 30.1,
-          "hike_50bp": 67.7,
-          "hike_75bp": 2.1
-        }
-      },
-      {
-        "date": "2027-03-17",
-        "contract": "ZQH7",
-        "probabilities": {
-          "hike_25bp": 11.4,
-          "hike_50bp": 44.4,
-          "hike_75bp": 42.9,
-          "hike_100bp": 1.3
-        }
-      }
-    ],
-    "max_meetings": 3,
-    "source": "cme"
-  },
-  "error": null
+  "fedwatch": null,
+  "error": {
+    "fedwatch": "FedWatch 抓取失败：Failed to perform, curl: (28) Operation timed out after 30001 milliseconds with 0 bytes received. See https://curl.se/libcurl/c/libcurl-errors.html first for more details."
+  }
 }
