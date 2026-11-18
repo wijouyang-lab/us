@@ -17,6 +17,38 @@ def cmd(args, cwd, check=True):
     return subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=check)
 
 
+STATE_RANK = {"QUEUED": 0, "RUNNING": 1, "PUBLISHING": 2, "NEEDS_REVISION": 2, "BLOCKED": 2, "REVIEW_PENDING": 3, "PASS": 4}
+RECOVERABLE_BLOCK_REASONS = {"BUSINESS_PUSH_FAILED", "PUBLISHING_STATE_PUSH_FAILED", "STATE_PERSIST_FAILED", "PR_QUERY_FAILED", "PR_CREATE_FAILED", "READY_PR_BLOCKED", "MULTIPLE_PR_BLOCKED"}
+ALLOWED_TRANSITIONS = {
+    "QUEUED": {"QUEUED", "RUNNING", "BLOCKED"},
+    "RUNNING": {"RUNNING", "PUBLISHING", "BLOCKED", "FAIL"},
+    "PUBLISHING": {"PUBLISHING", "REVIEW_PENDING", "PASS", "BLOCKED", "FAIL", "NEEDS_REVISION"},
+    "NEEDS_REVISION": {"NEEDS_REVISION", "PUBLISHING"},
+    "BLOCKED": {"BLOCKED", "PUBLISHING"},
+    "REVIEW_PENDING": {"REVIEW_PENDING", "PASS"},
+    "PASS": {"PASS"},
+    "FAIL": {"FAIL"},
+}
+
+
+def transition_ok(local_status, remote_status, local_reason="", remote_reason=""):
+    if remote_status not in STATE_RANK or local_status not in STATE_RANK:
+        return False
+    if remote_status not in ALLOWED_TRANSITIONS.get(local_status, set()):
+        return False
+    if local_status == "BLOCKED" and remote_status == "PUBLISHING" and local_reason not in RECOVERABLE_BLOCK_REASONS:
+        return False
+    return True
+
+
+def _valid_sha(value):
+    return isinstance(value, str) and len(value) == 40 and all(c in "0123456789abcdef" for c in value.lower())
+
+
+def _valid_url(value):
+    return isinstance(value, str) and value.startswith(("https://", "http://")) and " " not in value
+
+
 def push_state(store, root, branch, task_id):
     try:
         store.save(store.load())
@@ -60,13 +92,16 @@ def push_state(store, root, branch, task_id):
                 return False
         if remote_task.get("status") not in STATUSES:
             return False
-        rank = {"PUBLISHING": 1, "REVIEW_PENDING": 2, "PASS": 3}
-        if rank.get(remote_task.get("status"), 0) < rank.get(local_task.get("status"), 0):
+        if not transition_ok(local_task.get("status"), remote_task.get("status"), (local_task.get("last_review") or {}).get("reason", ""), (remote_task.get("last_review") or {}).get("reason", "")):
             return False
         for key in ("published_sha", "pr_url"):
             if local_task.get(key) and remote_task.get(key) != local_task.get(key):
                 return False
-        if remote_task.get("status") == "REVIEW_PENDING" and not remote_task.get("pr_url"):
+        if remote_task.get("published_sha") and not _valid_sha(remote_task["published_sha"]):
+            return False
+        if remote_task.get("pr_url") and not _valid_url(remote_task["pr_url"]):
+            return False
+        if remote_task.get("status") == "REVIEW_PENDING" and not _valid_url(remote_task.get("pr_url")):
             return False
         rev = subprocess.run(["git", "rev-list", "--reverse", f"{local_sha}..FETCH_HEAD"], cwd=root, text=True, capture_output=True)
         if rev.returncode != 0 or not rev.stdout.strip():
