@@ -37,3 +37,24 @@ def test_sha_and_url_formats():
     assert not _valid_sha("z" * 40)
     assert _valid_url("https://github.com/x/y/pull/1")
     assert not _valid_url("not-a-url")
+    assert not _valid_url("https://")
+    assert not _valid_url("https://?x")
+    assert not _valid_url("")
+
+
+def test_complete_state_transition_matrix():
+    statuses = ["QUEUED", "RUNNING", "PUBLISHING", "NEEDS_REVISION", "BLOCKED", "REVIEW_PENDING", "PASS", "FAIL"]
+    allowed = {
+        ("QUEUED", "QUEUED"), ("QUEUED", "RUNNING"), ("QUEUED", "BLOCKED"),
+        ("RUNNING", "RUNNING"), ("RUNNING", "PUBLISHING"), ("RUNNING", "BLOCKED"), ("RUNNING", "FAIL"),
+        ("PUBLISHING", "PUBLISHING"), ("PUBLISHING", "REVIEW_PENDING"), ("PUBLISHING", "PASS"), ("PUBLISHING", "BLOCKED"), ("PUBLISHING", "FAIL"), ("PUBLISHING", "NEEDS_REVISION"),
+        ("NEEDS_REVISION", "NEEDS_REVISION"), ("NEEDS_REVISION", "PUBLISHING"),
+        ("BLOCKED", "BLOCKED"), ("BLOCKED", "PUBLISHING"),
+        ("REVIEW_PENDING", "REVIEW_PENDING"), ("REVIEW_PENDING", "PASS"),
+        ("PASS", "PASS"),
+        ("FAIL", "FAIL"),
+    }
+    for local in statuses:
+        for remote in statuses:
+            expected = (local, remote) in allowed
+            assert transition_ok(local, remote, "BUSINESS_PUSH_FAILED") is expected, (local, remote)

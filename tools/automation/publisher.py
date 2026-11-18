@@ -17,7 +17,6 @@ def cmd(args, cwd, check=True):
     return subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=check)
 
 
-STATE_RANK = {"QUEUED": 0, "RUNNING": 1, "PUBLISHING": 2, "NEEDS_REVISION": 2, "BLOCKED": 2, "REVIEW_PENDING": 3, "PASS": 4}
 RECOVERABLE_BLOCK_REASONS = {"BUSINESS_PUSH_FAILED", "PUBLISHING_STATE_PUSH_FAILED", "STATE_PERSIST_FAILED", "PR_QUERY_FAILED", "PR_CREATE_FAILED", "READY_PR_BLOCKED", "MULTIPLE_PR_BLOCKED"}
 ALLOWED_TRANSITIONS = {
     "QUEUED": {"QUEUED", "RUNNING", "BLOCKED"},
@@ -32,11 +31,13 @@ ALLOWED_TRANSITIONS = {
 
 
 def transition_ok(local_status, remote_status, local_reason="", remote_reason=""):
-    if remote_status not in STATE_RANK or local_status not in STATE_RANK:
+    if remote_status not in STATUSES or local_status not in STATUSES:
         return False
     if remote_status not in ALLOWED_TRANSITIONS.get(local_status, set()):
         return False
     if local_status == "BLOCKED" and remote_status == "PUBLISHING" and local_reason not in RECOVERABLE_BLOCK_REASONS:
+        return False
+    if remote_status == "BLOCKED" and not isinstance(remote_reason, str):
         return False
     return True
 
@@ -46,7 +47,11 @@ def _valid_sha(value):
 
 
 def _valid_url(value):
-    return isinstance(value, str) and value.startswith(("https://", "http://")) and " " not in value
+    if not isinstance(value, str) or not value.strip():
+        return False
+    from urllib.parse import urlparse
+    p = urlparse(value)
+    return p.scheme in {"http", "https"} and bool(p.hostname) and "." in p.hostname
 
 
 def push_state(store, root, branch, task_id):
@@ -99,6 +104,12 @@ def push_state(store, root, branch, task_id):
                 return False
         if remote_task.get("published_sha") and not _valid_sha(remote_task["published_sha"]):
             return False
+        if remote_task.get("published_sha"):
+            sha = remote_task["published_sha"]
+            if subprocess.run(["git", "cat-file", "-e", f"{sha}^{{commit}}"], cwd=root, capture_output=True).returncode != 0:
+                return False
+            if subprocess.run(["git", "merge-base", "--is-ancestor", sha, "FETCH_HEAD"], cwd=root, capture_output=True).returncode != 0:
+                return False
         if remote_task.get("pr_url") and not _valid_url(remote_task["pr_url"]):
             return False
         if remote_task.get("status") == "REVIEW_PENDING" and not _valid_url(remote_task.get("pr_url")):
