@@ -238,7 +238,7 @@ def test_dry_run_gate_and_no_max_attempts():
     assert wf["jobs"]["agent"]["permissions"] == {"contents": "read"}
     assert "DRY_RUN_VALIDATION_ONLY" in text
     assert "max_attempts" not in text
-    assert wf["jobs"]["agent"]["if"] == "inputs.dry_run == false"
+    assert wf["jobs"]["agent"]["if"] == "inputs.dry_run == false && vars.DSH_REAL_MODEL_ENABLED == 'true'"
     assert "no DSH/model call" in text
     for name, job in wf["jobs"].items():
         if name != "publisher":
