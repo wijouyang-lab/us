@@ -1,15 +1,15 @@
-name: Test
+﻿name: Test
 
-# 让「全量回归通过」这个基线有强制机制（此前 9 个 workflow 无一跑 pytest）。
-# 参考 docs/HANDOVER.md:120 —— 全量测试必须用 Python 3.12（scan.py 含 3.11 无法解析的
-# f-string 反斜杠），Windows 本机另需 PYTHONUTF8=1；这里统一在 workflow 级声明。
+# 璁┿€屽叏閲忓洖褰掗€氳繃銆嶈繖涓熀绾挎湁寮哄埗鏈哄埗锛堟鍓?9 涓?workflow 鏃犱竴璺?pytest锛夈€?
+# 鍙傝€?docs/HANDOVER.md:120 鈥斺€?鍏ㄩ噺娴嬭瘯蹇呴』鐢?Python 3.12锛坰can.py 鍚?3.11 鏃犳硶瑙ｆ瀽鐨?
+# f-string 鍙嶆枩鏉狅級锛學indows 鏈満鍙﹂渶 PYTHONUTF8=1锛涜繖閲岀粺涓€鍦?workflow 绾у０鏄庛€?
 #
-# 注意：bot 的 chore(dashboard) 提交带 [skip ci]，GitHub 对 push 事件会据此跳过本 workflow。
-# 功能分支也触发全量回归，避免只依赖 PR synchronize 事件；主分支的数据刷新仍被 [skip ci] 排除。
+# 娉ㄦ剰锛歜ot 鐨?chore(dashboard) 鎻愪氦甯?[skip ci]锛孏itHub 瀵?push 浜嬩欢浼氭嵁姝よ烦杩囨湰 workflow銆?
+# 鍔熻兘鍒嗘敮涔熻Е鍙戝叏閲忓洖褰掞紝閬垮厤鍙緷璧?PR synchronize 浜嬩欢锛涗富鍒嗘敮鐨勬暟鎹埛鏂颁粛琚?[skip ci] 鎺掗櫎銆?
 #
-# 隐式依赖：多个前端测试用 subprocess.run(["node", ...])（如 test_macro_panel_frontend.py:39、
-# test_model_usage.py:165、test_market_indicators.py:282）。ubuntu-latest 自带 Node，无需安装；
-# 若将来换 runner 镜像，需显式安装。
+# 闅愬紡渚濊禆锛氬涓墠绔祴璇曠敤 subprocess.run(["node", ...])锛堝 test_macro_panel_frontend.py:39銆?
+# test_model_usage.py:165銆乼est_market_indicators.py:282锛夈€倁buntu-latest 鑷甫 Node锛屾棤闇€瀹夎锛?
+# 鑻ュ皢鏉ユ崲 runner 闀滃儚锛岄渶鏄惧紡瀹夎銆?
 
 on:
   push:
@@ -26,9 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
@@ -51,13 +51,29 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: "22"
       - name: Install and verify pinned DSH (no secrets)
         run: |
-          npm install --prefix .dsh-runtime --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.0-rc.2
-          .dsh-runtime/node_modules/.bin/dsh --version
-          .dsh-runtime/node_modules/.bin/dsh --profile headless --help >/dev/null
-          test -f .dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
-          grep -q "SENSITIVE_ENV_PATTERN" .dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+          npm ci --prefix dsh-runtime --ignore-scripts --no-audit --no-fund
+          dsh-runtime/node_modules/.bin/dsh --version
+          dsh-runtime/node_modules/.bin/dsh --profile headless --help >/dev/null
+          test -f dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+          grep -q "SENSITIVE_ENV_PATTERN" dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+
+
+
+  dsh-subprocess-isolation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Install locked DSH runtime
+        run: npm ci --prefix dsh-runtime --ignore-scripts --no-audit --no-fund
+      - name: Verify real DSH subprocess environment scrub
+        run: node tools/automation/dsh_subprocess_probe.mjs

@@ -88,3 +88,21 @@ def test_preflight_protected_without_rules_blocks(monkeypatch):
     monkeypatch.setattr(p.subprocess, "run", fake)
     monkeypatch.setattr("sys.argv", ["preflight", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"])
     assert p.main() == 1
+
+
+def test_lock_gate_and_action_pinning():
+    wf = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert 'DSH_REQUIRE_LOCK: "1"' in wf
+    assert "BLOCKED:LOCK_NOT_IMPLEMENTED" in (ROOT / "tools/automation/publisher.py").read_text(encoding="utf-8")
+    for line in wf.splitlines():
+        if "uses:" in line:
+            assert "@" in line and len(line.split("@", 1)[1].split()[0]) == 40
+
+
+def test_locked_dsh_runtime_assets_exist():
+    import json
+    pkg = json.loads((ROOT / "dsh-runtime/package.json").read_text(encoding="utf-8-sig"))
+    assert pkg["dependencies"]["@deepseek-ai/dsh"] == "0.2.0-rc.2"
+    lock = json.loads((ROOT / "dsh-runtime/package-lock.json").read_text(encoding="utf-8-sig"))
+    assert lock["packages"]["node_modules/@deepseek-ai/dsh"]["version"] == "0.2.0-rc.2"
+    assert (ROOT / "tools/automation/dsh_subprocess_probe.mjs").exists()

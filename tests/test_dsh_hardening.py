@@ -196,7 +196,8 @@ def test_headless_child_env_excludes_github_credentials(tmp_path, monkeypatch):
 def test_checkout_does_not_persist_credentials():
     text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
     assert "persist-credentials: false" in text
-    assert "@deepseek-ai/dsh@0.2.0-rc.2" in text
+    assert "npm ci --prefix dsh-runtime" in text
+    assert "@deepseek-ai/dsh" in (ROOT / "dsh-runtime/package.json").read_text(encoding="utf-8")
 
 
 def test_failed_dsh_does_not_publish(tmp_path):

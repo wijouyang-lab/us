@@ -205,6 +205,9 @@ def main() -> int:
     ap.add_argument("--base-branch", required=True)
     args = ap.parse_args()
     root = Path(args.repo).resolve()
+    if os.environ.get("DSH_REQUIRE_LOCK") == "1":
+        print("BLOCKED:LOCK_NOT_IMPLEMENTED")
+        return 3
     try:
         task_id = validate_task_id(args.task_id)
         base_branch = validate_base(args.base_branch)

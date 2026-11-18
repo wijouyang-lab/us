@@ -30,3 +30,6 @@ automation/logs/*.log
 .dsh-runtime/
 agent-artifact/
 tmp-dsh-*/
+
+dsh-runtime/node_modules/
+
