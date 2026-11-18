@@ -250,6 +250,7 @@ def main() -> int:
         if code:
             if not recovery_range_ok(root, code, head):
                 mark(store, task_id, "BLOCKED", "UNKNOWN_COMMIT_AFTER_ARTIFACT", root, branch)
+                print("BLOCKED:UNKNOWN_COMMIT_AFTER_ARTIFACT")
                 return 1
             resume_code = True
         else:
