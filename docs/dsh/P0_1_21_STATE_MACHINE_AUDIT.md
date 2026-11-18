@@ -1,5 +1,7 @@
 # P0.1.21: Publisher State Machine Correction Audit
 
+> Historical audit; superseded by P0.1.22.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `b5bf26697edf22ebb08d617c3e31ab34253b96e3`
