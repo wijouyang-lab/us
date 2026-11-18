@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 
 from tools.automation.artifact import _check_parents, artifact_digest, read_manifest
-from tools.automation.state_store import TaskStore
+from tools.automation.state_store import STATUSES, TaskStore
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
 
 
@@ -47,20 +47,31 @@ def push_state(store, root, branch, task_id):
             data = json.loads(content.stdout)
         except Exception:
             return False
-        remote_task = (data.get("tasks") or {}).get(task_id)
+        if not isinstance(data, dict) or not isinstance(data.get("tasks"), dict):
+            return False
+        remote_task = data["tasks"].get(task_id)
         local_task = store.load().get("tasks", {}).get(task_id)
-        if not remote_task or not local_task:
+        if not isinstance(remote_task, dict) or not isinstance(local_task, dict):
+            return False
+        if remote_task.get("task_id", task_id) != task_id:
             return False
         for key in ("agent_source_sha", "artifact_digest", "base_commit_sha", "branch", "base_branch"):
-            if remote_task.get(key) != local_task.get(key):
+            if not isinstance(remote_task.get(key), str) or remote_task.get(key) != local_task.get(key):
                 return False
+        if remote_task.get("status") not in STATUSES:
+            return False
         rank = {"PUBLISHING": 1, "REVIEW_PENDING": 2, "PASS": 3}
         if rank.get(remote_task.get("status"), 0) < rank.get(local_task.get("status"), 0):
             return False
         for key in ("published_sha", "pr_url"):
-            if remote_task.get(key) and local_task.get(key) and remote_task.get(key) != local_task.get(key):
+            if local_task.get(key) and remote_task.get(key) != local_task.get(key):
                 return False
-        for sha in subprocess.run(["git", "rev-list", "--reverse", f"{local_sha}..FETCH_HEAD"], cwd=root, text=True, capture_output=True).stdout.splitlines():
+        if remote_task.get("status") == "REVIEW_PENDING" and not remote_task.get("pr_url"):
+            return False
+        rev = subprocess.run(["git", "rev-list", "--reverse", f"{local_sha}..FETCH_HEAD"], cwd=root, text=True, capture_output=True)
+        if rev.returncode != 0 or not rev.stdout.strip():
+            return False
+        for sha in rev.stdout.splitlines():
             if not _one_commit_state_only(root, sha):
                 return False
         return True
