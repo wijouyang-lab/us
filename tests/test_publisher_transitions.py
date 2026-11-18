@@ -40,6 +40,12 @@ def test_sha_and_url_formats():
     assert not _valid_url("https://")
     assert not _valid_url("https://?x")
     assert not _valid_url("")
+    assert not _valid_url("https://-bad.com")
+    assert not _valid_url("https://bad-.com")
+    assert not _valid_url("https://bad..com")
+    assert not _valid_url("https://example.com:99999")
+    assert not _valid_url("https://example.com:bad")
+    assert _valid_url("http://example.com:8080/x")
 
 
 def test_complete_state_transition_matrix():

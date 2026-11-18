@@ -49,9 +49,18 @@ def _valid_sha(value):
 def _valid_url(value):
     if not isinstance(value, str) or not value.strip():
         return False
+    import re
     from urllib.parse import urlparse
-    p = urlparse(value)
-    return p.scheme in {"http", "https"} and bool(p.hostname) and "." in p.hostname
+    try:
+        p = urlparse(value)
+        port = p.port
+    except ValueError:
+        return False
+    if p.scheme not in {"http", "https"} or not p.hostname:
+        return False
+    if not re.fullmatch(r"(?=.{1,253}$)([A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}", p.hostname):
+        return False
+    return port is None or 0 <= port <= 65535
 
 
 def push_state(store, root, branch, task_id):
