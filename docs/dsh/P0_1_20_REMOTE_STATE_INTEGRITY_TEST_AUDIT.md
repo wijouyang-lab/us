@@ -1,5 +1,7 @@
 # P0.1.20: Remote State Integrity Integration Test Completion Audit
 
+> Historical audit; superseded by P0.1.21.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `d74c56d362955f031d68366d0e97e8744a28a89b`
