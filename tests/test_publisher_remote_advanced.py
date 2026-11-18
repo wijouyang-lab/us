@@ -258,7 +258,8 @@ def add_followup(b, kind):
         subprocess.run(["git", "add", "."], cwd=b, check=True)
         subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=b, check=True)
         raw = subprocess.check_output(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "-M", "-C", "--find-copies-harder", "HEAD~1", "HEAD"], cwd=b, text=True)
-        assert "C" in raw
+        rows = [line.split("\t") for line in raw.splitlines() if line.strip()]
+        assert any(row and row[0].startswith("C") for row in rows), raw
 
 
 @pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")

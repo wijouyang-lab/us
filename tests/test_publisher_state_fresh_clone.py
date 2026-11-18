@@ -169,9 +169,16 @@ def test_unknown_commit_after_artifact_blocked_fresh_clone(tmp_path):
     f = fresh(bare, tmp_path)
     r = run(f, art, bindir, log, "existing")
     assert r.returncode != 0 and "BLOCKED:UNKNOWN_COMMIT_AFTER_ARTIFACT" in r.stdout
+    assert "STATE_PERSIST_FAILED:REMOTE_NOT_SAVED" not in (r.stdout + r.stderr)
+    subprocess.run(["git", "fetch", "origin", "fix/t"], cwd=f, check=True)
+    remote = json.loads(subprocess.check_output(["git", "show", "origin/fix/t:automation/state/tasks.json"], cwd=f, text=True))
+    assert remote["tasks"]["t"]["status"] == "BLOCKED"
+    assert remote["tasks"]["t"]["last_review"]["reason"] == "UNKNOWN_COMMIT_AFTER_ARTIFACT"
     state = json.loads((f / "automation/state/tasks.json").read_text())
     assert state["tasks"]["t"]["status"] == "BLOCKED"
     assert state["tasks"]["t"]["last_review"]["reason"] == "UNKNOWN_COMMIT_AFTER_ARTIFACT"
     subjects = subprocess.check_output(["git", "log", "origin/fix/t", "--format=%s"], cwd=f, text=True).splitlines()
     assert len([x for x in subjects if x.startswith("automation: DSH task")]) == 1
+    assert "unknown business change" in subjects
+    assert sum(1 for x in subjects if x == "automation: persist task state [skip ci]") >= 1
     assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1
