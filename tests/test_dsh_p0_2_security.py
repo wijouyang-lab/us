@@ -156,3 +156,50 @@ def test_production_cli_blocks_fake_oidc_env(tmp_path):
     r = subprocess.run([sys.executable, "-m", "tools.automation.publisher", "--repo", str(tmp_path), "--artifact", str(tmp_path), "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"], env=env, text=True, capture_output=True)
     assert r.returncode != 0
     assert "BLOCKED:WORKFLOW_CONTEXT_UNVERIFIED" in r.stdout
+
+def _oidc_case(claims=None, remove=None, kid=None, alg=None):
+    import json, subprocess
+    inp = {"claims": claims or {}, "remove": remove or []}
+    if kid:
+        inp["kid"] = kid
+    if alg:
+        inp["alg"] = alg
+    out = json.loads(subprocess.check_output(["node", "tools/automation/oidc_test_token.mjs"], input=json.dumps(inp), text=True))
+    return out
+
+
+def test_oidc_full_negative_claim_matrix():
+    from tools.automation.oidc import verify_token
+    base = _oidc_case()
+    assert verify_token(base["token"], base["jwks"], {"run_id": "123456"})["ok"] is True
+    cases = [
+        _oidc_case({"iss": "https://evil.example"}),
+        _oidc_case({"aud": "wrong"}),
+        _oidc_case({"repository": "evil/repo"}),
+        _oidc_case({"repository_id": "1"}),
+        _oidc_case({"workflow_ref": "evil/workflow"}),
+        _oidc_case({"ref": "refs/heads/main"}),
+        _oidc_case({"event_name": "push"}),
+        _oidc_case(remove=["exp"]),
+        _oidc_case({"exp": 1}),
+        _oidc_case({"nbf": 9999999999}),
+        _oidc_case({"iat": 9999999999}),
+        _oidc_case({"run_id": "not-a-number"}),
+        _oidc_case({"run_id": "999"}),
+        _oidc_case(kid="missing-kid"),
+        _oidc_case(alg="HS256"),
+        _oidc_case(remove=["repository"]),
+    ]
+    for i, item in enumerate(cases):
+        expected = {"run_id": "123456"}
+        assert verify_token(item["token"], item["jwks"], expected)["ok"] is False, i
+    tampered = base["token"][:-4] + "AAAA"
+    assert verify_token(tampered, base["jwks"], {"run_id": "123456"})["ok"] is False
+
+def test_test_harness_not_in_production_entrypoints():
+    from pathlib import Path
+    workflow = Path(".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    agent = Path("tools/automation/agent_task.py").read_text(encoding="utf-8")
+    assert "publisher_cli" not in workflow
+    assert "publisher_cli" not in agent
+    assert "_TEST_HARNESS" not in (Path("tools/automation/agent_task.py").read_text(encoding="utf-8"))

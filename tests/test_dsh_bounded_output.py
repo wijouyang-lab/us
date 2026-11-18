@@ -36,3 +36,26 @@ def test_normal_small_output(tmp_path):
     out = HeadlessRunner([sys.executable, str(script)], max_output_bytes=1000, timeout=10).run("p", tmp_path / "log")
     assert out["returncode"] == 0
     assert out["final"] == "ok"
+
+def test_grandchild_is_terminated_when_parent_exits(tmp_path):
+    import os, time
+    init = tmp_path / "parent.py"
+    pidfile = tmp_path / "grandchild.pid"
+    init.write_text(
+        "import subprocess,sys,time\n"
+        "p=subprocess.Popen([sys.executable,'-c','import sys,time\\nwhile True:\\n sys.stdout.write(\\\"x\\\"*4096); sys.stdout.flush()'])\n"
+        f"open({str(pidfile)!r},'w').write(str(p.pid))\n"
+        "time.sleep(0.2)\n",
+        encoding="utf-8",
+    )
+    out = HeadlessRunner([sys.executable, str(init)], max_output_bytes=5000, timeout=10).run("p", tmp_path / "log")
+    assert out["returncode"] in {0, 125}
+    time.sleep(0.3)
+    pid = int(pidfile.read_text(encoding="utf-8"))
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        pass
+    else:
+        os.kill(pid, 9)
+        raise AssertionError("grandchild survived")
