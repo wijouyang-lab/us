@@ -1,0 +1,90 @@
+import json
+from pathlib import Path
+from unittest import mock
+
+import pytest
+
+from tools.automation.artifact import build_artifact, read_manifest
+from tools.automation.redact import MAX_SUMMARY, redact
+from tools.automation.validate import validate_base
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_redact_removes_credentials_and_limits_length():
+    text = "DEEPSEEK_API_KEY=sk-test-not-real\nGH_TOKEN=gh-test-not-real\nNORMAL=visible\n" + "x" * 5000
+    out = redact(text)
+    assert "sk-test-not-real" not in out
+    assert "gh-test-not-real" not in out
+    assert "NORMAL=visible" in out
+    assert len(out) <= MAX_SUMMARY + 20
+    assert "<truncated>" in out
+
+
+def test_artifact_has_no_raw_prompt_or_output(tmp_path):
+    repo = tmp_path / "repo"
+    (repo / "docs/research").mkdir(parents=True)
+    (repo / "docs/research/a.md").write_text("a", encoding="utf-8")
+    out = tmp_path / "art"
+    manifest = {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": "a" * 40, "base_commit_sha": "b" * 40, "status": "AGENT_COMPLETE", "timed_out": False, "tests_returncode": 0, "diagnostic_summary": "safe summary"}
+    build_artifact(repo, out, manifest, ["docs/research/a.md"])
+    data = (out / "manifest.json").read_text(encoding="utf-8")
+    assert "prompt" not in data
+    assert "final" not in data
+    assert "sk-test" not in data
+    read_manifest(out)
+
+
+def test_workflow_has_no_raw_log_upload_and_dry_gate():
+    text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert "Upload DSH log" not in text
+    assert "dsh-log-" not in text
+    assert "DRY_RUN_VALIDATION_ONLY" in text
+    assert 'if: inputs.dry_run == false' in text
+    assert "dsh-publisher-${{ inputs.branch }}" in text
+
+
+def test_base_branch_only_main():
+    assert validate_base("main") == "main"
+    with pytest.raises(ValueError):
+        validate_base("release")
+
+
+def test_preflight_fails_closed_on_api_errors(monkeypatch):
+    import tools.automation.preflight as p
+    calls = []
+
+    class R:
+        returncode = 1
+        stdout = ""
+
+    def fake(args, **kwargs):
+        calls.append(args)
+        if args[:2] == ["gh", "repo"]:
+            return type("X", (), {"returncode": 0, "stdout": "o/r\n"})()
+        return R()
+
+    monkeypatch.setattr(p.subprocess, "run", fake)
+    monkeypatch.setattr("sys.argv", ["preflight", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"])
+    assert p.main() == 1
+    assert calls
+
+
+def test_preflight_protected_without_rules_blocks(monkeypatch):
+    import tools.automation.preflight as p
+
+    class R:
+        def __init__(self, rc, out):
+            self.returncode = rc
+            self.stdout = out
+
+    def fake(args, **kwargs):
+        if args[:2] == ["gh", "repo"]:
+            return R(0, "o/r\n")
+        if args[-1].endswith("/branches/main"):
+            return R(0, json.dumps({"protected": True}))
+        return R(404, "")
+
+    monkeypatch.setattr(p.subprocess, "run", fake)
+    monkeypatch.setattr("sys.argv", ["preflight", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"])
+    assert p.main() == 1

@@ -11,7 +11,7 @@ from tools.automation.changes import ALLOWED
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
 
 REQUIRED = {"task_id", "branch", "base_branch", "source_commit_sha", "base_commit_sha", "status", "files", "deletes", "timed_out", "tests_returncode"}
-OPTIONAL = {"final", "timed_out", "tests_returncode", "tests_tail", "error"}
+OPTIONAL = {"final", "timed_out", "tests_returncode", "tests_tail", "error", "diagnostic_summary"}
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 

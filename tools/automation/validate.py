@@ -25,11 +25,6 @@ def validate_branch(value: str, base: str = "main") -> str:
 
 
 def validate_base(value: str) -> str:
-    v = value or ""
-    if v in {"main", "master"}:
-        return v
-    if ".." in v or v.startswith("/") or v.endswith("/") or "//" in v:
-        raise ValueError("INVALID_BASE_BRANCH")
-    if not BRANCH_RE.fullmatch(v):
-        raise ValueError("INVALID_BASE_BRANCH")
-    return v
+    if value != "main":
+        raise ValueError("BASE_BRANCH_NOT_MAIN")
+    return value

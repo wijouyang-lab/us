@@ -9,6 +9,7 @@ from pathlib import Path
 from tools.automation.artifact import build_artifact
 from tools.automation.changes import changed_paths, validate_paths
 from tools.automation.headless import HeadlessRunner
+from tools.automation.redact import redact
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
 
 
@@ -32,7 +33,7 @@ def main() -> int:
     source = subprocess.run(["git", "rev-parse", "HEAD"], text=True, capture_output=True).stdout.strip()
     base = subprocess.run(["git", "rev-parse", f"origin/{args.base_branch}"], text=True, capture_output=True).stdout.strip()
     result = HeadlessRunner().run(args.prompt, Path(args.log))
-    manifest = {"task_id": task_id, "branch": args.branch, "base_branch": args.base_branch, "source_commit_sha": source, "base_commit_sha": base, "status": "AGENT_FAILED", "final": result.get("final"), "timed_out": result.get("timed_out", False)}
+    manifest = {"task_id": task_id, "branch": args.branch, "base_branch": args.base_branch, "source_commit_sha": source, "base_commit_sha": base, "status": "AGENT_FAILED", "timed_out": result.get("timed_out", False), "diagnostic_summary": redact(result.get("final") or "")}
     if result["returncode"] != 0 or not result.get("final"):
         build_artifact(Path("."), out, manifest, [])
         return 1
@@ -41,7 +42,7 @@ def main() -> int:
         validate_paths(paths)
         tests = subprocess.run(["python", "-m", "pytest", "-q"], text=True, capture_output=True, timeout=600)
         manifest["tests_returncode"] = tests.returncode
-        manifest["tests_tail"] = (tests.stdout + tests.stderr)[-4000:]
+        manifest["diagnostic_summary"] = redact((tests.stdout + tests.stderr)[-4000:])
         if tests.returncode != 0:
             manifest["status"] = "AGENT_TESTS_FAILED"
             build_artifact(Path("."), out, manifest, paths)

@@ -1,9 +1,9 @@
-"""Preflight: validate inputs and fail closed when main protection is absent."""
+"""Preflight: main-only, fail-closed protection checks."""
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
-import sys
 
 from tools.automation.validate import validate_base, validate_branch, validate_task_id
 
@@ -26,13 +26,37 @@ def main() -> int:
     if slug.returncode != 0 or not slug.stdout.strip():
         print("BLOCKED:REPO_IDENTITY_UNAVAILABLE")
         return 1
-    r = subprocess.run(["gh", "api", f"repos/{slug.stdout.strip()}/branches/main", "--jq", ".protected"], text=True, capture_output=True)
-    if r.returncode != 0 or r.stdout.strip().lower() != "true":
-        if args.dry_run:
-            print("PREFLIGHT_OK_DRY_RUN:MAIN_PROTECTION_UNVERIFIED")
-            return 0
-        print("BLOCKED:MAIN_PROTECTION_UNVERIFIED")
+    branch = subprocess.run(["gh", "api", f"repos/{slug.stdout.strip()}/branches/main"], text=True, capture_output=True)
+    if branch.returncode != 0:
+        print("BLOCKED:PROTECTION_RULES_UNVERIFIED")
         return 1
+    try:
+        if json.loads(branch.stdout).get("protected") is not True:
+            print("BLOCKED:MAIN_PROTECTION_UNVERIFIED")
+            return 1
+    except Exception:
+        print("BLOCKED:PROTECTION_RULES_UNVERIFIED")
+        return 1
+    rules = subprocess.run(["gh", "api", f"repos/{slug.stdout.strip()}/branches/main/protection"], text=True, capture_output=True)
+    if rules.returncode != 0:
+        print("BLOCKED:PROTECTION_RULES_UNVERIFIED")
+        return 1
+    try:
+        p = json.loads(rules.stdout)
+        ok = (
+            bool(p.get("required_status_checks"))
+            and bool(p.get("required_pull_request_reviews"))
+            and p.get("allow_force_pushes", {}).get("enabled") is False
+            and p.get("enforce_admins", {}).get("enabled") is True
+        )
+    except Exception:
+        ok = False
+    if not ok:
+        print("BLOCKED:PROTECTION_RULES_UNVERIFIED")
+        return 1
+    if args.dry_run:
+        print("DRY_RUN_VALIDATION_ONLY")
+        return 0
     print("PREFLIGHT_OK")
     return 0
 

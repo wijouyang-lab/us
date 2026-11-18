@@ -21,7 +21,7 @@ on:
         default: "main"
         type: string
       dry_run:
-        description: "Run DSH and generate artifacts without publishing (still makes model calls)"
+        description: "Validate inputs and run static checks only (no DSH/model call)"
         required: true
         default: true
         type: boolean
@@ -32,7 +32,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: dsh-task-${{ inputs.task_id }}
+  group: dsh-publisher-${{ inputs.branch }}
   cancel-in-progress: false
 
 jobs:
@@ -80,6 +80,7 @@ jobs:
 
   agent:
     needs: [preflight, dsh-install-verify]
+    if: inputs.dry_run == false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -123,14 +124,6 @@ jobs:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
           python -m tools.automation.agent_task             --task-id "$TASK_ID" --prompt "$TASK_PROMPT"             --branch "$TASK_BRANCH" --base-branch "$BASE_BRANCH"             --out agent-artifact --log automation/logs/agent.ndjson
-      - name: Upload DSH log (artifact only)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: dsh-log-${{ inputs.task_id }}-${{ github.run_id }}
-          path: automation/logs/
-          if-no-files-found: warn
-          retention-days: 7
       - name: Upload agent artifact for Publisher
         if: always()
         uses: actions/upload-artifact@v4
@@ -141,7 +134,7 @@ jobs:
           retention-days: 7
       - name: DRY_RUN_COMPLETE
         if: inputs.dry_run == true
-        run: echo "DRY_RUN_COMPLETE - no Publisher, commit, push or PR was performed."
+        run: echo "DRY_RUN_VALIDATION_ONLY - no DSH agent, Publisher, commit, push or PR was performed."
 
   publisher:
     needs: agent

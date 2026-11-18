@@ -29,7 +29,12 @@ def test_malicious_identifiers_rejected():
 
 def test_valid_branches_and_base():
     assert validate_branch("fix/dsh-p0-1-hardening", "feature/dsh-headless-automation") == "fix/dsh-p0-1-hardening"
-    assert validate_base("feature/dsh-headless-automation") == "feature/dsh-headless-automation"
+    try:
+        validate_base("feature/dsh-headless-automation")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("non-main base accepted")
 
 
 def test_prompt_is_one_argument_not_shell(tmp_path):
@@ -101,7 +106,7 @@ def test_pr_create_failure_is_terminal_fail(tmp_path, monkeypatch):
     monkeypatch.setattr(mod, "stage_allowed", lambda repo, paths: "diff")
     monkeypatch.setattr(mod, "commit_diff", lambda repo: "diff")
     store = TaskStore(tmp_path / "tasks.json")
-    task = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=False, require_protection=False).run_task("t4", "p", "fix/test", "feature/base")
+    task = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=False, require_protection=False).run_task("t4", "p", "fix/test", "main")
     assert task["status"] == "FAIL"
     assert task["last_review"]["reason"] == "PR_CREATE_FAILED"
 
@@ -230,9 +235,10 @@ def test_dry_run_gate_and_no_max_attempts():
     assert wf["jobs"]["publisher"]["if"] == "inputs.dry_run == false"
     assert wf["jobs"]["publisher"]["needs"] == "agent"
     assert wf["jobs"]["agent"]["permissions"] == {"contents": "read"}
-    assert "DRY_RUN_COMPLETE" in text
+    assert "DRY_RUN_VALIDATION_ONLY" in text
     assert "max_attempts" not in text
-    assert "Run DSH and generate artifacts without publishing" in text
+    assert wf["jobs"]["agent"]["if"] == "inputs.dry_run == false"
+    assert "no DSH/model call" in text
     for name, job in wf["jobs"].items():
         if name != "publisher":
             assert job.get("permissions", {}).get("contents") != "write"

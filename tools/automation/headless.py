@@ -18,6 +18,7 @@ BASE_ALLOW = {
     "DEEPSEEK_BASE_URL", "DEEPSEEK_MODEL", "DSH_HOME",
 }
 MODEL_AUTH = {"DEEPSEEK_API_KEY"}
+MAX_OUTPUT_CHARS = 200_000
 
 
 def child_env() -> dict[str, str]:
@@ -66,7 +67,8 @@ class HeadlessRunner:
             except subprocess.TimeoutExpired:
                 proc.kill()
                 output, _ = proc.communicate()
-        log_path.write_text(output or "", encoding="utf-8")
+        output = (output or "")[:MAX_OUTPUT_CHARS]
+        log_path.write_text(output, encoding="utf-8")
         final = None
         session_id = None
         for line in (output or "").splitlines():
