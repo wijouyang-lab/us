@@ -219,3 +219,36 @@ def test_oidc_request_url_origin_protection(monkeypatch):
     assert not _valid_oidc_request_url("https://evil.example/x")
     assert not _valid_oidc_request_url("https://user:pass@pipelines.actions.githubusercontent.com/x")
     assert not _valid_oidc_request_url("https://pipelines.actions.githubusercontent.com:8443/x")
+
+def test_oidc_http_missing_and_bad_endpoint(monkeypatch):
+    from tools.automation import oidc
+    monkeypatch.delenv("ACTIONS_ID_TOKEN_REQUEST_URL", raising=False)
+    monkeypatch.delenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN", raising=False)
+    assert oidc._fetch_actions_token() == ""
+    monkeypatch.setenv("ACTIONS_ID_TOKEN_REQUEST_URL", "http://evil.example/token")
+    monkeypatch.setenv("ACTIONS_ID_TOKEN_REQUEST_TOKEN", "test-bearer")
+    assert oidc._fetch_actions_token() == ""
+    monkeypatch.setenv("ACTIONS_ID_TOKEN_REQUEST_URL", "https://pipelines.actions.githubusercontent.com/x?api-version=2")
+    called = []
+    class Boom:
+        def open(self, *args, **kwargs):
+            called.append(True)
+            raise RuntimeError("redirect")
+    import urllib.request
+    monkeypatch.setattr(urllib.request, "build_opener", lambda *a, **k: Boom())
+    try:
+        oidc._fetch_actions_token()
+    except RuntimeError:
+        pass
+    assert called
+
+def test_real_model_gate_defaults_disabled():
+    wf = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert "vars.DSH_REAL_MODEL_ENABLED == 'true'" in wf
+    assert "BLOCKED:REAL_MODEL_EXECUTION_DISABLED" in wf
+    agent = wf.split("  agent:", 1)[1].split("  publisher:", 1)[0]
+    assert "DEEPSEEK_API_KEY" in agent
+    preflight = wf.split("  preflight:", 1)[1].split("  dsh-install-verify:", 1)[0]
+    assert "DEEPSEEK_API_KEY" not in preflight
+    publisher = wf.split("  publisher:", 1)[1]
+    assert "DEEPSEEK_API_KEY" not in publisher

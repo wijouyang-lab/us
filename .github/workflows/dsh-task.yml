@@ -1,4 +1,4 @@
-﻿name: DSH Headless Task
+name: DSH Headless Task
 
 on:
   workflow_dispatch:
@@ -55,8 +55,13 @@ jobs:
           TASK_BRANCH: ${{ inputs.branch }}
           BASE_BRANCH: ${{ inputs.base_branch }}
           DRY_RUN: ${{ inputs.dry_run }}
+          REAL_MODEL_ENABLED: ${{ vars.DSH_REAL_MODEL_ENABLED }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          if [ "$DRY_RUN" = "false" ] && [ "$REAL_MODEL_ENABLED" != "true" ]; then
+            echo "BLOCKED:REAL_MODEL_EXECUTION_DISABLED"
+            exit 1
+          fi
           if [ "$DRY_RUN" = "true" ]; then
             python -m tools.automation.preflight --task-id "$TASK_ID" --branch "$TASK_BRANCH" --base-branch "$BASE_BRANCH" --dry-run
           else
@@ -82,7 +87,7 @@ jobs:
 
   agent:
     needs: [preflight, dsh-install-verify]
-    if: inputs.dry_run == false
+    if: inputs.dry_run == false && vars.DSH_REAL_MODEL_ENABLED == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
