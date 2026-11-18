@@ -17,7 +17,7 @@ def cmd(args, cwd, check=True):
     return subprocess.run(args, cwd=cwd, text=True, capture_output=True, check=check)
 
 
-def push_state(store, root, branch):
+def push_state(store, root, branch, task_id):
     try:
         store.save(store.load())
         cmd(["git", "add", "automation/state/tasks.json"], root)
@@ -41,14 +41,36 @@ def push_state(store, root, branch):
         if subprocess.run(["git", "merge-base", "--is-ancestor", local_sha, "FETCH_HEAD"], cwd=root, capture_output=True).returncode != 0:
             return False
         content = subprocess.run(["git", "show", "FETCH_HEAD:automation/state/tasks.json"], cwd=root, text=True, capture_output=True)
-        return content.returncode == 0 and content.stdout.strip().startswith("{")
+        if content.returncode != 0:
+            return False
+        try:
+            data = json.loads(content.stdout)
+        except Exception:
+            return False
+        remote_task = (data.get("tasks") or {}).get(task_id)
+        local_task = store.load().get("tasks", {}).get(task_id)
+        if not remote_task or not local_task:
+            return False
+        for key in ("agent_source_sha", "artifact_digest", "base_commit_sha", "branch", "base_branch"):
+            if remote_task.get(key) != local_task.get(key):
+                return False
+        rank = {"PUBLISHING": 1, "REVIEW_PENDING": 2, "PASS": 3}
+        if rank.get(remote_task.get("status"), 0) < rank.get(local_task.get("status"), 0):
+            return False
+        for key in ("published_sha", "pr_url"):
+            if remote_task.get(key) and local_task.get(key) and remote_task.get(key) != local_task.get(key):
+                return False
+        for sha in subprocess.run(["git", "rev-list", "--reverse", f"{local_sha}..FETCH_HEAD"], cwd=root, text=True, capture_output=True).stdout.splitlines():
+            if not _one_commit_state_only(root, sha):
+                return False
+        return True
     except Exception:
         return False
 
 
 def mark(store, task_id, status, reason, root, branch, **extra):
     store.update(task_id, status=status, last_review={"reason": reason, **extra})
-    ok = push_state(store, root, branch)
+    ok = push_state(store, root, branch, task_id)
     if not ok:
         store.update(task_id, last_review={"reason": reason, **extra, "state_persist_failed": True})
         store.save(store.load())
@@ -177,7 +199,7 @@ def main() -> int:
         store.enqueue(task_id, "", branch)
         task = store.load()["tasks"][task_id]
         store.update(task_id, status="PUBLISHING", attempts=task["attempts"] + 1, agent_source_sha=m["source_commit_sha"], base_commit_sha=m["base_commit_sha"], artifact_digest=digest, branch=branch, base_branch=base_branch)
-        if not push_state(store, root, branch):
+        if not push_state(store, root, branch, task_id):
             mark(store, task_id, "PUBLISHING", "PUBLISHING_STATE_PUSH_FAILED", root, branch)
             return 1
     try:
@@ -242,7 +264,7 @@ def main() -> int:
             if not v.get("isDraft") or v.get("url") != pr_url or v.get("headRefName") != branch or v.get("baseRefName") != base_branch:
                 raise RuntimeError("DRAFT_PR_VERIFY_FAILED")
         store.update(task_id, status="REVIEW_PENDING", pr_url=pr_url, last_review={"reviewer": "chatgpt", "reason": "AWAITING_INDEPENDENT_PR_REVIEW"})
-        if not push_state(store, root, branch):
+        if not push_state(store, root, branch, task_id):
             store.update(task_id, last_review={"reason": "STATE_PERSIST_FAILED", "pr_url": pr_url})
             store.save(store.load())
             print("STATE_PERSIST_FAILED:PR_EXISTS")
