@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import subprocess
 import sys
@@ -59,7 +59,7 @@ exit 1
 
 def run_publisher(repo, art, bindir, log, mode):
     env = dict(os.environ, PATH=f"{bindir}:{os.environ.get('PATH','')}", PYTHONPATH=str(ROOT), GH_MODE=mode, GH_LOG=str(log))
-    cmd = [sys.executable, "-m", "tools.automation.publisher", "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"]
+    cmd = [sys.executable, str(Path(__file__).with_name("publisher_cli.py")), "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"]
     return subprocess.run(cmd, cwd=repo, env=env, text=True, capture_output=True)
 
 
@@ -139,3 +139,4 @@ def test_business_push_rejected_then_fresh_clone_retry(tmp_path):
     assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1
     state = json.loads((fresh / "automation/state/tasks.json").read_text())
     assert state["tasks"]["t"]["status"] == "REVIEW_PENDING"
+

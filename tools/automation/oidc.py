@@ -1,4 +1,4 @@
-"""GitHub Actions OIDC verification via the local Node runtime."""
+"""GitHub Actions OIDC verification. Production trusts only GitHub endpoints."""
 from __future__ import annotations
 
 import json
@@ -7,12 +7,14 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+ISSUER = "https://token.actions.githubusercontent.com"
+JWKS_URL = "https://token.actions.githubusercontent.com/.well-known/jwks"
 
 
-def verify_token(token: str, jwks: dict) -> dict:
+def verify_token(token: str, jwks: dict, expected: dict | None = None) -> dict:
     proc = subprocess.run(
         ["node", str(ROOT / "tools/automation/oidc_verify.mjs")],
-        input=json.dumps({"token": token, "jwks": jwks}),
+        input=json.dumps({"token": token, "jwks": jwks, "expected": expected or {}}),
         text=True, capture_output=True, timeout=30,
     )
     if proc.returncode != 0:
@@ -41,20 +43,21 @@ def _fetch_actions_token() -> str:
 
 def _fetch_jwks() -> dict:
     import urllib.request
-    with urllib.request.urlopen("https://token.actions.githubusercontent.com/.well-known/jwks", timeout=15) as resp:
+    with urllib.request.urlopen(JWKS_URL, timeout=15) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 
 def oidc_context() -> dict:
-    token = os.environ.get("DSH_OIDC_TOKEN", "") or _fetch_actions_token()
+    # Production only: no token/JWKS override environment variables.
+    try:
+        token = _fetch_actions_token()
+    except Exception:
+        return {"ok": False, "error": "OIDC_CONTEXT_UNVERIFIED"}
     if not token:
         return {"ok": False, "error": "OIDC_CONTEXT_UNVERIFIED"}
     try:
-        jwks_path = os.environ.get("DSH_OIDC_JWKS_FILE", "")
-        if jwks_path and Path(jwks_path).is_file():
-            jwks = json.loads(Path(jwks_path).read_text(encoding="utf-8"))
-        else:
-            jwks = _fetch_jwks()
+        jwks = _fetch_jwks()
     except Exception:
         return {"ok": False, "error": "OIDC_CONTEXT_UNVERIFIED"}
-    return verify_token(token, jwks)
+    result = verify_token(token, jwks, {"run_id": os.environ.get("GITHUB_RUN_ID", "")})
+    return result

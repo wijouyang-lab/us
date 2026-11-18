@@ -33,10 +33,10 @@ def child_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     return env
 
 
-def _kill_tree(proc: subprocess.Popen) -> None:
+def _kill_tree(proc: subprocess.Popen, pgid: int | None = None) -> None:
     if os.name != "nt":
         try:
-            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            os.killpg(pgid or os.getpgid(proc.pid), signal.SIGKILL)
         except (ProcessLookupError, PermissionError, OSError):
             pass
     else:
@@ -65,6 +65,12 @@ class HeadlessRunner:
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             env=child_env(self.extra_env), **kwargs,
         )
+        pgid = None
+        if os.name != "nt":
+            try:
+                pgid = os.getpgid(proc.pid)
+            except OSError:
+                pgid = None
         chunks: list[bytes] = []
         total = 0
         exceeded = False
@@ -79,14 +85,14 @@ class HeadlessRunner:
                 with lock:
                     if total >= self.max_output_bytes:
                         exceeded = True
-                        _kill_tree(proc)
+                        _kill_tree(proc, pgid)
                         break
                     keep = chunk[: self.max_output_bytes - total]
                     chunks.append(keep)
                     total += len(keep)
                     if len(chunk) > len(keep):
                         exceeded = True
-                        _kill_tree(proc)
+                        _kill_tree(proc, pgid)
                         break
 
         thread = threading.Thread(target=_reader, daemon=True)
@@ -96,12 +102,14 @@ class HeadlessRunner:
             proc.wait(timeout=self.timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
-            _kill_tree(proc)
+            _kill_tree(proc, pgid)
         try:
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
-            _kill_tree(proc)
+            _kill_tree(proc, pgid)
+        _kill_tree(proc, pgid)
         thread.join(timeout=5)
+        reader_alive = thread.is_alive()
         try:
             if proc.stdout:
                 proc.stdout.close()
@@ -126,6 +134,8 @@ class HeadlessRunner:
             rc = 125
         elif timed_out:
             rc = 124
+        elif reader_alive:
+            rc = 126
         else:
             rc = proc.returncode
-        return {"returncode": rc, "final": final, "session_id": session_id, "log": str(log_path), "timed_out": timed_out, "output_limit_exceeded": exceeded, "final_event": final is not None}
+        return {"returncode": rc, "final": final, "session_id": session_id, "log": str(log_path), "timed_out": timed_out, "output_limit_exceeded": exceeded, "cleanup_failed": reader_alive, "final_event": final is not None}

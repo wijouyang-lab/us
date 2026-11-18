@@ -148,3 +148,11 @@ def test_explicit_extra_cannot_inject_credentials(tmp_path, monkeypatch):
     assert "DEEPSEEK_API_KEY" not in env
     assert "GH_TOKEN" not in env
     assert env.get("NORMAL_TEST_VAR") == "visible"
+
+def test_production_cli_blocks_fake_oidc_env(tmp_path):
+    import os, subprocess, sys
+    from pathlib import Path
+    env = dict(os.environ, GITHUB_ACTIONS="true", GITHUB_REPOSITORY="wijouyang-lab/us", GITHUB_WORKFLOW="DSH Headless Task", GITHUB_JOB="publisher", GITHUB_EVENT_NAME="workflow_dispatch", GITHUB_REF="refs/heads/deploy/dsh-automation-p0", GITHUB_RUN_ID="123456", DSH_WORKFLOW_CONTEXT="publisher", DSH_OIDC_TOKEN="fake", DSH_OIDC_JWKS_FILE="/tmp/fake")
+    r = subprocess.run([sys.executable, "-m", "tools.automation.publisher", "--repo", str(tmp_path), "--artifact", str(tmp_path), "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"], env=env, text=True, capture_output=True)
+    assert r.returncode != 0
+    assert "BLOCKED:WORKFLOW_CONTEXT_UNVERIFIED" in r.stdout
