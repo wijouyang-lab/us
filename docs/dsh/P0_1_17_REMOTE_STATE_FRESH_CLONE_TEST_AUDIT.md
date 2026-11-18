@@ -1,5 +1,7 @@
 # P0.1.17: Remote State Fresh-Clone Verification Audit
 
+> Historical audit; superseded by P0.1.18.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `7ad4f1f17c1a6763403c28b25f2329b25b8c016f`
