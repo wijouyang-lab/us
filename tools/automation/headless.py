@@ -20,8 +20,11 @@ MODEL_AUTH = {"DEEPSEEK_API_KEY"}
 MAX_OUTPUT_BYTES = 200_000
 
 
-def child_env() -> dict[str, str]:
+def child_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     env = {k: v for k, v in os.environ.items() if k in BASE_ALLOW}
+    for k, v in (extra or {}).items():
+        if not any(x in k.upper() for x in ("KEY", "TOKEN", "SECRET", "PASSWORD")):
+            env[k] = v
     for k in MODEL_AUTH:
         if os.environ.get(k):
             env[k] = os.environ[k]
@@ -45,7 +48,8 @@ def _kill_tree(proc: subprocess.Popen) -> None:
 
 
 class HeadlessRunner:
-    def __init__(self, dsh_cmd: list[str] | None = None, timeout: int = 1800, max_output_bytes: int = MAX_OUTPUT_BYTES):
+    def __init__(self, dsh_cmd: list[str] | None = None, timeout: int = 1800, max_output_bytes: int = MAX_OUTPUT_BYTES, extra_env: dict[str, str] | None = None):
+        self.extra_env = extra_env
         if dsh_cmd is None:
             binary = shutil.which("dsh") or shutil.which("dsh.cmd") or "dsh"
             dsh_cmd = [binary, "--profile", "headless", "--json"]
@@ -59,7 +63,7 @@ class HeadlessRunner:
         kwargs = {"start_new_session": True} if os.name != "nt" else {}
         proc = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            env=child_env(), **kwargs,
+            env=child_env(self.extra_env), **kwargs,
         )
         chunks: list[bytes] = []
         total = 0

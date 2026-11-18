@@ -140,3 +140,11 @@ def test_python_lock_is_fully_pinned():
     assert lines
     assert all("==" in x for x in lines)
     assert any(x.startswith("pandas==") for x in lines)
+
+def test_explicit_extra_cannot_inject_credentials(tmp_path, monkeypatch):
+    from tools.automation.headless import child_env
+    monkeypatch.setenv("NORMAL_TEST_VAR", "visible")
+    env = child_env({"DEEPSEEK_API_KEY": "sk-extra", "GH_TOKEN": "gh-extra", "NORMAL_TEST_VAR": "visible"})
+    assert "DEEPSEEK_API_KEY" not in env
+    assert "GH_TOKEN" not in env
+    assert env.get("NORMAL_TEST_VAR") == "visible"
