@@ -56,11 +56,9 @@ def _valid_url(value):
         port = p.port
     except ValueError:
         return False
-    if p.scheme not in {"http", "https"} or not p.hostname:
+    if p.scheme != "https" or p.hostname != "github.com" or port not in (None, 443):
         return False
-    if not re.fullmatch(r"(?=.{1,253}$)([A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,}", p.hostname):
-        return False
-    return port is None or 0 <= port <= 65535
+    return bool(re.fullmatch(r"/wijouyang-lab/us/pull/[1-9][0-9]*", p.path)) and not p.query and not p.fragment
 
 
 def push_state(store, root, branch, task_id, force_remote_check=False):
@@ -100,7 +98,7 @@ def push_state(store, root, branch, task_id, force_remote_check=False):
         local_task = store.load().get("tasks", {}).get(task_id)
         if not isinstance(remote_task, dict) or not isinstance(local_task, dict):
             return False
-        if remote_task.get("task_id", task_id) != task_id:
+        if not isinstance(remote_task.get("task_id"), str) or remote_task["task_id"] != task_id:
             return False
         for key in ("agent_source_sha", "artifact_digest", "base_commit_sha", "branch", "base_branch"):
             if not isinstance(remote_task.get(key), str) or remote_task.get(key) != local_task.get(key):

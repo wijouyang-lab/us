@@ -76,7 +76,7 @@ def test_state_push_client_error_remote_advanced_contains_commit(tmp_path):
 
 
 NEGATIVE_CASES = [
-    "malformed", "top_array", "tasks_missing", "task_missing", "task_id_mismatch",
+    "malformed", "top_array", "tasks_missing", "task_missing", "task_id_mismatch", "task_id_missing",
     "identity", "source", "base", "branch", "base_branch", "bad_status",
     "rollback", "published_deleted", "published_replaced", "published_format",
     "published_missing", "pr_url_replaced", "pr_url_format", "pr_url_missing",
@@ -107,6 +107,8 @@ def test_remote_json_negative(tmp_path, case):
             d["tasks"].pop("t", None)
         elif case == "task_id_mismatch":
             t["task_id"] = "other"
+        elif case == "task_id_missing":
+            t.pop("task_id", None)
         elif case == "identity":
             t["artifact_digest"] = "d" * 64
         elif case == "source":
@@ -176,3 +178,15 @@ def test_git_command_failure_closed(tmp_path, command):
 
     advance(bare, tmp_path, _advance_state)
     assert call(repo, store, fail_wrapper(tmp_path, command)) is False
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX git wrapper")
+def test_cat_file_failure_closed(tmp_path):
+    repo, store, bare = setup(tmp_path)
+    base = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+    store.update("t", published_sha=base)
+    subprocess.run(["git", "add", "."], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-m", "automation: persist task state [skip ci]"], cwd=repo, check=True)
+    subprocess.run(["git", "push", "origin", "fix/t"], cwd=repo, check=True)
+    advance(bare, tmp_path, lambda d: d["tasks"]["t"].update({"published_sha": base}))
+    assert call(repo, store, fail_wrapper(tmp_path, "cat-file")) is False
