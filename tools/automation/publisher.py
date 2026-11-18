@@ -27,10 +27,21 @@ def push_state(store, root, branch):
         r = subprocess.run(["git", "-c", "credential.helper=!gh auth git-credential", "push", "origin", branch], cwd=root, text=True, capture_output=True)
         if r.returncode == 0:
             return True
-        # Client error may be ambiguous: verify the remote ref actually contains HEAD.
+        # Client error may be ambiguous: verify remote contains HEAD and its state file is present.
         local = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, text=True, capture_output=True)
         remote = subprocess.run(["git", "ls-remote", "origin", f"refs/heads/{branch}"], cwd=root, text=True, capture_output=True)
-        return local.returncode == 0 and remote.returncode == 0 and remote.stdout.split()[:1] == [local.stdout.strip()]
+        if local.returncode != 0 or remote.returncode != 0 or not remote.stdout.strip():
+            return False
+        remote_sha = remote.stdout.split()[0]
+        local_sha = local.stdout.strip()
+        if remote_sha == local_sha:
+            return True
+        if subprocess.run(["git", "fetch", "-q", "origin", f"refs/heads/{branch}"], cwd=root, capture_output=True).returncode != 0:
+            return False
+        if subprocess.run(["git", "merge-base", "--is-ancestor", local_sha, "FETCH_HEAD"], cwd=root, capture_output=True).returncode != 0:
+            return False
+        content = subprocess.run(["git", "show", "FETCH_HEAD:automation/state/tasks.json"], cwd=root, text=True, capture_output=True)
+        return content.returncode == 0 and content.stdout.strip().startswith("{")
     except Exception:
         return False
 
