@@ -1,5 +1,7 @@
 # P0.1.26: Final Security Acceptance Audit
 
+> Historical audit; superseded by P0.1.27.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `a2f487ef8678ca740bf72c8aae146389dfea75a1`
