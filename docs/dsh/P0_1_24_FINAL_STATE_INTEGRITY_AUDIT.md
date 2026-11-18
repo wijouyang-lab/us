@@ -1,5 +1,7 @@
 # P0.1.24: Final State Integrity Audit
 
+> Historical audit; superseded by P0.1.25.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `473011216eda0040e9bb3246e217b9c4f10f17a8`
