@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-18T06:02:27Z",
+  "generated_at": "2026-11-18T06:17:32Z",
   "fear_greed": {
     "score": 25.17,
     "rating": "fear",
@@ -152,37 +152,37 @@
     "next_meeting": "2026-12-09",
     "current_target": "3.75%-4.00%",
     "effr": 3.88,
-    "trade_date": "2026-11-16",
+    "trade_date": "2026-11-17",
     "probabilities": {
-      "hike_25bp": 95.5,
-      "hike_50bp": 4.5
+      "hike_25bp": 96.9,
+      "hike_50bp": 3.1
     },
     "meetings": [
       {
         "date": "2026-12-09",
         "contract": "ZQZ6",
         "probabilities": {
-          "hike_25bp": 95.5,
-          "hike_50bp": 4.5
+          "hike_25bp": 96.9,
+          "hike_50bp": 3.1
         }
       },
       {
         "date": "2027-01-27",
         "contract": "ZQF7",
         "probabilities": {
-          "hike_25bp": 25.3,
-          "hike_50bp": 71.4,
-          "hike_75bp": 3.3
+          "hike_25bp": 30.1,
+          "hike_50bp": 67.7,
+          "hike_75bp": 2.1
         }
       },
       {
         "date": "2027-03-17",
         "contract": "ZQH7",
         "probabilities": {
-          "hike_25bp": 8.1,
-          "hike_50bp": 40.1,
-          "hike_75bp": 49.5,
-          "hike_100bp": 2.3
+          "hike_25bp": 11.4,
+          "hike_50bp": 44.4,
+          "hike_75bp": 42.9,
+          "hike_100bp": 1.3
         }
       }
     ],
