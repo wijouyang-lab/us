@@ -1,5 +1,7 @@
 # P0.2.8: Final Security Closure Audit
 
+> Historical audit; superseded by P0.2.9.
+
 Date: 2026-11-19
 Branch: `deploy/dsh-automation-p0`
 HEAD: `656b711da2937c05944a9507fb4f7c2abbcf2601`
