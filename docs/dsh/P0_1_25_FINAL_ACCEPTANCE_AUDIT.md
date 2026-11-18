@@ -1,5 +1,7 @@
 # P0.1.25: Final State Integrity Acceptance Audit
 
+> Historical audit; superseded by P0.1.26.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `042834d667b6bc9f9c531aeefcf7b94564e0429d`
