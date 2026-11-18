@@ -1,5 +1,7 @@
 # P0.1.19: Remote State Integrity Negative Tests Audit
 
+> Historical audit; superseded by P0.1.20.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `322999176dc9e888041a25ce04d55b24abc991a4`

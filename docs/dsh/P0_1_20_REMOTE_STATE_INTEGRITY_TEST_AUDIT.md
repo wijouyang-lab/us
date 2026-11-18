@@ -1,0 +1,66 @@
+# P0.1.20: Remote State Integrity Integration Test Completion Audit
+
+Date: 2026-11-18
+Branch: `deploy/dsh-automation-p0`
+HEAD: `d74c56d362955f031d68366d0e97e8744a28a89b`
+Base main: `bd748d94eef6867ed722c74708f1d304434afb76`
+
+## 1. Transition model
+
+Explicit matrix added for QUEUED, RUNNING, PUBLISHING, NEEDS_REVISION, BLOCKED,
+REVIEW_PENDING, PASS, FAIL. BLOCKED -> PUBLISHING requires a recoverable reason.
+SHA and PR URL format validation added.
+
+Tests (`tests/test_publisher_transitions.py`):
+
+```text
+allowed: PUBLISHING -> REVIEW_PENDING/PASS/PUBLISHING, REVIEW_PENDING -> PASS,
+         BLOCKED -> PUBLISHING with recoverable reason
+rejected: PASS -> PUBLISHING, REVIEW_PENDING -> PUBLISHING,
+          FAIL -> PUBLISHING/RUNNING, unknown status
+```
+
+## 2. Status
+
+```text
+STATUS_TRANSITION_MATRIX_TESTED: PASSED (unit matrix)
+REMOTE_ANCESTRY_BRANCH_EXERCISED: NOT_VERIFIED
+REMOTE_JSON_NEGATIVE_CASES: NOT_VERIFIED
+REMOTE_TASK_IDENTITY_VALIDATION: CODE_IMPLEMENTED_NOT_INTEGRATION_TESTED
+REMOTE_STATE_ROLLBACK_BLOCKED: CODE_IMPLEMENTED_NOT_INTEGRATION_TESTED
+PUBLISHED_SHA_REMOVAL_BLOCKED: CODE_IMPLEMENTED_NOT_INTEGRATION_TESTED
+PR_URL_REMOVAL_BLOCKED: CODE_IMPLEMENTED_NOT_INTEGRATION_TESTED
+PUBLISHED_SHA_FORMAT_VALIDATED: UNIT_TESTED
+PR_URL_FORMAT_VALIDATED: UNIT_TESTED
+REV_LIST_FAILURE_CLOSED: CODE_IMPLEMENTED_NOT_TESTED
+FETCH_FAILURE_CLOSED: CODE_IMPLEMENTED_NOT_TESTED
+UNKNOWN_COMMIT_FRESH_CLONE_CLI_BLOCKED: NOT_VERIFIED
+FOUR_FRESH_CLONE_TESTS: PASSED
+ONE_BUSINESS_COMMIT_ENFORCED: PASSED
+DRAFT_CREATE_IDEMPOTENCY: PASSED
+FULL_CI: PASSED (1437 passed, 1 skipped)
+DSH_INSTALL_VERIFY: PASSED
+MAIN_SYNCED: YES (bd748d94)
+AUTO_MERGE: DISABLED
+REAL_DSH_TASK_EXECUTED: NO
+MAIN_MODIFIED: NO
+PR_STATUS: DRAFT / OPEN
+```
+
+## 3. NOT_VERIFIED
+
+No real remote-advanced ancestry CLI test, no remote JSON negative CLI tests, no
+rev-list/fetch failure injection, and no unknown-commit fresh-clone CLI test were
+added in this round. Code checks exist but are not claimed as integration-tested.
+
+## 4. CI
+
+Full CI: **1437 passed, 1 skipped**.
+Jobs:
+
+```text
+test: success
+dsh-install-verify: success
+```
+
+CI: https://github.com/wijouyang-lab/us/actions/runs/44224776249
