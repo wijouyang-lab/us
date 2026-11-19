@@ -1,0 +1,59 @@
+{
+  "p390": {
+    "source_rows": 98,
+    "overlap_tickers": 54,
+    "overlap_high": 53,
+    "overlap_medium": 1,
+    "overlap_expected_member_days": 38948,
+    "high_expected_member_days": 38108,
+    "medium_expected_member_days": 840,
+    "overlap_observed_member_days": 38690,
+    "high_observed_member_days": 37850,
+    "medium_observed_member_days": 840
+  },
+  "p10_rows": 80,
+  "p10_in_p13": 26,
+  "p10_confirmed_in_p13": 2,
+  "sec_facts": {
+    "rows": 6391195,
+    "ciks": 5368,
+    "tickers_field_unique": 5367,
+    "metrics": 19,
+    "taxonomies": {
+      "us-gaap": 6085978,
+      "ifrs-full": 176432,
+      "dei": 128785
+    },
+    "dei_tags": [
+      "EntityCommonStockSharesOutstanding"
+    ],
+    "has_trading_symbol": false,
+    "has_security_exchange": false,
+    "null_pit": 0,
+    "min_pit": "2013-03-19",
+    "max_pit": "2026-11-05"
+  },
+  "coverage_full": {
+    "expected_tickers": 607,
+    "expected_member_days": 633971,
+    "verified_identity_tickers": 2,
+    "verified_member_days": 2516,
+    "verified_observed_member_days": 0,
+    "candidate_high_tickers": 54,
+    "candidate_high_member_days": 38948,
+    "candidate_high_observed_member_days": 38690,
+    "unresolved_tickers": 551
+  },
+  "coverage_priced": {
+    "priced_tickers": 581,
+    "priced_member_days": 625608,
+    "verified_price_tickers": 0,
+    "verified_price_member_days": 0,
+    "candidate_price_tickers": 53,
+    "candidate_price_member_days": 38690,
+    "daily_cross_section_max_candidate": 53,
+    "exploratory_100_names_gate": false
+  },
+  "status": "DATA_BLOCKED",
+  "reason": "Only 2 verified identities in P13, both without prices; 54 PR390 candidates cannot prove historical intervals; priced candidate max 54 < 100/day gate."
+}

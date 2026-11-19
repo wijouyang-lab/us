@@ -1,0 +1,6 @@
+ticker,cik,alias_group,note
+COG,0000858470,COG/CTRA,same issuer; separate ticker periods/classes not proven
+CTRA,0000858470,COG/CTRA,same CIK does not prove same security
+DISCA,0001437107,DISCA/DISCK/WBD,share classes and subsequent ticker; separate security_id
+DISCK,0001437107,DISCA/DISCK/WBD,share class
+WBD,0001437107,DISCA/DISCK/WBD,successor ticker; interval not fully proven

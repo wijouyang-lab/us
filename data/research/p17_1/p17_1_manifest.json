@@ -1,0 +1,75 @@
+{
+  "outputs": {
+    "p17_1_identity_conflicts.csv": {
+      "sha256": "0e0195c75924db269043959a1945cf8bb5c282490cf84370df6f318d8587f87b",
+      "bytes": 388,
+      "rows": 5
+    },
+    "p17_1_identity_coverage_annual.csv": {
+      "sha256": "048adbb3ad9e5ada0405558f8fef0f68c1db3dc60d9db955eef081bed20561c7",
+      "bytes": 89,
+      "rows": 1
+    },
+    "p17_1_identity_coverage_full.csv": {
+      "sha256": "941f79a94ae02639cfc803b63456855304ec55dec00856f8fcf1332bdac669f5",
+      "bytes": 261,
+      "rows": 1
+    },
+    "p17_1_identity_coverage_industry.csv": {
+      "sha256": "0d134bf38ac589b1d18c748cda3bfd5f3e9c3e3c0525e0f970d76c9c04baa159",
+      "bytes": 31,
+      "rows": 1
+    },
+    "p17_1_identity_coverage_priced.csv": {
+      "sha256": "61c6110cd553a3f272e2b6b7cda88098fb41252052d2c9b31071486265865f3b",
+      "bytes": 232,
+      "rows": 1
+    },
+    "p17_1_p10_crosswalk_reconciliation.csv": {
+      "sha256": "cda720683c5a31f4669fbdee75454d113b4683578c634e72f09e7770b9a19ad3",
+      "bytes": 27897,
+      "rows": 80
+    },
+    "p17_1_p390_identity_reconciliation.csv": {
+      "sha256": "c41f851a936710b6508fe4cd7c40119d92bd4a9e8584fe9f4271cf6bfdafa92b",
+      "bytes": 104992,
+      "rows": 98
+    },
+    "p17_1_security_class_aliases.csv": {
+      "sha256": "0e0195c75924db269043959a1945cf8bb5c282490cf84370df6f318d8587f87b",
+      "bytes": 388,
+      "rows": 5
+    },
+    "p17_1_security_identity_intervals.csv": {
+      "sha256": "67e1fc8af9b5a1e56b18ac981f3f6e44df589eb01815295e3135cedc7f4082b7",
+      "bytes": 28824,
+      "rows": 54
+    },
+    "p17_1_sec_dei_tag_audit.csv": {
+      "sha256": "84ac1e22d70227d701208b4b869b630952555d674f13a984d8115f01179d6d36",
+      "bytes": 1786,
+      "rows": 43
+    },
+    "p17_1_sec_facts_full_audit.csv": {
+      "sha256": "e9f28838cf94ab9bfadd0c1e264c6105fb6c822ffa5e96011a53a4facddc20e7",
+      "bytes": 282,
+      "rows": 1
+    },
+    "p17_1_summary.json": {
+      "sha256": "3bde34ec6c90146dc80000834e7dc829909b9848c388f9df8ca06b5738c35cbd",
+      "bytes": 1786,
+      "rows": null
+    },
+    "p17_1_unresolved_priced_tickers.csv": {
+      "sha256": "26ba3c396fae4d70d520fc5156871c8b7b4b1018f224193dd7e64402d3717e6e",
+      "bytes": 2734,
+      "rows": 528
+    }
+  },
+  "sources": {
+    "p390_commit": "fb39cff3",
+    "p390_sha256": "7c5eb90cdcb849795f61d02888f63648a9770a889836a3061d54f0fdfbbd8c8a",
+    "p10_sha256": "2b0ad5ce74c3bcb8be7a5fc4946fed1328c97883831993cc0a6e09b79362c969"
+  },
+  "note": "P17.1 identity reconciliation; no alpha/backtest"
+}
