@@ -1,0 +1,138 @@
+{
+  "coverage": [
+    {
+      "window": "5Y",
+      "start": "2020-01-02",
+      "end": "2024-12-31",
+      "expected_member_days": 633971,
+      "observed_member_days": 625608,
+      "member_day_coverage": 0.986808544870349,
+      "tickers": 581,
+      "median_names": 499.0,
+      "pools": {
+        "broad": 580,
+        "cover80": 581,
+        "cover95": 581,
+        "continuous": 581
+      },
+      "stock_coverage_median": 1.0,
+      "stock_coverage_80": 581,
+      "stock_coverage_95": 581
+    },
+    {
+      "window": "3Y",
+      "start": "2022-01-03",
+      "end": "2024-12-31",
+      "expected_member_days": 378944,
+      "observed_member_days": 373588,
+      "member_day_coverage": 0.9858659854754265,
+      "tickers": 541,
+      "median_names": 498.0,
+      "pools": {
+        "broad": 540,
+        "cover80": 541,
+        "cover95": 541,
+        "continuous": 541
+      },
+      "stock_coverage_median": 1.0,
+      "stock_coverage_80": 541,
+      "stock_coverage_95": 541
+    }
+  ],
+  "price": [
+    {
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "mean": 0.0038998729699799245,
+      "hac_t": 1.0499070672184936,
+      "p": 0.29396591288976015,
+      "dates": 1238,
+      "mean_ic": -0.00033412553901949484,
+      "q": 0.5879318257795203
+    },
+    {
+      "factor": "vol20",
+      "direction": "low_minus_high",
+      "mean": -0.0038998729699799245,
+      "hac_t": -1.0499070672184936,
+      "p": 0.29396591288976015,
+      "dates": 1238,
+      "mean_ic": -0.00033412553901949484,
+      "q": 0.5879318257795203
+    },
+    {
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "mean": -0.001420882678732793,
+      "hac_t": -0.5393274732933386,
+      "p": 0.5897579724866933,
+      "dates": 1238,
+      "mean_ic": -0.0019783248979489436,
+      "q": 0.5897579724866933
+    },
+    {
+      "factor": "mom20",
+      "direction": "low_minus_high",
+      "mean": 0.001420882678732793,
+      "hac_t": 0.5393274732933386,
+      "p": 0.5897579724866933,
+      "dates": 1238,
+      "mean_ic": -0.0019783248979489436,
+      "q": 0.5897579724866933
+    }
+  ],
+  "oos": [
+    {
+      "segment": "train",
+      "factor": "vol20",
+      "dates": 742,
+      "mean_ic": -0.00903814464524144,
+      "high_minus_low": 0.0043647937408404485,
+      "low_minus_high": -0.0043647937408404485
+    },
+    {
+      "segment": "train",
+      "factor": "mom20",
+      "dates": 742,
+      "mean_ic": -0.008464086103078037,
+      "high_minus_low": -0.0029409042602046753,
+      "low_minus_high": 0.0029409042602046753
+    },
+    {
+      "segment": "validation",
+      "factor": "vol20",
+      "dates": 248,
+      "mean_ic": 0.06883707008867637,
+      "high_minus_low": 0.013883832821649665,
+      "low_minus_high": -0.013883832821649665
+    },
+    {
+      "segment": "validation",
+      "factor": "mom20",
+      "dates": 248,
+      "mean_ic": -0.005689029065830461,
+      "high_minus_low": -0.0011721706644818564,
+      "low_minus_high": 0.0011721706644818564
+    },
+    {
+      "segment": "test",
+      "factor": "vol20",
+      "dates": 248,
+      "mean_ic": -0.04346345755051904,
+      "high_minus_low": -0.007475099833216064,
+      "low_minus_high": 0.007475099833216064
+    },
+    {
+      "segment": "test",
+      "factor": "mom20",
+      "dates": 248,
+      "mean_ic": 0.02113735835947205,
+      "high_minus_low": 0.00287821181287166,
+      "low_minus_high": -0.00287821181287166
+    }
+  ],
+  "coverage_thresholds": {
+    "member_day_95": true
+  },
+  "note": "ADJUSTMENT_UNVERIFIED adjusted_close; ATR not retested"
+}

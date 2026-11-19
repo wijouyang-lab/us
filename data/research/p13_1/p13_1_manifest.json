@@ -1,0 +1,55 @@
+{
+  "outputs": {
+    "p13_1_coverage.json": {
+      "sha256": "55198ac968ee3a4d8c7a8262baa1d0f674f61b853dcd84e1e7d00ffde73a73e2",
+      "bytes": 940
+    },
+    "p13_1_price_daily.csv": {
+      "sha256": "cedce137da907dd6ea137d1eace54e3c8b323796aabd7fa6fb627306ff5b8878",
+      "bytes": 174290
+    },
+    "p13_1_price_hac.csv": {
+      "sha256": "89c41f9dbfc1b954755ed161d41534e8e6430911dc32cae803380548e24d3504",
+      "bytes": 569
+    },
+    "p13_1_price_oos.csv": {
+      "sha256": "554447974918cd0dfb1f441bc2670db5944ea962f80e0918d7ae8db898d86aed",
+      "bytes": 558
+    },
+    "p13_1_stock_coverage.csv": {
+      "sha256": "31cd6acfacdab4a3c6b649bb546e2bb7da560ec798b96797e2fa9513872f291c",
+      "bytes": 10894
+    },
+    "p13_1_summary.json": {
+      "sha256": "38cca0f74f96b68f9cfb19d5406a803f4bf801678d5165f941083c9556be3af0",
+      "bytes": 3680
+    }
+  },
+  "sources": {
+    "finsaber_prices_raw": {
+      "path": "../_us_audit/pr512/data/research/pit_data/finsaber_prices_raw.csv",
+      "exists": true,
+      "bytes": 265180873,
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
+    },
+    "sp500_daily": {
+      "path": "../_us_audit/pr512/data/research/historical_universe/sp500_daily.csv",
+      "exists": true,
+      "bytes": 5533628,
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
+    },
+    "spy": {
+      "path": "../_us_audit/pr512/data/research/p9_1_support_resistance/SPY.csv",
+      "exists": true,
+      "bytes": 189975,
+      "sha256": "4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62"
+    },
+    "sec_panel": {
+      "path": "../_us_audit/fund_p63/universe/sec_fundamentals_panel_p63.csv.gz",
+      "exists": true,
+      "bytes": 67433497,
+      "sha256": "5687b8644ceb5ccf3d94e055f98a0a204502e68edaebfda3a294899e98a99c31"
+    }
+  },
+  "note": "P13.1 coverage-driven; adjusted_close supplier convention unverified; quality blocked"
+}
