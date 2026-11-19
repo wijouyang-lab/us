@@ -3,7 +3,9 @@
 Date: 2026-11-19
 Branch: `research/p14-12m-skip-month-momentum`
 Base: `9b07f588dd5af05017d2d4cba36ae87a23d9460a`
+Final HEAD: `77f6c0c0e7cbf5790288c146178a6181ec45be06`
 Status: **NO_GO**
+Full CI: **1518 passed, 1 skipped** (run 44558875249)
 
 ## 1. Data
 
