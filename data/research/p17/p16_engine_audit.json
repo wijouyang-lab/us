@@ -1,0 +1,14 @@
+{
+  "p16_full_risk_on": 4449,
+  "p16_full_days": 6311,
+  "main_risk_on": 979,
+  "main_days": 1258,
+  "three_risk_on": 533,
+  "three_days": 753,
+  "spy_missing_weekdays": 234,
+  "ranking_issue": "IC uses rank(MOM63)+rank(MOM126); portfolio uses raw MOM63+MOM126",
+  "price_basis": "stocks adjusted_close; SPY close (mismatch)",
+  "sharpe_issue": "P16 uses CAGR/vol, not daily excess return",
+  "regime_scope": "entry filter only; existing holdings not reduced",
+  "status": "P16_ENGINE_AUDIT_PARTIAL"
+}
