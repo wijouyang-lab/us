@@ -46,8 +46,14 @@ def choose_pr(prs: list[Pr]) -> tuple[str, str] | tuple[None, str]:
     return "reuse", pr.url
 
 
-def publish(manifest: dict, trusted: dict, git: GitPort, github: GitHubPort, state: StatePort) -> dict:
+def publish(manifest: dict, trusted: dict, git: GitPort, github: GitHubPort, state: StatePort, lock=None) -> dict:
     """Perform the gated PR decision without touching files or remotes directly."""
+    lease = None
+    if lock is not None:
+        try:
+            lease = lock.acquire(manifest["branch"], manifest["task_id"], 60)
+        except Exception as e:
+            return {"ok": False, "reason": getattr(e, "code", "LOCK_UNAVAILABLE")}
     for key in ("task_id", "branch", "base_branch"):
         if manifest.get(key) != trusted.get(key):
             return {"ok": False, "reason": "MANIFEST_INPUT_MISMATCH"}
@@ -75,6 +81,13 @@ def publish(manifest: dict, trusted: dict, git: GitPort, github: GitHubPort, sta
         if not pr.draft or pr.head != manifest["branch"] or pr.base != manifest["base_branch"]:
             return {"ok": False, "reason": "DRAFT_PR_VERIFY_FAILED"}
         value = url
+    if lease is not None and not lock.validate(lease):
+        return {"ok": False, "reason": "LOCK_LOST"}
     if not state.persist(manifest["task_id"], status="REVIEW_PENDING", pr_url=value):
         return {"ok": False, "reason": "STATE_PERSIST_FAILED"}
+    if lease is not None:
+        try:
+            lock.release(lease)
+        except Exception:
+            return {"ok": False, "reason": "LOCK_RELEASE_FAILED", "status": "REVIEW_PENDING", "pr_url": value}
     return {"ok": True, "status": "REVIEW_PENDING", "pr_url": value, "skipped": False}

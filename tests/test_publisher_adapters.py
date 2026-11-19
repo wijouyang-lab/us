@@ -98,3 +98,21 @@ def test_failures_and_state_failure():
 def test_terminal_task_skipped():
     out = publish(manifest(), trusted(), Git(), GH(), State({"status": "REVIEW_PENDING", "pr_url": "u"}))
     assert out["ok"] and out["skipped"] is True
+
+def test_publish_acquires_and_releases_lock():
+    from tools.automation.lock_core import FakeClock, FakeLockAdapter, FakeLockBackend
+    clock = FakeClock(); backend = FakeLockBackend(clock); lock = FakeLockAdapter(backend)
+    out = publish(manifest(), trusted(), Git(), GH(), State(), lock)
+    assert out["ok"] is True
+    assert lock.acquire_calls == 1 and lock.release_calls == 1
+    assert backend.acquire("fix/t", "other", 5).fencing_token == 2
+
+
+def test_publish_lock_busy_fails_closed():
+    from tools.automation.lock_core import FakeLockAdapter, FakeLockBackend, LockError
+    class Busy:
+        def acquire(self, *a): raise LockError("LOCK_BUSY")
+        def validate(self, l): return True
+        def release(self, l): return True
+    out = publish(manifest(), trusted(), Git(), GH(), State(), Busy())
+    assert out == {"ok": False, "reason": "LOCK_BUSY"}
