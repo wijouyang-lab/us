@@ -1,0 +1,19 @@
+{
+  "start": "2020-01-02",
+  "end": "2024-12-02",
+  "tickers": 581,
+  "rows": 625608,
+  "membership_days": 1258,
+  "member_day_coverage": 0.9868056388000664,
+  "ticker_coverage": 0.957166392092257,
+  "daily_obs_median": 498.0,
+  "price_fields": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "adjusted_close"
+  ],
+  "atr_formula": "Wilder ATR(14)/close",
+  "status": "EXPLORATORY_PIT_MEMBERSHIP_PARTIAL"
+}
