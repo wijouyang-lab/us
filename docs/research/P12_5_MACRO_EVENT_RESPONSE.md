@@ -57,9 +57,9 @@ Univariate event-level tests (76 events), BH across 12 tests:
 | 20D | Beta_SPY | +0.045 | 1.30 | +1.508% | 1.75 | 0.084 | 0.335 |
 
 The only raw 5% result is 1D Beta_TLT top-minus-bottom (+34.5 bps, t=2.19,
-p=0.032), but BH q=0.192; it does not survive multiple testing. Its 95% event
-bootstrap-style normal CI is approximately +0.04% to +0.65%, but the event
-distribution is not independent of market regime.
+p=0.032; Newey-West lag-3 t=2.24, p=0.028), but BH q=0.192; it does not survive
+multiple testing. A 5,000-draw event-level bootstrap CI is +0.045% to +0.653%.
+The event distribution is not independent of market regime.
 
 ## 4. Out-of-sample
 
