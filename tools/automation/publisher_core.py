@@ -76,8 +76,8 @@ def publish(manifest: dict, trusted: dict, git: GitPort, github: GitHubPort, sta
             return {"ok": False, "reason": "MANIFEST_INPUT_MISMATCH"}
     existing = state.task(manifest["task_id"])
     if existing and existing.get("status") in {"REVIEW_PENDING", "PASS"}:
-        pr_url = existing.get("pr_url", "")
-        if pr_url and not _valid_pr_url(pr_url):
+        pr_url = existing.get("pr_url")
+        if not _valid_pr_url(pr_url):
             return {"ok": False, "reason": "PR_URL_INVALID"}
         return {"ok": True, "status": existing["status"], "pr_url": pr_url, "skipped": True}
     if git.branch() != manifest["branch"]:
