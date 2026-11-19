@@ -1,0 +1,107 @@
+{
+  "series": {
+    "CPIAUCSL": {
+      "family": "cpi_headline_sa",
+      "csv": "vintages_starting_1972-07-21.csv",
+      "zip_sha256": "1ec87869f63638d50cbf33267265a4b12a3593a8a21526a180715f72ef290f91",
+      "vintages": 671,
+      "first_vintage": "1972-07-21",
+      "last_vintage": "2026-11-10",
+      "observations": 237
+    },
+    "CPILFESL": {
+      "family": "cpi_core_sa",
+      "csv": "vintages_starting_1996-12-12.csv",
+      "zip_sha256": "93faafbdf4f7022f401584ea06966468da81678982098ba4fc2ded6349f029db",
+      "vintages": 378,
+      "first_vintage": "1996-12-12",
+      "last_vintage": "2026-11-10",
+      "observations": 237
+    },
+    "PAYEMS": {
+      "family": "payrolls_sa",
+      "csv": "vintages_starting_1955-05-06.csv",
+      "zip_sha256": "51ae7fb715d488f8074c1cc3b5eb594ca5a56fda0b35cef8bc307c88210ae3bf",
+      "vintages": 861,
+      "first_vintage": "1955-05-06",
+      "last_vintage": "2026-11-06",
+      "observations": 238
+    },
+    "UNRATE": {
+      "family": "unemployment_sa",
+      "csv": "vintages_starting_1960-03-15.csv",
+      "zip_sha256": "0710403fc6b861d0b207eee2807e91376072fb5888c8ca3ca3fff91fe0ab2079",
+      "vintages": 801,
+      "first_vintage": "1960-03-15",
+      "last_vintage": "2026-11-06",
+      "observations": 237
+    },
+    "CES0500000003": {
+      "family": "earnings_sa",
+      "csv": "vintages_starting_2011-03-04.csv",
+      "zip_sha256": "782576565f6de261a3b98507072804d3d8c17137894a6134850fa9b11a32b392",
+      "vintages": 188,
+      "first_vintage": "2011-03-04",
+      "last_vintage": "2026-11-06",
+      "observations": 238
+    }
+  },
+  "bls_live": {
+    "cpi": 403,
+    "empsit": 403
+  },
+  "timestamp_policy": "date_only; no inferred 08:30; BLS live 403",
+  "events": 474,
+  "cpi_events": 237,
+  "employment_events": 237,
+  "exact_embargo_time_events": 0,
+  "initial_value_coverage": 1.0,
+  "initial_cpi_coverage": 0.9915611814345991,
+  "initial_payroll_coverage": 0.9957805907172996,
+  "outputs": {
+    "alfred_initial_values.csv": {
+      "sha256": "156a622a8b68d46fa0407d1cd4351c0b089b2b27105bd075e305030c670ae1e9",
+      "bytes": 82298
+    },
+    "alfred_vintage_audit.json": {
+      "sha256": "a8113795194d50a4b9395968e504190a365a965904a981070b7a6aa8563b571d",
+      "bytes": 1784
+    },
+    "bls_event_coverage_audit.json": {
+      "sha256": "0fa01ab6e9746886b9802bbd224c44877b4ca74baa7ef79f421226f96beffe45",
+      "bytes": 2171
+    },
+    "bls_macro_events.csv": {
+      "sha256": "c3e8c7792f92c1adfab7881ce4295cfe73dfc89f1a01455f54ac9c29320bd51f",
+      "bytes": 128927
+    },
+    "bls_source_manifest.json": {
+      "sha256": "c76615938951d02ec05ca993d64a8c8f2503bfd5fea7c9b592cd71b7eae3d45f",
+      "bytes": 2002
+    },
+    "event_data_audit.json": {
+      "sha256": "13a2ff26645c67f16b91e6a84da46c7fcd4039e6bd671601683b30642d0dd945",
+      "bytes": 343
+    },
+    "event_results.csv": {
+      "sha256": "3d7835c3025206cf16b74ea58400699be2d8b6e2620f22b7087d642dc744f1c2",
+      "bytes": 2728
+    },
+    "event_results_hac.csv": {
+      "sha256": "744ed2eacf7c11dc94c9b71f6364e7fb241bbf81f0d4c9d83b9819409d9e16bc",
+      "bytes": 593
+    },
+    "fomc_rate_beta_panel.csv": {
+      "sha256": "05ebe57f4ca5dc1d8016dccf79d7dd83eac99e95b71d93514398f869d94544e6",
+      "bytes": 10450706
+    },
+    "oos_ic.csv": {
+      "sha256": "c100c4644064bae7f0214998de5fd2b7ff6d8cabe163bc2d030648da5a7ddece",
+      "bytes": 449
+    },
+    "summary.json": {
+      "sha256": "acbc33f838be455e7d10cc863c2f732198fad2237e4128dfd7219caeb6592e2e",
+      "bytes": 1859
+    }
+  }
+}

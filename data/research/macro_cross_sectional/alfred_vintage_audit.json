@@ -1,0 +1,51 @@
+{
+  "series": {
+    "CPIAUCSL": {
+      "family": "cpi_headline_sa",
+      "csv": "vintages_starting_1972-07-21.csv",
+      "zip_sha256": "1ec87869f63638d50cbf33267265a4b12a3593a8a21526a180715f72ef290f91",
+      "vintages": 671,
+      "first_vintage": "1972-07-21",
+      "last_vintage": "2026-11-10",
+      "observations": 237
+    },
+    "CPILFESL": {
+      "family": "cpi_core_sa",
+      "csv": "vintages_starting_1996-12-12.csv",
+      "zip_sha256": "93faafbdf4f7022f401584ea06966468da81678982098ba4fc2ded6349f029db",
+      "vintages": 378,
+      "first_vintage": "1996-12-12",
+      "last_vintage": "2026-11-10",
+      "observations": 237
+    },
+    "PAYEMS": {
+      "family": "payrolls_sa",
+      "csv": "vintages_starting_1955-05-06.csv",
+      "zip_sha256": "51ae7fb715d488f8074c1cc3b5eb594ca5a56fda0b35cef8bc307c88210ae3bf",
+      "vintages": 861,
+      "first_vintage": "1955-05-06",
+      "last_vintage": "2026-11-06",
+      "observations": 238
+    },
+    "UNRATE": {
+      "family": "unemployment_sa",
+      "csv": "vintages_starting_1960-03-15.csv",
+      "zip_sha256": "0710403fc6b861d0b207eee2807e91376072fb5888c8ca3ca3fff91fe0ab2079",
+      "vintages": 801,
+      "first_vintage": "1960-03-15",
+      "last_vintage": "2026-11-06",
+      "observations": 237
+    },
+    "CES0500000003": {
+      "family": "earnings_sa",
+      "csv": "vintages_starting_2011-03-04.csv",
+      "zip_sha256": "782576565f6de261a3b98507072804d3d8c17137894a6134850fa9b11a32b392",
+      "vintages": 188,
+      "first_vintage": "2011-03-04",
+      "last_vintage": "2026-11-06",
+      "observations": 238
+    }
+  },
+  "initial_selection": "first non-null vintage per observation",
+  "timestamp_policy": "vintage date only; no embargo inference"
+}
