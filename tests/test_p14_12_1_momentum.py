@@ -1,13 +1,13 @@
-﻿import numpy as np
+import numpy as np
 import pandas as pd
 from tools.research.p14_12_1_momentum import block_boot, nw
 
 
-def test_entry_exit_are_exact_market_calendar():
-    p = pd.read_csv("data/research/p14/p14_momentum_signal_panel.csv", nrows=5000)
-    assert (pd.to_datetime(p.entry_date) > pd.to_datetime(p.signal_date)).all()
-    # exit = entry + 21 market sessions; at minimum later than entry
-    assert (pd.to_datetime(p.exit_date) > pd.to_datetime(p.entry_date)).all()
+def test_monthly_proxy_is_non_overlapping():
+    m = pd.read_csv("data/research/p14/p14_monthly_long_only.csv")
+    assert len(m) == 47
+    dates = pd.to_datetime(m.date)
+    assert (dates.diff().dropna() > pd.Timedelta(days=18)).all()
 
 
 def test_bootstrap_reproducible():
