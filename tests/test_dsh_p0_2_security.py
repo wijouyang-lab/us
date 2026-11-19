@@ -253,10 +253,12 @@ def test_real_model_gate_defaults_disabled():
     publisher = wf.split("  publisher:", 1)[1]
     assert "DEEPSEEK_API_KEY" not in publisher
 
-def test_oidc_redirect_does_not_forward_bearer(monkeypatch):
+@pytest.mark.parametrize("status", [302, 307, 308])
+def test_oidc_redirect_does_not_forward_bearer(monkeypatch, status):
     import http.server, threading, urllib.request
     from tools.automation import oidc
     hits = []
+    source_hits = []
     class Target(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
             hits.append(self.headers.get("Authorization"))
@@ -267,7 +269,8 @@ def test_oidc_redirect_does_not_forward_bearer(monkeypatch):
     target = f"http://127.0.0.1:{t.server_port}/target"
     class Source(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
-            self.send_response(302); self.send_header("Location", target); self.end_headers()
+            source_hits.append(self.headers.get("Authorization"))
+            self.send_response(status); self.send_header("Location", target); self.end_headers()
         def log_message(self, *a): pass
     s = http.server.HTTPServer(("127.0.0.1", 0), Source)
     threading.Thread(target=s.serve_forever, daemon=True).start()
@@ -279,6 +282,7 @@ def test_oidc_redirect_does_not_forward_bearer(monkeypatch):
             oidc._fetch_actions_token()
         except Exception:
             pass
+        assert source_hits == ["Bearer test-bearer"]
         assert hits == []
     finally:
         s.shutdown(); t.shutdown()

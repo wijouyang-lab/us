@@ -75,3 +75,13 @@ def test_kill_failure_is_reported(monkeypatch):
     monkeypatch.setattr(headless.os, "killpg", denied)
     monkeypatch.setattr(headless.os, "getpgid", lambda pid: 123)
     assert headless._kill_tree(P(), 123) is False
+
+def test_cleanup_failure_is_not_success(tmp_path, monkeypatch):
+    import sys
+    from tools.automation import headless
+    monkeypatch.setattr(headless, "_kill_tree", lambda *a, **k: False)
+    script = tmp_path / "ok.py"
+    script.write_text("print('ok')\n", encoding="utf-8")
+    out = HeadlessRunner([sys.executable, str(script)], max_output_bytes=1000, timeout=10).run("p", tmp_path / "log")
+    assert out["returncode"] == 126
+    assert out["cleanup_failed"] is True
