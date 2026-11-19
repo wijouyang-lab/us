@@ -1,0 +1,16 @@
+{
+  "expected_member_days": 633971,
+  "by_status": {
+    "IDENTITY_CONFIRMED": 2516,
+    "IDENTITY_CONFLICT": 399,
+    "UNRESOLVED": 631056
+  },
+  "verified_member_day_rate": 0.0039686357893342124,
+  "high_or_better_rate": 0.0039686357893342124,
+  "unique_tickers": 607,
+  "mapped_tickers": 3,
+  "unique_ciks": 23,
+  "identity_conflicts": 1,
+  "status": "DATA_BLOCKED",
+  "note": "P10 crosswalk covers 80 historical names; most P13 members have no verified PIT identity."
+}

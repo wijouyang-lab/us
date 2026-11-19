@@ -1,0 +1,64 @@
+{
+  "overall": "DATA_BLOCKED",
+  "identity": {
+    "expected_member_days": 633971,
+    "by_status": {
+      "IDENTITY_CONFIRMED": 2516,
+      "IDENTITY_CONFLICT": 399,
+      "UNRESOLVED": 631056
+    },
+    "verified_member_day_rate": 0.0039686357893342124,
+    "high_or_better_rate": 0.0039686357893342124,
+    "unique_tickers": 607,
+    "mapped_tickers": 3,
+    "unique_ciks": 23,
+    "identity_conflicts": 1,
+    "status": "DATA_BLOCKED",
+    "note": "P10 crosswalk covers 80 historical names; most P13 members have no verified PIT identity."
+  },
+  "sec_facts": {
+    "rows": 6391195,
+    "ciks": 5368,
+    "tickers": 5367,
+    "metrics": 19,
+    "taxonomies": {
+      "us-gaap": 6085978,
+      "ifrs-full": 176432,
+      "dei": 128785
+    },
+    "forms": {
+      "10-Q": 4348709,
+      "10-K": 1535053,
+      "20-F": 233785,
+      "6-K": 104587,
+      "10-Q/A": 37549,
+      "10-K/A": 37424,
+      "40-F": 26109,
+      "8-K": 17530
+    },
+    "min_pit": "2013-03-19",
+    "max_pit": "2026-11-05",
+    "null_pit": 0,
+    "status": "AVAILABLE_BUT_IDENTITY_BLOCKED"
+  },
+  "p16_audit": {
+    "p16_full_risk_on": 4449,
+    "p16_full_days": 6311,
+    "main_risk_on": 979,
+    "main_days": 1258,
+    "three_risk_on": 533,
+    "three_days": 753,
+    "spy_missing_weekdays": 234,
+    "ranking_issue": "IC uses rank(MOM63)+rank(MOM126); portfolio uses raw MOM63+MOM126",
+    "price_basis": "stocks adjusted_close; SPY close (mismatch)",
+    "sharpe_issue": "P16 uses CAGR/vol, not daily excess return",
+    "regime_scope": "entry filter only; existing holdings not reduced",
+    "status": "P16_ENGINE_AUDIT_PARTIAL"
+  },
+  "entry": "NOT_RUN_IDENTITY_BLOCKED",
+  "exit": "NOT_RUN_IDENTITY_BLOCKED",
+  "quality": "DATA_BLOCKED",
+  "growth": "DATA_BLOCKED",
+  "value": "DATA_BLOCKED",
+  "portfolio": "NOT_RUN"
+}
