@@ -1,8 +1,14 @@
 {
-  "broad": 580,
-  "cover80": 581,
-  "cover95": 581,
-  "three_year": 541,
-  "missing_member_tickers": 26,
-  "note": "pools use priced names only"
+  "5Y": {
+    "broad": 580,
+    "cover80": 581,
+    "cover95": 580
+  },
+  "3Y": {
+    "broad": 540,
+    "cover80": 541,
+    "cover95": 541
+  },
+  "missing_price_members": 26,
+  "note": "3Y pools built independently"
 }

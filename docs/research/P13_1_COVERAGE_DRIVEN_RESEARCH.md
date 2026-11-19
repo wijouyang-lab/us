@@ -62,6 +62,18 @@ SPY missing business days: 46 (holidays; no synthetic dates)
 quarterly coverage are in `p13_1_stock_coverage.csv`. The missing names mean
 this is not a complete PIT market.
 
+3Y independent pools (built from the 3Y expected table, not the 5Y table):
+
+| pool | count |
+|---|---:|
+| Broad | 540 |
+| Coverage ≥80% | 541 |
+| Coverage ≥95% | 541 |
+| Missing-price members | 25 |
+
+The 3Y research loop uses these pools. The 3Y and 5Y results are separate BH
+families (6 tests each), not one 12-test family.
+
 ## 4. Return alignment
 
 All observations contain:
@@ -80,25 +92,26 @@ stock_return / benchmark_return / excess_return
 
 ## 5. Price results (corrected)
 
-5Y, 20D excess, HAC lag=19, BH over 6 tests (2 factors × 3 cohorts):
+5Y, 20D excess, HAC lag=19. BH family = 6 tests per window (2 factors × 3 cohorts); 5Y and 3Y are separate BH families. Because the three cohorts have identical effective samples (1,218/733 dates), they are not independent evidence.
 
 | cohort | factor | mean Q5−Q1 | HAC t | p | BH q |
 |---|---|---:|---:|---:|---:|
-| broad | vol20 | +0.584% | 0.954 | 0.340 | 0.840 |
-| broad | mom20 | −0.312% | −0.807 | 0.420 | 0.840 |
-| cover80 | vol20 | +0.584% | 0.954 | 0.340 | 0.840 |
-| cover80 | mom20 | −0.312% | −0.807 | 0.420 | 0.840 |
-| cover95 | vol20 | +0.569% | 0.932 | 0.351 | 0.840 |
-| cover95 | mom20 | −0.307% | −0.797 | 0.426 | 0.840 |
+| broad | vol20 | +0.584% | 0.954 | 0.340 | 0.420 |
+| broad | mom20 | −0.312% | −0.807 | 0.420 | 0.420 |
+| cover80 | vol20 | +0.584% | 0.954 | 0.340 | 0.420 |
+| cover80 | mom20 | −0.312% | −0.807 | 0.420 | 0.420 |
+| cover95 | vol20 | +0.584% | 0.954 | 0.340 | 0.420 |
+| cover95 | mom20 | −0.312% | −0.807 | 0.420 | 0.420 |
 
 No result passes BH 10%. 20-day moving-block bootstrap CIs include zero for all
-primary factors.
+primary factors. The 5Y `cover80`/`cover95` rows are numerically identical to
+`broad`; they are not independent tests.
 
 3Y sensitivity:
 
 ```text
-vol20 Q5-Q1 = -0.065%, HAC t = -0.111, p = 0.912
-mom20 Q5-Q1 = +0.199%, HAC t = +0.646, p = 0.518
+vol20 Q5-Q1 = -0.065%, HAC t = -0.111, p = 0.912, q = 0.930
+mom20 Q5-Q1 = -0.036%, HAC t = -0.088, p = 0.930, q = 0.930
 ```
 
 ## 6. OOS purge

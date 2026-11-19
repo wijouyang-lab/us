@@ -14,7 +14,7 @@
     },
     "calendar": {
       "spy_duplicate_dates": 0,
-      "spy_missing_business_days": 46,
+      "weekday_dates_absent_from_spy": 46,
       "membership_duplicate_snapshots": 0,
       "price_duplicate_symbol_days": 0,
       "snapshot_count": 2720
@@ -35,8 +35,14 @@
       "broad": 580,
       "cover80": 581,
       "cover95": 580,
-      "3y_cover95": 580,
-      "missing": 26
+      "missing": 26,
+      "3y_cover95": 541
+    },
+    "pools_3y": {
+      "broad": 540,
+      "cover80": 541,
+      "cover95": 541,
+      "missing": 25
     },
     "missing_price_members": 26
   },
@@ -44,8 +50,8 @@
     "broad": 580,
     "cover80": 581,
     "cover95": 580,
-    "3y_cover95": 580,
-    "missing": 26
+    "missing": 26,
+    "3y_cover95": 541
   },
   "alignment": {
     "rows": 604026,
@@ -64,7 +70,7 @@
       "mean_spread": 0.0058358542861822755,
       "hac_lag19_t": 0.9540808339409755,
       "p": 0.34023218815795914,
-      "q": 0.8395100789147193
+      "q": 0.41975503945735965
     },
     {
       "window": "5Y",
@@ -76,7 +82,7 @@
       "mean_spread": -0.0031182896260917078,
       "hac_lag19_t": -0.8071200347662939,
       "p": 0.41975503945735965,
-      "q": 0.8395100789147193
+      "q": 0.41975503945735965
     },
     {
       "window": "5Y",
@@ -88,7 +94,7 @@
       "mean_spread": 0.0058358542861822755,
       "hac_lag19_t": 0.9540808339409755,
       "p": 0.34023218815795914,
-      "q": 0.8395100789147193
+      "q": 0.41975503945735965
     },
     {
       "window": "5Y",
@@ -100,7 +106,7 @@
       "mean_spread": -0.0031182896260917078,
       "hac_lag19_t": -0.8071200347662939,
       "p": 0.41975503945735965,
-      "q": 0.8395100789147193
+      "q": 0.41975503945735965
     },
     {
       "window": "5Y",
@@ -112,7 +118,7 @@
       "mean_spread": 0.0058358542861822755,
       "hac_lag19_t": 0.9540808339409755,
       "p": 0.34023218815795914,
-      "q": 0.8395100789147193
+      "q": 0.41975503945735965
     },
     {
       "window": "5Y",
@@ -124,7 +130,7 @@
       "mean_spread": -0.0031182896260917078,
       "hac_lag19_t": -0.8071200347662939,
       "p": 0.41975503945735965,
-      "q": 0.8395100789147193
+      "q": 0.41975503945735965
     },
     {
       "window": "3Y",
@@ -306,6 +312,11 @@
       "dates": 710,
       "start": "2020-01-31",
       "end": "2022-11-22",
+      "entry_min": "2020-01-31",
+      "exit_min": "2020-03-02",
+      "exit_max": "2022-12-21",
+      "next_segment_first_signal": "2022-12-22",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.0033764841857634054,
       "mean_spread": 0.0078077700191055265
     },
@@ -317,6 +328,11 @@
       "dates": 710,
       "start": "2020-01-31",
       "end": "2022-11-22",
+      "entry_min": "2020-01-31",
+      "exit_min": "2020-03-02",
+      "exit_max": "2022-12-21",
+      "next_segment_first_signal": "2022-12-22",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.015142034165867424,
       "mean_spread": -0.005379451062848511
     },
@@ -328,6 +344,11 @@
       "dates": 224,
       "start": "2022-12-22",
       "end": "2023-11-13",
+      "entry_min": "2022-12-22",
+      "exit_min": "2023-01-24",
+      "exit_max": "2023-12-12",
+      "next_segment_first_signal": "2023-12-13",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.03922763807715598,
       "mean_spread": 0.009873052232010387
     },
@@ -339,6 +360,11 @@
       "dates": 224,
       "start": "2022-12-22",
       "end": "2023-11-13",
+      "entry_min": "2022-12-22",
+      "exit_min": "2023-01-24",
+      "exit_max": "2023-12-12",
+      "next_segment_first_signal": "2023-12-13",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0073179682557726845,
       "mean_spread": -0.0022566228892164026
     },
@@ -350,6 +376,11 @@
       "dates": 244,
       "start": "2023-12-13",
       "end": "2024-12-02",
+      "entry_min": "2023-12-13",
+      "exit_min": "2024-01-12",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.04775097211584874,
       "mean_spread": -0.009886133583797977
     },
@@ -361,6 +392,11 @@
       "dates": 244,
       "start": "2023-12-13",
       "end": "2024-12-02",
+      "entry_min": "2023-12-13",
+      "exit_min": "2024-01-12",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.016698654423693185,
       "mean_spread": 0.0009654815669672287
     },
@@ -372,6 +408,11 @@
       "dates": 710,
       "start": "2020-01-31",
       "end": "2022-11-22",
+      "entry_min": "2020-01-31",
+      "exit_min": "2020-03-02",
+      "exit_max": "2022-12-21",
+      "next_segment_first_signal": "2022-12-22",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.0033764841857634054,
       "mean_spread": 0.0078077700191055265
     },
@@ -383,6 +424,11 @@
       "dates": 710,
       "start": "2020-01-31",
       "end": "2022-11-22",
+      "entry_min": "2020-01-31",
+      "exit_min": "2020-03-02",
+      "exit_max": "2022-12-21",
+      "next_segment_first_signal": "2022-12-22",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.015142034165867424,
       "mean_spread": -0.005379451062848511
     },
@@ -394,6 +440,11 @@
       "dates": 224,
       "start": "2022-12-22",
       "end": "2023-11-13",
+      "entry_min": "2022-12-22",
+      "exit_min": "2023-01-24",
+      "exit_max": "2023-12-12",
+      "next_segment_first_signal": "2023-12-13",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.03922763807715598,
       "mean_spread": 0.009873052232010387
     },
@@ -405,6 +456,11 @@
       "dates": 224,
       "start": "2022-12-22",
       "end": "2023-11-13",
+      "entry_min": "2022-12-22",
+      "exit_min": "2023-01-24",
+      "exit_max": "2023-12-12",
+      "next_segment_first_signal": "2023-12-13",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0073179682557726845,
       "mean_spread": -0.0022566228892164026
     },
@@ -416,6 +472,11 @@
       "dates": 244,
       "start": "2023-12-13",
       "end": "2024-12-02",
+      "entry_min": "2023-12-13",
+      "exit_min": "2024-01-12",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.04775097211584874,
       "mean_spread": -0.009886133583797977
     },
@@ -427,6 +488,11 @@
       "dates": 244,
       "start": "2023-12-13",
       "end": "2024-12-02",
+      "entry_min": "2023-12-13",
+      "exit_min": "2024-01-12",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.016698654423693185,
       "mean_spread": 0.0009654815669672287
     },
@@ -438,6 +504,11 @@
       "dates": 710,
       "start": "2020-01-31",
       "end": "2022-11-22",
+      "entry_min": "2020-01-31",
+      "exit_min": "2020-03-02",
+      "exit_max": "2022-12-21",
+      "next_segment_first_signal": "2022-12-22",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.0033764841857634054,
       "mean_spread": 0.0078077700191055265
     },
@@ -449,6 +520,11 @@
       "dates": 710,
       "start": "2020-01-31",
       "end": "2022-11-22",
+      "entry_min": "2020-01-31",
+      "exit_min": "2020-03-02",
+      "exit_max": "2022-12-21",
+      "next_segment_first_signal": "2022-12-22",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.015142034165867424,
       "mean_spread": -0.005379451062848511
     },
@@ -460,6 +536,11 @@
       "dates": 224,
       "start": "2022-12-22",
       "end": "2023-11-13",
+      "entry_min": "2022-12-22",
+      "exit_min": "2023-01-24",
+      "exit_max": "2023-12-12",
+      "next_segment_first_signal": "2023-12-13",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.03922763807715598,
       "mean_spread": 0.009873052232010387
     },
@@ -471,6 +552,11 @@
       "dates": 224,
       "start": "2022-12-22",
       "end": "2023-11-13",
+      "entry_min": "2022-12-22",
+      "exit_min": "2023-01-24",
+      "exit_max": "2023-12-12",
+      "next_segment_first_signal": "2023-12-13",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0073179682557726845,
       "mean_spread": -0.0022566228892164026
     },
@@ -482,6 +568,11 @@
       "dates": 244,
       "start": "2023-12-13",
       "end": "2024-12-02",
+      "entry_min": "2023-12-13",
+      "exit_min": "2024-01-12",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.04775097211584874,
       "mean_spread": -0.009886133583797977
     },
@@ -493,6 +584,11 @@
       "dates": 244,
       "start": "2023-12-13",
       "end": "2024-12-02",
+      "entry_min": "2023-12-13",
+      "exit_min": "2024-01-12",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.016698654423693185,
       "mean_spread": 0.0009654815669672287
     },
@@ -504,6 +600,11 @@
       "dates": 419,
       "start": "2022-01-03",
       "end": "2023-09-01",
+      "entry_min": "2022-01-03",
+      "exit_min": "2022-02-01",
+      "exit_max": "2023-10-02",
+      "next_segment_first_signal": "2023-10-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.006496955343124091,
       "mean_spread": 0.0006674452181975831
     },
@@ -515,6 +616,11 @@
       "dates": 419,
       "start": "2022-01-03",
       "end": "2023-09-01",
+      "entry_min": "2022-01-03",
+      "exit_min": "2022-02-01",
+      "exit_max": "2023-10-02",
+      "next_segment_first_signal": "2023-10-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0025849251898332963,
       "mean_spread": -0.0025550059519764013
     },
@@ -526,6 +632,11 @@
       "dates": 127,
       "start": "2023-10-03",
       "end": "2024-04-04",
+      "entry_min": "2023-10-03",
+      "exit_min": "2023-10-31",
+      "exit_max": "2024-05-02",
+      "next_segment_first_signal": "2024-05-03",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.03792963322713221,
       "mean_spread": 0.00998900255222401
     },
@@ -537,6 +648,11 @@
       "dates": 127,
       "start": "2023-10-03",
       "end": "2024-04-04",
+      "entry_min": "2023-10-03",
+      "exit_min": "2023-10-31",
+      "exit_max": "2024-05-02",
+      "next_segment_first_signal": "2024-05-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0008609774349899173,
       "mean_spread": -0.00012202560779042903
     },
@@ -548,6 +664,11 @@
       "dates": 147,
       "start": "2024-05-03",
       "end": "2024-12-02",
+      "entry_min": "2024-05-03",
+      "exit_min": "2024-06-03",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.040054844730081196,
       "mean_spread": -0.012224025513939484
     },
@@ -559,6 +680,11 @@
       "dates": 147,
       "start": "2024-05-03",
       "end": "2024-12-02",
+      "entry_min": "2024-05-03",
+      "exit_min": "2024-06-03",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.02693181816859431,
       "mean_spread": 0.001007505132366615
     },
@@ -570,6 +696,11 @@
       "dates": 419,
       "start": "2022-01-03",
       "end": "2023-09-01",
+      "entry_min": "2022-01-03",
+      "exit_min": "2022-02-01",
+      "exit_max": "2023-10-02",
+      "next_segment_first_signal": "2023-10-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.006496955343124091,
       "mean_spread": 0.0006674452181975831
     },
@@ -581,6 +712,11 @@
       "dates": 419,
       "start": "2022-01-03",
       "end": "2023-09-01",
+      "entry_min": "2022-01-03",
+      "exit_min": "2022-02-01",
+      "exit_max": "2023-10-02",
+      "next_segment_first_signal": "2023-10-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0025849251898332963,
       "mean_spread": -0.0025550059519764013
     },
@@ -592,6 +728,11 @@
       "dates": 127,
       "start": "2023-10-03",
       "end": "2024-04-04",
+      "entry_min": "2023-10-03",
+      "exit_min": "2023-10-31",
+      "exit_max": "2024-05-02",
+      "next_segment_first_signal": "2024-05-03",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.03792963322713221,
       "mean_spread": 0.00998900255222401
     },
@@ -603,6 +744,11 @@
       "dates": 127,
       "start": "2023-10-03",
       "end": "2024-04-04",
+      "entry_min": "2023-10-03",
+      "exit_min": "2023-10-31",
+      "exit_max": "2024-05-02",
+      "next_segment_first_signal": "2024-05-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0008609774349899173,
       "mean_spread": -0.00012202560779042903
     },
@@ -614,6 +760,11 @@
       "dates": 147,
       "start": "2024-05-03",
       "end": "2024-12-02",
+      "entry_min": "2024-05-03",
+      "exit_min": "2024-06-03",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.040054844730081196,
       "mean_spread": -0.012224025513939484
     },
@@ -625,6 +776,11 @@
       "dates": 147,
       "start": "2024-05-03",
       "end": "2024-12-02",
+      "entry_min": "2024-05-03",
+      "exit_min": "2024-06-03",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.02693181816859431,
       "mean_spread": 0.001007505132366615
     },
@@ -636,6 +792,11 @@
       "dates": 419,
       "start": "2022-01-03",
       "end": "2023-09-01",
+      "entry_min": "2022-01-03",
+      "exit_min": "2022-02-01",
+      "exit_max": "2023-10-02",
+      "next_segment_first_signal": "2023-10-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.006496955343124091,
       "mean_spread": 0.0006674452181975831
     },
@@ -647,6 +808,11 @@
       "dates": 419,
       "start": "2022-01-03",
       "end": "2023-09-01",
+      "entry_min": "2022-01-03",
+      "exit_min": "2022-02-01",
+      "exit_max": "2023-10-02",
+      "next_segment_first_signal": "2023-10-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0025849251898332963,
       "mean_spread": -0.0025550059519764013
     },
@@ -658,6 +824,11 @@
       "dates": 127,
       "start": "2023-10-03",
       "end": "2024-04-04",
+      "entry_min": "2023-10-03",
+      "exit_min": "2023-10-31",
+      "exit_max": "2024-05-02",
+      "next_segment_first_signal": "2024-05-03",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.03792963322713221,
       "mean_spread": 0.00998900255222401
     },
@@ -669,6 +840,11 @@
       "dates": 127,
       "start": "2023-10-03",
       "end": "2024-04-04",
+      "entry_min": "2023-10-03",
+      "exit_min": "2023-10-31",
+      "exit_max": "2024-05-02",
+      "next_segment_first_signal": "2024-05-03",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.0008609774349899173,
       "mean_spread": -0.00012202560779042903
     },
@@ -680,6 +856,11 @@
       "dates": 147,
       "start": "2024-05-03",
       "end": "2024-12-02",
+      "entry_min": "2024-05-03",
+      "exit_min": "2024-06-03",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": -0.040054844730081196,
       "mean_spread": -0.012224025513939484
     },
@@ -691,6 +872,11 @@
       "dates": 147,
       "start": "2024-05-03",
       "end": "2024-12-02",
+      "entry_min": "2024-05-03",
+      "exit_min": "2024-06-03",
+      "exit_max": "2024-12-31",
+      "next_segment_first_signal": "",
+      "exit_before_next_boundary": true,
       "mean_ic": 0.02693181816859431,
       "mean_spread": 0.001007505132366615
     }

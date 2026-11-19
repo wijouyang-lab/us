@@ -13,7 +13,7 @@
   },
   "calendar": {
     "spy_duplicate_dates": 0,
-    "spy_missing_business_days": 46,
+    "weekday_dates_absent_from_spy": 46,
     "membership_duplicate_snapshots": 0,
     "price_duplicate_symbol_days": 0,
     "snapshot_count": 2720
@@ -34,8 +34,14 @@
     "broad": 580,
     "cover80": 581,
     "cover95": 580,
-    "3y_cover95": 580,
-    "missing": 26
+    "missing": 26,
+    "3y_cover95": 541
+  },
+  "pools_3y": {
+    "broad": 540,
+    "cover80": 541,
+    "cover95": 541,
+    "missing": 25
   },
   "missing_price_members": 26
 }

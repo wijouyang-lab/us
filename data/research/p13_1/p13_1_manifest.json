@@ -9,39 +9,34 @@
       "bytes": 808
     },
     "p13_1_coverage.json": {
-      "sha256": "ffff5839fa7566fdcd27575ef1e92ac5ab3aec755c6451235d0fabb18a8e65a2",
-      "bytes": 1057
+      "sha256": "bb7e039e5b4c3132533fc6f4b8e3d80ec78cbbe74a024e9f4e2759fe24faf026",
+      "bytes": 1164
     },
     "p13_1_missing_price_members.csv": {
       "sha256": "871cead54ae47060e38df6eca29eb52795ad30f2704cd5bea92ecdeb767e45e6",
       "bytes": 4820
     },
-    "p13_1_price_daily.csv": {
-      "sha256": "cedce137da907dd6ea137d1eace54e3c8b323796aabd7fa6fb627306ff5b8878",
-      "bytes": 174290
-    },
     "p13_1_price_hac.csv": {
-      "sha256": "e4b902c1b0d4e44053424fa760a4485afcb3cf8090bae9a202a954b14a6443e2",
-      "bytes": 1749
+      "sha256": "d1d0d1c1a3b2eacc0a031a07b5d50c4b27cb6dad4ad4de75930b08a5d0f337ed",
+      "bytes": 1755
     },
     "p13_1_price_oos.csv": {
-      "sha256": "a9ba12e90fc4732d370b0a44882cc75cf704037cdb61f129e32868cad66e2882",
-      "bytes": 3459
+      "sha256": "38e7a296f19d14fb59343b487abce8fd98eec1e7d2259011e62781781b7f9c8b",
+      "bytes": 5183
     },
     "p13_1_stock_coverage.csv": {
       "sha256": "6846ecf16386514061e40f7113acf2cd264dbee888f703c872dc3caf23425d68",
       "bytes": 256568
     },
     "p13_1_summary.json": {
-      "sha256": "912b8c0748e3749fb7f05ea5438d4f5bf394b392ca05cda9556d42128489af8c",
-      "bytes": 18245
+      "sha256": "836c20d69ffc9d019c1ced26fb9cc63aad0afb047d1340398212ad419b36fd51",
+      "bytes": 25162
     },
     "p13_1_universe_manifest.json": {
       "sha256": "979216a7cdfd155a23a2915441b6842cf65f85ec30a38fed7dae4bbcd122b629",
       "bytes": 155
     }
   },
-  "note": "P13.1.1 corrected; aligned panel is 114MB local-only",
   "sources": {
     "finsaber_prices_raw": {
       "path": "../_us_audit/pr512/data/research/pit_data/finsaber_prices_raw.csv",
@@ -58,5 +53,6 @@
       "bytes": 189975,
       "sha256": "4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62"
     }
-  }
+  },
+  "note": "P13.1.1 corrected; panel local-only; no p13_1_price_daily.csv"
 }

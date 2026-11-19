@@ -82,7 +82,7 @@ coverage = {
            "tickers_expected": int(exp.ticker.nunique()), "tickers_priced": int(exp[exp.observed].ticker.nunique()),
            "ticker_coverage": exp[exp.observed].ticker.nunique() / max(exp.ticker.nunique(), 1),
            "median_names": float(exp[exp.observed].groupby("date").size().median())},
-    "calendar": {"spy_duplicate_dates": dup_spy, "spy_missing_business_days": missing_spy_days,
+    "calendar": {"spy_duplicate_dates": dup_spy, "weekday_dates_absent_from_spy": missing_spy_days,
                  "membership_duplicate_snapshots": dup_snap, "price_duplicate_symbol_days": dup_px,
                  "snapshot_count": len(snap_dates)},
 }
@@ -96,35 +96,39 @@ coverage["3Y"] = {"start": str(e3.date.min().date()), "end": str(e3.date.max().d
                   "ticker_coverage": e3[e3.observed].ticker.nunique() / max(e3.ticker.nunique(), 1),
                   "median_names": float(e3[e3.observed].groupby("date").size().median())}
 # Per-stock coverage over full expected membership, including missing-price names.
-stock = []
-for t, g in exp.groupby("ticker"):
-    expected_n = len(g); obs = int(g.observed.sum())
-    dates = g.date.tolist(); obs_dates = g[g.observed].date
-    # longest missing streak in calendar positions
-    present = g.observed.to_numpy(); best = cur = 0
-    for v in present:
-        cur = 0 if v else cur + 1; best = max(best, cur)
-    annual = g.groupby("year")["observed"].mean().round(4).to_dict()
-    quarterly = g.groupby("quarter")["observed"].mean().round(4).to_dict()
-    stock.append({"ticker": t, "expected_member_days": expected_n, "observed_member_days": obs,
-                  "coverage": obs / expected_n if expected_n else 0,
-                  "first_expected_date": str(g.date.min().date()), "last_expected_date": str(g.date.max().date()),
-                  "first_observed_date": str(obs_dates.min().date()) if len(obs_dates) else "",
-                  "last_observed_date": str(obs_dates.max().date()) if len(obs_dates) else "",
-                  "missing_sessions": expected_n - obs, "longest_missing_streak": best,
-                  "annual_coverage": json.dumps(annual), "quarterly_coverage": json.dumps(quarterly)})
-stock = pd.DataFrame(stock).sort_values("coverage")
-stock.to_csv(OUT / "p13_1_stock_coverage.csv", index=False)
+def stock_table(frame):
+    out = []
+    for t, g in frame.groupby("ticker"):
+        expected_n = len(g); obs = int(g["observed"].sum())
+        obs_dates = g[g["observed"]].date
+        present = g["observed"].to_numpy(); best = cur = 0
+        for v in present:
+            cur = 0 if v else cur + 1; best = max(best, cur)
+        annual = g.groupby("year")["observed"].mean().round(4).to_dict()
+        quarterly = g.groupby("quarter")["observed"].mean().round(4).to_dict()
+        out.append({"ticker": t, "expected_member_days": expected_n, "observed_member_days": obs,
+                    "coverage": obs / expected_n if expected_n else 0,
+                    "first_expected_date": str(g.date.min().date()), "last_expected_date": str(g.date.max().date()),
+                    "first_observed_date": str(obs_dates.min().date()) if len(obs_dates) else "",
+                    "last_observed_date": str(obs_dates.max().date()) if len(obs_dates) else "",
+                    "missing_sessions": expected_n - obs, "longest_missing_streak": best,
+                    "annual_coverage": json.dumps(annual), "quarterly_coverage": json.dumps(quarterly)})
+    return pd.DataFrame(out).sort_values("coverage")
+
+def make_pools(st):
+    return {"broad": st[st.observed_member_days >= 20].ticker.tolist(),
+            "cover80": st[st.coverage >= .80].ticker.tolist(),
+            "cover95": st[st.coverage >= .95].ticker.tolist(),
+            "missing": st[st.observed_member_days == 0].ticker.tolist()}
+
+stock = stock_table(exp); stock.to_csv(OUT / "p13_1_stock_coverage.csv", index=False)
+stock3 = stock_table(e3)
+pools = make_pools(stock); pools3 = make_pools(stock3)
 missing = stock[stock.observed_member_days == 0]
 missing.to_csv(OUT / "p13_1_missing_price_members.csv", index=False)
-pools = {
-    "broad": stock[stock.observed_member_days >= 20].ticker.tolist(),
-    "cover80": stock[stock.coverage >= .80].ticker.tolist(),
-    "cover95": stock[stock.coverage >= .95].ticker.tolist(),
-    "3y_cover95": stock[(stock.coverage >= .95) & (stock.observed_member_days >= 20)].ticker.tolist(),
-    "missing": missing.ticker.tolist(),
-}
+pools["3y_cover95"] = pools3["cover95"]
 coverage["pools"] = {k: len(v) for k, v in pools.items()}
+coverage["pools_3y"] = {k: len(v) for k, v in pools3.items()}
 coverage["missing_price_members"] = len(missing)
 (OUT / "p13_1_coverage.json").write_text(json.dumps(coverage, indent=2), encoding="utf-8")
 
@@ -174,8 +178,9 @@ def cohort_daily(panel, tickers, label):
 results = []; oos = []; boot = []
 for label, start in (("5Y", START5), ("3Y", START3)):
     pnl = panel[panel.signal_date >= start]
+    poolset = pools if label == "5Y" else pools3
     for cohort in ("broad", "cover80", "cover95"):
-        d = cohort_daily(pnl, set(pools[cohort]), label)
+        d = cohort_daily(pnl, set(poolset[cohort]), label)
         if d.empty: continue
         for f in ("vol20", "mom20"):
             x = d[f"spread_{f}"].dropna(); t = nw(x, 19)
@@ -203,11 +208,22 @@ for label, start in (("5Y", START5), ("3Y", START3)):
         tr = purge(dates[:c1], b1); va = purge(dates[c1:c2], b2); te = dates[c2:]
         for seg, ss in (("train", tr), ("validation", va), ("test", te)):
             sub = d[d.date.isin(ss)]
+            subp = pnl[pnl.signal_date.isin(ss)]
+            exits = subp.exit_date
+            boundary = b1 if seg == "train" else (b2 if seg == "validation" else None)
+            last_exit = exits.max() if len(exits) else pd.NaT
+            purge_ok = bool(last_exit < boundary) if boundary is not None and len(exits) else (len(exits) > 0)
             for f in ("vol20", "mom20"):
                 oos.append({"window": label, "cohort": cohort, "segment": seg, "factor": f, "dates": len(sub),
                             "start": str(min(ss).date()) if ss else "", "end": str(max(ss).date()) if ss else "",
+                            "entry_min": str(subp.entry_date.min().date()) if len(subp) else "",
+                            "exit_min": str(exits.min().date()) if len(exits) else "",
+                            "exit_max": str(last_exit.date()) if len(exits) else "",
+                            "next_segment_first_signal": str(boundary.date()) if boundary is not None else "",
+                            "exit_before_next_boundary": purge_ok,
                             "mean_ic": sub[f"ic_{f}"].mean(), "mean_spread": sub[f"spread_{f}"].mean()})
-res = pd.DataFrame(results); res["q"] = bh(res.p)
+res = pd.DataFrame(results)
+res["q"] = res.groupby("window")["p"].transform(lambda x: bh(x))
 res.to_csv(OUT / "p13_1_price_hac.csv", index=False)
 pd.DataFrame(boot).to_csv(OUT / "p13_1_block_bootstrap.csv", index=False)
 pd.DataFrame(oos).to_csv(OUT / "p13_1_price_oos.csv", index=False)

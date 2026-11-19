@@ -39,3 +39,24 @@ def test_no_duplicate_windows():
     assert c["calendar"]["spy_duplicate_dates"] == 0
     assert c["calendar"]["membership_duplicate_snapshots"] == 0
     assert c["calendar"]["price_duplicate_symbol_days"] == 0
+def test_3y_pools_are_independent_and_report_matches_csv():
+    import pandas as pd
+    c = json.loads(Path("data/research/p13_1/p13_1_coverage.json").read_text())
+    assert c["pools_3y"]["cover95"] == 541
+    assert c["pools"]["cover95"] == 580
+    h = pd.read_csv("data/research/p13_1/p13_1_price_hac.csv")
+    s = json.loads(Path("data/research/p13_1/p13_1_summary.json").read_text())
+    assert len(h) == len(s["price_results"]) == 12
+    row = h[(h.window == "3Y") & (h.cohort == "broad") & (h.factor == "mom20")].iloc[0]
+    assert abs(row.mean_spread - (-0.0003553238058834115)) < 1e-12
+    matches = [x for x in s["price_results"] if x["window"] == "3Y" and x["cohort"] == "broad" and x["factor"] == "mom20"]
+    assert len(matches) == 1 and abs(matches[0]["q"] - row.q) < 1e-12
+
+
+def test_oos_purge_boundaries_are_audited():
+    import pandas as pd
+    o = pd.read_csv("data/research/p13_1/p13_1_price_oos.csv")
+    assert o.exit_before_next_boundary.all()
+    for _, r in o[o.segment == "test"].iterrows():
+        assert pd.isna(r.next_segment_first_signal)
+        assert r.exit_max <= "2024-12-31"
