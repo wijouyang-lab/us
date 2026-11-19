@@ -1,0 +1,77 @@
+{
+  "outputs": {
+    "p15_block_bootstrap.csv": {
+      "sha256": "cc4f8a53aeeed0ad82c8ab08c8bedb97ec8c95e403d50f81c6b8ff96c511ee9b",
+      "bytes": 95
+    },
+    "p15_contribution_attribution.csv": {
+      "sha256": "434fcd3acc50b6cfc9627c1998d8510cdc4dcdd3e01a2a94226c91cab8811688",
+      "bytes": 58
+    },
+    "p15_cost_sensitivity.csv": {
+      "sha256": "8392717a2341c073cb3862baf83fa428e18409537796ca853c546b047f427655",
+      "bytes": 330
+    },
+    "p15_daily_ic.csv": {
+      "sha256": "7fcd7ab889ec976652d6bc258de209fb94f93a5adb5d01f513df2f52f39b0580",
+      "bytes": 199253
+    },
+    "p15_data_coverage.json": {
+      "sha256": "243e61c5c232d249e72eda90a3b3f02b52953c536e113aa23b388c5df6a2bf6f",
+      "bytes": 1146
+    },
+    "p15_fama_macbeth.csv": {
+      "sha256": "6089c499a85f00e3677adbff27f4c0e413e5703ac17decef68794ccbe9434d64",
+      "bytes": 67661
+    },
+    "p15_fm_results.csv": {
+      "sha256": "80bc8411ca325072807b64b4553403a8fd041ab4723dd316fa25d031d21312c8",
+      "bytes": 138
+    },
+    "p15_hac_results.csv": {
+      "sha256": "f20bff36690d5fd3016cdb8d5f77b39b20848bfc4d58f5f4d98de9f7b03194c3",
+      "bytes": 91
+    },
+    "p15_membership_audit.csv": {
+      "sha256": "9c6e9f43db28e3ee036fb9b2c63c3583a295c67cabddb6c43fddffa717a3c607",
+      "bytes": 69659
+    },
+    "p15_monthly_long_only.csv": {
+      "sha256": "1b900c39c71cc4e17096cb42b4327b0294565a635a313fc6f3d9b2c8ebabe923",
+      "bytes": 10249
+    },
+    "p15_oos_results.csv": {
+      "sha256": "5b1752d0acdff0e26c2b06873a2dbd6975bc7c101da856f5f579adde97263bdb",
+      "bytes": 396
+    },
+    "p15_price_quality_audit.csv": {
+      "sha256": "d66b51870e3b09fd653aa2f9af9b676aa75871844f85f5e5b9557a1ff6eb3349",
+      "bytes": 156
+    },
+    "p15_quantile_returns.csv": {
+      "sha256": "8166cf35bcb58ec17464d11fb65a101af465afad57c150a49e15a45f81f693f1",
+      "bytes": 272
+    },
+    "p15_stock_coverage.csv": {
+      "sha256": "6846ecf16386514061e40f7113acf2cd264dbee888f703c872dc3caf23425d68",
+      "bytes": 256568
+    },
+    "p15_summary.json": {
+      "sha256": "10665721a73654d9e13c2f9d56124e068decc989d7798bc6e2ce2a28ca355b61",
+      "bytes": 2328
+    }
+  },
+  "sources": {
+    "finsaber_prices_raw": {
+      "path": "../_us_audit/pr512/data/research/pit_data/finsaber_prices_raw.csv",
+      "bytes": 265180873,
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
+    },
+    "sp500_daily": {
+      "path": "../_us_audit/pr512/data/research/historical_universe/sp500_daily.csv",
+      "bytes": 5533628,
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
+    }
+  },
+  "note": "P15; signal panel local-only; adjusted_close unverified"
+}
