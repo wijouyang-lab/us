@@ -1,485 +1,562 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-18T14:09:40Z",
-  "asof": "2026-11-18",
+  "generated_at": "2026-11-19T14:08:28Z",
+  "asof": "2026-11-19",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
   "ai_model": null,
-  "ai_count": 6,
+  "ai_count": 8,
   "candidates": [
     {
       "ticker": "NVDA",
       "name": "Nvidia",
-      "score": 51.0,
+      "score": 53.5,
       "tag": "深度超跌",
-      "rsi": 22.5,
-      "bias_pct": -19.28,
-      "drawdown_pct": -28.18,
-      "zscore": -1.87,
-      "atr_pct": 6.25,
-      "momentum_60d_pct": -25.43,
-      "volume_ratio_20d": 1.81,
-      "beta": 1.601,
-      "rs_20d_vs_spy": -23.42,
+      "rsi": 21.1,
+      "bias_pct": -20.14,
+      "drawdown_pct": -31.99,
+      "zscore": -1.83,
+      "atr_pct": 6.41,
+      "momentum_60d_pct": -29.14,
+      "volume_ratio_20d": 1.46,
+      "beta": 1.595,
+      "rs_20d_vs_spy": -26.44,
       "market_regime": "NORMAL",
       "technical_score": 10.0,
       "event_score": 8.0,
       "quant_score": 64.0,
       "snapshot_sector": "Technology",
       "sector": "Technology",
-      "ref_price": 155.46,
-      "stop_loss": 140.89,
-      "confirm": "RSI 回升过 35 且站回 MA20 $192.59",
-      "invalid": "跌破参考止损 $140.89 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 22.5 / Bias -19.3% / ZScore -1.87；ATR 6.2% · 20日量比 1.807；板块 Technology。规则版筛选，未回测。",
+      "ref_price": 150.96,
+      "stop_loss": 136.45,
+      "confirm": "RSI 回升过 35 且站回 MA20 $189.04",
+      "invalid": "跌破参考止损 $136.45 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 21.1 / Bias -20.1% / ZScore -1.83；ATR 6.4% · 20日量比 1.4566；板块 Technology。规则版筛选，未回测。",
       "enrich": {
         "sector": "Technology",
         "industry": "Semiconductors",
-        "pe_ttm": 19.653605,
-        "pe_forward": 9.532126,
-        "pb": 24.020395,
-        "roe": 1.17211,
-        "profit_margin": 0.63663,
-        "revenue_growth": 1.059,
-        "earnings_growth": 1.278,
-        "market_cap": 3753892642816.0,
+        "pe_ttm": 16.214823,
+        "pe_forward": 9.0910845,
+        "pb": 13.646719,
+        "roe": 1.17364,
+        "profit_margin": 0.62535,
+        "revenue_growth": 1.032,
+        "earnings_growth": 1.077,
+        "market_cap": 3645231071232.0,
         "news": [
           {
-            "title": "3 numbers explain why Nvidia stock is rising despite no Jensen Huang on the earnings call",
+            "title": "Nvidia, AMD, Micron stocks lead chip sector higher amid Anthropic IPO optimism",
             "publisher": "Yahoo Finance",
-            "time": "2026-11-18T10:50:04Z"
+            "time": "2026-11-19T13:44:08Z"
           },
           {
-            "title": "In China, Trump is greeted by Xi Jinping and meets with Canada's Mark Carney",
+            "title": "Stalemates over semiconductors and rare earth minerals appear little changed as Trump heads home from China",
             "publisher": "Yahoo Finance",
-            "time": "2026-11-18T13:14:12Z"
+            "time": "2026-11-19T12:15:55Z"
           },
           {
-            "title": "Stock market today: S&P 500, Nasdaq futures rise after Nvidia clears hurdle, Anthropic prepares to price its IPO",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-18T09:06:13Z"
+            "title": "Should You Buy Bloom Energy With $500 Right Now?",
+            "publisher": "Motley Fool",
+            "time": "2026-11-19T13:50:03Z"
           },
           {
-            "title": "Nvidia delivered a monster quarter, then its new leaders stumbled on the earnings call",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-18T12:03:32Z"
-          }
-        ]
-      }
-    },
-    {
-      "ticker": "HOOD",
-      "name": "Robinhood Markets",
-      "score": 49.0,
-      "tag": "深度超跌",
-      "rsi": 27.2,
-      "bias_pct": -19.31,
-      "drawdown_pct": -29.55,
-      "zscore": -2.31,
-      "atr_pct": 7.61,
-      "momentum_60d_pct": -33.23,
-      "volume_ratio_20d": 1.15,
-      "beta": 3.013,
-      "rs_20d_vs_spy": -24.79,
-      "market_regime": "NORMAL",
-      "technical_score": 5.0,
-      "event_score": 4.0,
-      "quant_score": 19.0,
-      "snapshot_sector": "Other",
-      "sector": "Financial Services",
-      "ref_price": 69.19,
-      "stop_loss": 61.29,
-      "confirm": "RSI 回升过 35 且站回 MA20 $85.75",
-      "invalid": "跌破参考止损 $61.29 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 27.2 / Bias -19.3% / ZScore -2.31；ATR 7.6% · 20日量比 1.1497；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Financial Services",
-        "industry": "Capital Markets",
-        "pe_ttm": 31.884792,
-        "pe_forward": 20.287409,
-        "pb": 6.233333,
-        "roe": 0.21452999,
-        "profit_margin": 0.39040002,
-        "revenue_growth": 0.118,
-        "earnings_growth": -0.164,
-        "market_cap": 62304993280.0,
-        "news": [
-          {
-            "title": "Why the Anthropic IPO could be a trap for investors",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-18T13:55:04Z"
-          },
-          {
-            "title": "Should You Buy Coinbase Stock Now Or Wait?",
-            "publisher": "Trefis",
-            "time": "2026-11-18T13:11:54Z"
-          },
-          {
-            "title": "Kalshi Will Start Offering Stock and ETF Trading. That’s a New Threat to Robinhood",
-            "publisher": "TIKR",
-            "time": "2026-11-18T06:14:53Z"
-          },
-          {
-            "title": "HOOD Stock Rebounds Overnight As Retail Traders Dismiss Kalshi Threat – Here’s What Wall Street Thinks",
-            "publisher": "Stocktwits",
-            "time": "2026-11-18T01:35:49Z"
+            "title": "IonQ Has 2 Opportunities That Could Transform Its Long-Term Growth Story",
+            "publisher": "24/7 Wall St.",
+            "time": "2026-11-19T13:47:50Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI 27.2处于超卖，20日动量-29.6%、相对SPY-24.8%，跌破20日均线19.3%，beta 3.0放大波动，技术分5/25",
-        "fundamental": "市盈率TTM 31.9、远期20.3，市净率6.2，ROE 21.5%，利润率39%，营收增11.8%，但盈利增长-16.4%",
-        "news": "Kalshi推股票与ETF交易构成新竞争；散户暂无视该威胁、股价隔夜反弹；另有Anthropic IPO等讨论，属市场层面",
-        "risk": "beta 3.0放大回撤，盈利负增长，新竞争加剧，ATR 7.6%高波动，仓位需严控",
-        "summary": "技术破位叠加盈利转负与新竞争者，短线超卖或有反弹，但趋势未稳，宜谨慎观察"
+        "technical": "RSI14仅21.1深度超卖，股价低于MA20达20.1%，20日动量-31.99%、跑输SPY26.4%，ATR6.4%波动极高，量比1.46，趋势明显破位。",
+        "fundamental": "PE(TTM)16.2、前瞻9.1，ROE117%、净利率62.5%，营收增103%、盈利增107.7%，PB13.6偏高，市值3.65万亿美元，基本面强。",
+        "news": "市场层面：芯片板块因Anthropic IPO乐观情绪走高，英伟达领涨；半导体与稀土议题僵局未解。个股无实质消息，另两篇为其他公司。",
+        "risk": "20日跌约32%，价格远低于均线，动能极弱；Beta1.6易放大回撤；PB偏高；贸易与稀土政策不确定；超卖反弹若不能持续，下行风险仍存。",
+        "summary": "基本面强但技术面破位深跌，超卖或存反弹，趋势尚未修复，宜谨慎观察。"
+      }
+    },
+    {
+      "ticker": "FCX",
+      "name": "Freeport-McMoRan",
+      "score": 51.9,
+      "tag": "深度超跌",
+      "rsi": 26.1,
+      "bias_pct": -16.15,
+      "drawdown_pct": -25.33,
+      "zscore": -2.93,
+      "atr_pct": 5.77,
+      "momentum_60d_pct": -35.62,
+      "volume_ratio_20d": 2.22,
+      "beta": 1.909,
+      "rs_20d_vs_spy": -19.78,
+      "market_regime": "NORMAL",
+      "technical_score": 5.0,
+      "event_score": 8.0,
+      "quant_score": 25.0,
+      "snapshot_sector": "Materials",
+      "sector": "Basic Materials",
+      "ref_price": 51.45,
+      "stop_loss": 47.0,
+      "confirm": "RSI 回升过 35 且站回 MA20 $61.36",
+      "invalid": "跌破参考止损 $47.00 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 26.1 / Bias -16.1% / ZScore -2.93；ATR 5.8% · 20日量比 2.2176；板块 Materials。规则版筛选，未回测。",
+      "enrich": {
+        "sector": "Basic Materials",
+        "industry": "Copper",
+        "pe_ttm": 21.617647,
+        "pe_forward": 12.192348,
+        "pb": 3.5189111,
+        "roe": 0.15719,
+        "profit_margin": 0.13029,
+        "revenue_growth": 0.082,
+        "earnings_growth": 0.761,
+        "market_cap": 73827459072.0,
+        "news": [
+          {
+            "title": "Copper’s partial rebound: physical tightness vs. bearish sentiment",
+            "publisher": "Investing.com",
+            "time": "2026-11-19T13:24:18Z"
+          },
+          {
+            "title": "What Triggered The Move In Freeport Stock?",
+            "publisher": "Trefis",
+            "time": "2026-11-19T12:49:55Z"
+          },
+          {
+            "title": "Your FCX Stock Rides Chips, Gold And The Dollar",
+            "publisher": "Trefis",
+            "time": "2026-11-19T11:18:20Z"
+          },
+          {
+            "title": "Stocks to Watch Recap: Palo Alto, Nvidia, Target",
+            "publisher": "The Wall Street Journal",
+            "time": "2026-11-18T22:45:52Z"
+          }
+        ]
+      },
+      "ai": {
+        "verdict": "谨慎",
+        "technical": "RSI 26.1、20日Z值-2.93，超卖极端；股价低于20日均线16.15%，20日动量-25.3%、60日-35.6%；相对SPY落后19.8%，量比2.22，显示放量下跌；beta 1.91，技术分5/25，趋势已经破位。",
+        "fundamental": "PE(TTM)21.6、远期PE12.2，隐含盈利改善预期；PB 3.52偏高，ROE 15.7%、净利率13%、营收增8.2%、盈利增76.1%，基本面不算差，但估值对铜价周期敏感。",
+        "news": "公司层面：铜价出现部分反弹，实体偏紧与情绪偏空并存；Trefis讨论FCX异动及芯片、黄金和美元等驱动。市场层面：market_news数据缺失，无法概括大盘。",
+        "risk": "高beta叠加放量下跌，超卖后仍可能继续下行；铜价情绪偏空是主要压制；参考价51.45，距参考止损47.0约8.6%空间；PB高，盈利预期若下修则承压。",
+        "summary": "技术面深度超卖但趋势破位、相对弱势明显，基本面尚可且远期估值偏低，消息面多空交织；观察笔记倾向于谨慎，等待企稳信号，不预测价格。"
+      }
+    },
+    {
+      "ticker": "COIN",
+      "name": "Coinbase",
+      "score": 51.4,
+      "tag": "深度超跌",
+      "rsi": 25.8,
+      "bias_pct": -22.05,
+      "drawdown_pct": -37.59,
+      "zscore": -2.01,
+      "atr_pct": 8.32,
+      "momentum_60d_pct": -40.95,
+      "volume_ratio_20d": 1.11,
+      "beta": 2.906,
+      "rs_20d_vs_spy": -32.05,
+      "market_regime": "NORMAL",
+      "technical_score": 5.0,
+      "event_score": 8.0,
+      "quant_score": 22.0,
+      "snapshot_sector": "Financials",
+      "sector": "Financial Services",
+      "ref_price": 110.51,
+      "stop_loss": 97.25,
+      "confirm": "RSI 回升过 35 且站回 MA20 $141.76",
+      "invalid": "跌破参考止损 $97.25 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 25.8 / Bias -22.1% / ZScore -2.01；ATR 8.3% · 20日量比 1.1076；板块 Financials。规则版筛选，未回测。",
+      "enrich": {
+        "sector": "Financial Services",
+        "industry": "Financial Data & Stock Exchanges",
+        "pe_ttm": null,
+        "pe_forward": 45.011326,
+        "pb": 2.0988357,
+        "roe": -0.046830002,
+        "profit_margin": -0.12894,
+        "revenue_growth": -0.342,
+        "earnings_growth": 0.674,
+        "market_cap": 29259005952.0,
+        "news": [
+          {
+            "title": "Why Tristan Thompson backed Anthropic early and is still bullish",
+            "publisher": "Yahoo Finance Video",
+            "time": "2026-11-19T11:00:00Z"
+          },
+          {
+            "title": "Strategy Sinks 26% in a Week as MSCI Drops It. Saylor: “Seller Exhaustion Will Come Long Before Saylor Exhaustion”",
+            "publisher": "TIKR",
+            "time": "2026-11-19T11:02:02Z"
+          },
+          {
+            "title": "Bitcoin Price: Heading For The $50,000s?",
+            "publisher": "Trefis",
+            "time": "2026-11-19T11:01:49Z"
+          },
+          {
+            "title": "What Could Coinbase Global (COIN) Gain From Tokenized US Stocks Onchain?",
+            "publisher": "Simply Wall St.",
+            "time": "2026-11-19T05:17:48Z"
+          }
+        ]
+      },
+      "ai": {
+        "verdict": "谨慎",
+        "technical": "RSI14 25.8超卖，20日偏离MA20 -22.05%，20/60日动量-37.59%/-40.95%，ATR 8.32%，beta60 2.91，技术评分5，趋势极弱但短线超卖。",
+        "fundamental": "TTM市盈率数据缺失；远期PE 45.0，PB 2.10，ROE -4.68%，净利率-12.9%，营收增速-34.2%，盈利增速+67.4%，市值292.6亿美元。",
+        "news": "个股新闻：代币化美股链上业务或带来机会；比特币价格看至5万美元区间的讨论及Strategy周跌26%，显示加密板块情绪偏弱。",
+        "risk": "高beta与ATR 8.32%放大波动；营收下滑、亏损、远期估值偏高；加密市场情绪与监管不确定性；参考价110.51距参考止损97.25约12%。",
+        "summary": "技术面严重超卖但下跌趋势强，基本面亏损且营收收缩，消息面偏弱；仅适合谨慎观察，不宜激进。"
+      }
+    },
+    {
+      "ticker": "UNH",
+      "name": "UnitedHealth Group",
+      "score": 50.2,
+      "tag": "超跌反弹",
+      "rsi": 28.5,
+      "bias_pct": -13.21,
+      "drawdown_pct": -16.09,
+      "zscore": -6.67,
+      "atr_pct": 4.05,
+      "momentum_60d_pct": -11.77,
+      "volume_ratio_20d": 3.5,
+      "beta": 0.442,
+      "rs_20d_vs_spy": -10.54,
+      "market_regime": "NORMAL",
+      "technical_score": 5.0,
+      "event_score": 8.0,
+      "quant_score": 27.0,
+      "snapshot_sector": "Healthcare",
+      "sector": "Healthcare",
+      "ref_price": 349.91,
+      "stop_loss": 328.65,
+      "confirm": "RSI 回升过 35 且站回 MA20 $403.16",
+      "invalid": "跌破参考止损 $328.65 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 28.5 / Bias -13.2% / ZScore -6.67；ATR 4.0% · 20日量比 3.4998；板块 Healthcare。规则版筛选，未回测。",
+      "enrich": {
+        "sector": "Healthcare",
+        "industry": "Healthcare Plans",
+        "pe_ttm": 19.972033,
+        "pe_forward": 14.991146,
+        "pb": 3.1960504,
+        "roe": 0.15773,
+        "profit_margin": 0.03529,
+        "revenue_growth": -0.004,
+        "earnings_growth": 0.761,
+        "market_cap": 313527271424.0,
+        "news": [
+          {
+            "title": "US Stock Market Today: S&P 500 Futures Advance On Falling Yields And Hawkish Fed Signals",
+            "publisher": "Simply Wall St.",
+            "time": "2026-11-19T13:15:16Z"
+          },
+          {
+            "title": "Dow Jones Futures Rise, Nasdaq Jumps: Anthropic To Debut After Record IPO; Palo Alto, Everpure Rally, Walmart Falls",
+            "publisher": "Investor's Business Daily",
+            "time": "2026-11-19T13:07:44Z"
+          },
+          {
+            "title": "Buy 3 Blue-Chip Stocks Amid Solid Upside Despite Dow's Recent Debacle",
+            "publisher": "Zacks",
+            "time": "2026-11-19T12:50:00Z"
+          },
+          {
+            "title": "Why Is Humana Stock Falling?",
+            "publisher": "Trefis",
+            "time": "2026-11-19T12:41:40Z"
+          }
+        ]
+      },
+      "ai": {
+        "verdict": "谨慎",
+        "technical": "RSI 28.5超卖，但价低于MA20约13.2%，20日动量-16.1%，量比3.5，相对SPY弱10.5个百分点，技术评分仅5/25。",
+        "fundamental": "PE(TTM)20.0、前瞻15.0，PB3.2，ROE15.8%，净利率3.5%；营收同比-0.4%，盈利同比+76.1%，估值与增长信号分化。",
+        "news": "个股新闻缺失；市场层面：报道提及期货、收益率与美联储信号，以及Humana下跌，未给出UNH具体事件。",
+        "risk": "高量下跌、20日显著跑输大盘，ATR约4.05%；利润率偏低且营收微降；个股消息缺失，事件风险不明。",
+        "summary": "技术面深度超卖且趋势弱，基本面估值不高但增长分化，消息面缺乏个股催化；列为谨慎观察，非投资建议。"
       }
     },
     {
       "ticker": "CRM",
       "name": "Salesforce",
-      "score": 47.8,
-      "tag": "超跌反弹",
-      "rsi": 25.7,
-      "bias_pct": -14.2,
-      "drawdown_pct": -19.76,
-      "zscore": -2.67,
-      "atr_pct": 4.55,
-      "momentum_60d_pct": -6.95,
-      "volume_ratio_20d": 1.98,
-      "beta": 0.801,
-      "rs_20d_vs_spy": -15.0,
+      "score": 49.1,
+      "tag": "深度超跌",
+      "rsi": 24.1,
+      "bias_pct": -15.05,
+      "drawdown_pct": -21.25,
+      "zscore": -2.47,
+      "atr_pct": 4.62,
+      "momentum_60d_pct": -7.43,
+      "volume_ratio_20d": 1.46,
+      "beta": 0.822,
+      "rs_20d_vs_spy": -15.7,
       "market_regime": "NORMAL",
       "technical_score": 5.0,
       "event_score": 8.0,
       "quant_score": 22.0,
       "snapshot_sector": "Technology",
       "sector": "Technology",
-      "ref_price": 194.52,
-      "stop_loss": 181.24,
-      "confirm": "RSI 回升过 35 且站回 MA20 $226.70",
-      "invalid": "跌破参考止损 $181.24 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 25.7 / Bias -14.2% / ZScore -2.67；ATR 4.5% · 20日量比 1.9848；板块 Technology。规则版筛选，未回测。",
+      "ref_price": 190.4,
+      "stop_loss": 177.21,
+      "confirm": "RSI 回升过 35 且站回 MA20 $224.13",
+      "invalid": "跌破参考止损 $177.21 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 24.1 / Bias -15.1% / ZScore -2.47；ATR 4.6% · 20日量比 1.4552；板块 Technology。规则版筛选，未回测。",
       "enrich": {
         "sector": "Technology",
         "industry": "Software - Application",
-        "pe_ttm": 17.796888,
-        "pe_forward": 12.145939,
-        "pb": 4.1713843,
+        "pe_ttm": 17.419945,
+        "pe_forward": 11.893309,
+        "pb": 4.083033,
         "roe": 0.19381,
         "profit_margin": 0.2199,
         "revenue_growth": 0.108,
         "earnings_growth": 1.189,
-        "market_cap": 160089964544.0,
+        "market_cap": 156699197440.0,
         "news": [
           {
-            "title": "What Is Driving ServiceNow Stock?",
+            "title": "How Risky Is Adobe Stock After Its Long Slide?",
             "publisher": "Trefis",
-            "time": "2026-11-18T12:58:38Z"
+            "time": "2026-11-19T12:54:10Z"
           },
           {
-            "title": "Fund Managers Are Cutting Tech at the Fastest Pace Since 2006",
-            "publisher": "24/7 Wall St.",
-            "time": "2026-11-18T12:42:13Z"
-          },
-          {
-            "title": "Can Salesforce Stock Jump 50%?",
+            "title": "Is ServiceNow A Better Buy Than Atlassian Now?",
             "publisher": "Trefis",
-            "time": "2026-11-18T12:34:45Z"
+            "time": "2026-11-19T12:54:10Z"
           },
           {
-            "title": "Biggest Dow Jones Loser Nike Keeps Sinking After Investor Day. Here's Why.",
-            "publisher": "Investor's Business Daily",
-            "time": "2026-11-18T12:26:09Z"
+            "title": "Buy 3 Blue-Chip Stocks Amid Solid Upside Despite Dow's Recent Debacle",
+            "publisher": "Zacks",
+            "time": "2026-11-19T12:50:00Z"
+          },
+          {
+            "title": "ETFs Are Net Sellers of Salesforce (CRM) on Nov. 17",
+            "publisher": "GuruFocus.com",
+            "time": "2026-11-19T11:02:34Z"
           }
         ]
       },
       "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI 25.7已超卖，但价格低于20日均线14.2%、20日动量-19.8%、相对SPY弱15%，量比1.98显示放量下跌，技术分仅5/25，趋势仍偏弱。",
-        "fundamental": "PE(TTM)17.8、前瞻12.1，PB 4.17，ROE 19.4%，净利率22.0%，营收增10.8%，盈利增118.9%，估值与盈利质量尚可。",
-        "news": "个股新闻多为提问式标题，无实质数据；「基金经理以2006年来最快速度减仓科技股」属市场层面，板块资金面偏空。",
-        "risk": "放量急跌叠加科技板块资金流出，超卖后仍可能延续下行；若跌破参考止损181.24，波动（ATR 4.55%）或放大。",
-        "summary": "基本面稳健、估值不高，但技术面破位放量下跌、板块遭减仓，属超卖观察对象，暂取谨慎，非投资建议。"
+        "verdict": "观察",
+        "technical": "RSI 24.1深度超卖，股价低于20日均线15%，20日动量-21.3%、相对SPY跑输15.7%，量比1.46放量下跌；技术分5/25，属下跌趋势中的超卖，未见止跌信号。",
+        "fundamental": "PE(TTM)17.4、前瞻11.9、PB 4.08，ROE 19.4%、净利率22%、营收增10.8%、盈利增118.9%，估值与盈利质量相对稳健，是主要支撑。",
+        "news": "无公司自身新闻，仅有ETF于11月17日净卖出的报道；其余为Adobe、ServiceNow等同板块个股讨论，属市场层面消息，无直接催化。",
+        "risk": "趋势与相对强度显著落后，ETF资金流出；若跌破参考位177.21附近支撑，超卖可能延续，软件板块情绪偏弱亦构成拖累。",
+        "summary": "基本面与估值尚可，但技术面破位、资金流出，属超卖下跌中。列为观察，等候企稳与量价修复信号，不作价格预测。"
       }
     },
     {
-      "ticker": "COIN",
-      "name": "Coinbase",
-      "score": 47.6,
+      "ticker": "HOOD",
+      "name": "Robinhood Markets",
+      "score": 44.4,
       "tag": "深度超跌",
-      "rsi": 27.4,
-      "bias_pct": -20.73,
-      "drawdown_pct": -32.68,
-      "zscore": -1.98,
-      "atr_pct": 8.22,
-      "momentum_60d_pct": -35.91,
-      "volume_ratio_20d": 1.08,
-      "beta": 2.922,
-      "rs_20d_vs_spy": -27.92,
+      "rsi": 27.2,
+      "bias_pct": -17.76,
+      "drawdown_pct": -32.14,
+      "zscore": -1.99,
+      "atr_pct": 7.32,
+      "momentum_60d_pct": -38.29,
+      "volume_ratio_20d": 0.8,
+      "beta": 2.954,
+      "rs_20d_vs_spy": -26.59,
       "market_regime": "NORMAL",
       "technical_score": 5.0,
-      "event_score": 11.0,
-      "quant_score": 25.0,
-      "snapshot_sector": "Financials",
+      "event_score": 8.0,
+      "quant_score": 23.0,
+      "snapshot_sector": "Other",
       "sector": "Financial Services",
-      "ref_price": 115.02,
-      "stop_loss": 101.22,
-      "confirm": "RSI 回升过 35 且站回 MA20 $145.09",
-      "invalid": "跌破参考止损 $101.22 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 27.4 / Bias -20.7% / ZScore -1.98；ATR 8.2% · 20日量比 1.0831；板块 Financials。规则版筛选，未回测。",
+      "ref_price": 69.17,
+      "stop_loss": 61.58,
+      "confirm": "RSI 回升过 35 且站回 MA20 $84.11",
+      "invalid": "跌破参考止损 $61.58 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 27.2 / Bias -17.8% / ZScore -1.99；ATR 7.3% · 20日量比 0.798；板块 Other。规则版筛选，未回测。",
       "enrich": {
         "sector": "Financial Services",
-        "industry": "Financial Data & Stock Exchanges",
-        "pe_ttm": null,
-        "pe_forward": 46.84827,
-        "pb": 2.184491,
-        "roe": -0.046830002,
-        "profit_margin": -0.12894,
-        "revenue_growth": -0.342,
-        "earnings_growth": 0.674,
-        "market_cap": 30453088256.0,
+        "industry": "Capital Markets",
+        "pe_ttm": 31.875574,
+        "pe_forward": 20.281542,
+        "pb": 6.231531,
+        "roe": 0.21452999,
+        "profit_margin": 0.39040002,
+        "revenue_growth": 0.118,
+        "earnings_growth": -0.164,
+        "market_cap": 62286979072.0,
         "news": [
           {
-            "title": "Should You Buy Coinbase Stock Now Or Wait?",
-            "publisher": "Trefis",
-            "time": "2026-11-18T13:11:54Z"
-          },
-          {
-            "title": "Crypto Stocks Rebound As Nvidia’s Earnings Beat Lifts Risk Appetite — Why COIN, CRCL, NXXT Are Moving Today",
-            "publisher": "Stocktwits",
-            "time": "2026-11-18T09:53:22Z"
-          },
-          {
-            "title": "New Yorkers can now borrow cash without credit checks",
-            "publisher": "TheStreet",
-            "time": "2026-11-18T08:52:00Z"
-          },
-          {
-            "title": "OKX-ICE Tokenized Stocks Lean on 6 Crypto Firms: Will Wall Street Ever Follow?",
-            "publisher": "BeInCrypto",
-            "time": "2026-11-18T08:00:00Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI14 27.4超卖；距MA20 -20.7%，20/60日动量-32.7%/-35.9%，相对SPY -27.9%；ATR 8.2%、Beta 2.92，波动高。",
-        "fundamental": "TTM市盈率缺失；远期PE 46.8、PB 2.18；ROE -4.7%、净利率-12.9%、营收增速-34.2%；盈利增速+67.4%。",
-        "news": "个股新闻：Trefis讨论是否买入；英伟达财报超预期带动加密股反弹、风险偏好回升，COIN异动；另有代币化股票报道。市场新闻缺失。",
-        "risk": "高Beta与高ATR放大回撤；20日大幅跑输SPY；负利润率与营收下滑；远期估值偏高；加密板块情绪驱动明显。",
-        "summary": "技术面深度超卖但趋势极弱，基本面盈利质量承压，消息面仅情绪反弹；列为谨慎观察，不构成投资建议。"
-      }
-    },
-    {
-      "ticker": "FCX",
-      "name": "Freeport-McMoRan",
-      "score": 33.0,
-      "tag": "超跌反弹",
-      "rsi": 30.9,
-      "bias_pct": -11.14,
-      "drawdown_pct": -19.7,
-      "zscore": -2.13,
-      "atr_pct": 5.11,
-      "momentum_60d_pct": -28.92,
-      "volume_ratio_20d": 1.19,
-      "beta": 1.901,
-      "rs_20d_vs_spy": -14.94,
-      "market_regime": "NORMAL",
-      "technical_score": 5.0,
-      "event_score": 4.0,
-      "quant_score": 21.0,
-      "snapshot_sector": "Materials",
-      "sector": "Basic Materials",
-      "ref_price": 55.3,
-      "stop_loss": 51.06,
-      "confirm": "RSI 回升过 35 且站回 MA20 $62.23",
-      "invalid": "跌破参考止损 $51.06 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 30.9 / Bias -11.1% / ZScore -2.13；ATR 5.1% · 20日量比 1.1919；板块 Materials。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Basic Materials",
-        "industry": "Copper",
-        "pe_ttm": 23.235292,
-        "pe_forward": 13.1047,
-        "pb": 3.7822309,
-        "roe": 0.15719,
-        "profit_margin": 0.13029,
-        "revenue_growth": 0.082,
-        "earnings_growth": 0.761,
-        "market_cap": 79351963648.0,
-        "news": [
-          {
-            "title": "Freeport-McMoRan Inc. (FCX) Is a Trending Stock: Facts to Know Before Betting on It",
+            "title": "HOOD Adds Live IPO Pricing Tools: Will Anthropic Drive Engagement?",
             "publisher": "Zacks",
-            "time": "2026-11-18T13:00:05Z"
+            "time": "2026-11-19T11:45:00Z"
           },
           {
-            "title": "Stocks to Watch: Nvidia, CoreWeave, Southern Copper",
-            "publisher": "The Wall Street Journal",
-            "time": "2026-11-18T10:22:55Z"
-          },
-          {
-            "title": "What Explains Freeport-McMoRan Stock's Nearly 7% Drop?",
+            "title": "Bitcoin Price: Heading For The $50,000s?",
             "publisher": "Trefis",
-            "time": "2026-11-17T14:40:49Z"
+            "time": "2026-11-19T11:01:49Z"
           },
           {
-            "title": "Can Newmont Stock Fall 40%?",
+            "title": "Why Did Chime Financial Stock Jump?",
             "publisher": "Trefis",
-            "time": "2026-11-17T11:29:46Z"
+            "time": "2026-11-18T21:37:15Z"
+          },
+          {
+            "title": "Coinbase expands crypto-backed loans to New York, now reaching all 50 states",
+            "publisher": "Yahoo Finance Video",
+            "time": "2026-11-18T18:16:57Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI30.9近超卖，股价低于MA20约11.1%，20日动量-19.7%、60日-28.9%，相对SPY弱14.9%，Beta1.90，ATR5.1%，技术评分5/25。",
-        "fundamental": "PE(TTM)23.2、前瞻13.1，PB3.78；ROE15.7%、净利率13.0%，营收增8.2%、盈利增76.1%，市值793.5亿美元。",
-        "news": "个股新闻偏中性：Zacks趋势股、Trefis提近7%下跌；WSJ提南方铜业。市场层面新闻缺失。",
-        "risk": "高Beta1.90放大波动，20日相对SPY弱14.9%，动量持续下行；ATR5.1%波动大，PB3.78偏高，商品价格与宏观需求风险未量化。",
-        "summary": "技术面明显走弱且相对大盘大幅落后，基本面盈利增长强但估值不低，新闻中性；规则分33偏低，列为谨慎观察。"
+        "technical": "RSI 27.2已深度超卖，但股价低于20日均线17.8%，20日动量-32%、60日-38%，相对SPY弱26.6%，缩量下跌，趋势仍向下，尚无企稳信号。",
+        "fundamental": "ROE 21.5%、净利率39%、营收增11.8%，但盈利增速-16.4%；PE静态31.9、前瞻20.3、PB 6.2，估值不便宜，需确认盈利转正。",
+        "news": "个股消息：上线IPO实时定价工具；比特币走弱及Coinbase扩张加密抵押贷或压加密交易收入；Chime异动为同业参照。属市场层面解读。",
+        "risk": "Beta 2.95、ATR 7.3%，波动极大；加密行情与散户交易情绪高度相关；高估值叠加盈利下滑，超卖后仍可能继续下探，参考止损61.58。",
+        "summary": "技术面极度弱势且高波动，基本面质量尚可但盈利收缩、估值偏高，消息面偏同业与加密情绪，暂以谨慎对待，等待企稳确认。"
       }
     },
     {
-      "ticker": "APTV",
-      "name": "Aptiv",
-      "score": 27.2,
+      "ticker": "VEEV",
+      "name": "Veeva Systems",
+      "score": 43.3,
       "tag": "超跌反弹",
-      "rsi": 30.5,
-      "bias_pct": -8.92,
-      "drawdown_pct": -15.93,
-      "zscore": -1.71,
-      "atr_pct": 3.82,
-      "momentum_60d_pct": -19.98,
-      "volume_ratio_20d": 1.11,
-      "beta": 0.964,
-      "rs_20d_vs_spy": -11.17,
+      "rsi": 30.7,
+      "bias_pct": -9.69,
+      "drawdown_pct": -13.52,
+      "zscore": -3.67,
+      "atr_pct": 3.42,
+      "momentum_60d_pct": 12.33,
+      "volume_ratio_20d": 2.06,
+      "beta": 0.603,
+      "rs_20d_vs_spy": -7.98,
       "market_regime": "NORMAL",
       "technical_score": 5.0,
       "event_score": 8.0,
       "quant_score": 25.0,
       "snapshot_sector": "Other",
-      "sector": "Consumer Cyclical",
-      "ref_price": 37.88,
-      "stop_loss": 35.71,
-      "confirm": "RSI 回升过 35 且站回 MA20 $41.59",
-      "invalid": "跌破参考止损 $35.71 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 30.5 / Bias -8.9% / ZScore -1.71；ATR 3.8% · 20日量比 1.1108；板块 Other。规则版筛选，未回测。",
+      "sector": "Healthcare",
+      "ref_price": 277.2,
+      "stop_loss": 262.98,
+      "confirm": "RSI 回升过 35 且站回 MA20 $306.93",
+      "invalid": "跌破参考止损 $262.98 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 30.7 / Bias -9.7% / ZScore -3.67；ATR 3.4% · 20日量比 2.0601；板块 Other。规则版筛选，未回测。",
       "enrich": {
-        "sector": "Consumer Cyclical",
-        "industry": "Auto Parts",
-        "pe_ttm": 10.581006,
-        "pe_forward": 6.2884836,
-        "pb": 0.87784755,
-        "roe": 0.12696,
-        "profit_margin": 0.03735,
-        "revenue_growth": 0.023,
-        "earnings_growth": null,
-        "market_cap": 7668051456.0,
+        "sector": "Healthcare",
+        "industry": "Health Information Services",
+        "pe_ttm": 45.442627,
+        "pe_forward": 27.012516,
+        "pb": 6.036586,
+        "roe": 0.14425,
+        "profit_margin": 0.29345,
+        "revenue_growth": 0.176,
+        "earnings_growth": 0.395,
+        "market_cap": 44881133568.0,
         "news": [
           {
-            "title": "What Happens To Amphenol Stock If AI Spending Slows?",
-            "publisher": "Trefis",
-            "time": "2026-11-18T13:15:13Z"
-          },
-          {
-            "title": "Can Amphenol Afford Its $4 Billion Buyback?",
-            "publisher": "Trefis",
-            "time": "2026-11-17T11:29:48Z"
-          },
-          {
-            "title": "Amphenol Fell Nearly 6%, But Orders Hit $12 Billion",
-            "publisher": "Trefis",
-            "time": "2026-11-17T10:38:56Z"
-          },
-          {
-            "title": "Is Amphenol Stock Really Expensive?",
-            "publisher": "Trefis",
-            "time": "2026-11-10T21:31:29Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI 30.5，低于MA20约8.92%；20日/60日动量-15.93%/-19.98%，相对SPY -11.17%，ATR 3.82%，趋势偏弱。",
-        "fundamental": "PE_TTM 10.58、前瞻PE 6.29、PB 0.88；ROE 12.70%、净利率3.74%、营收增2.3%；盈利增长数据缺失。",
-        "news": "提供的四条新闻均关于Amphenol，并非Aptiv；market_news为空，新闻面数据缺失。",
-        "risk": "汽车零部件周期敏感，客户产量与需求波动；盈利增长数据缺失；技术趋势弱且相对大盘落后，ATR 3.82%波动不低。",
-        "summary": "量化评分偏低、技术面弱势，估值不高但盈利增长缺失；新闻数据不匹配。暂以谨慎观察为主，不是投资建议。"
-      }
-    },
-    {
-      "ticker": "IFF",
-      "name": "International Flavors & Fragrances",
-      "score": 26.2,
-      "tag": "超跌反弹",
-      "rsi": 31.9,
-      "bias_pct": -9.49,
-      "drawdown_pct": -12.92,
-      "zscore": -1.71,
-      "atr_pct": 3.03,
-      "momentum_60d_pct": -7.43,
-      "volume_ratio_20d": 0.82,
-      "beta": -0.072,
-      "rs_20d_vs_spy": -8.15,
-      "market_regime": "NORMAL",
-      "technical_score": 5.0,
-      "event_score": 8.0,
-      "quant_score": 25.0,
-      "snapshot_sector": "Other",
-      "sector": "Basic Materials",
-      "ref_price": 79.43,
-      "stop_loss": 75.82,
-      "confirm": "RSI 回升过 35 且站回 MA20 $87.75",
-      "invalid": "跌破参考止损 $75.82 或 RSI 继续下行",
-      "observe_until": "2026-11-28",
-      "reason": "RSI 31.9 / Bias -9.5% / ZScore -1.71；ATR 3.0% · 20日量比 0.8243；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Basic Materials",
-        "industry": "Specialty Chemicals",
-        "pe_ttm": 226.94286,
-        "pe_forward": 20.547272,
-        "pb": 1.500066,
-        "roe": -0.073649995,
-        "profit_margin": 0.01677,
-        "revenue_growth": 0.039,
-        "earnings_growth": null,
-        "market_cap": 19888580608.0,
-        "news": [
-          {
-            "title": "Why International Flavors (IFF) International Revenue Trends Deserve Your Attention",
+            "title": "Veeva (VEEV) Is Considered a Good Investment by Brokers: Is That True?",
             "publisher": "Zacks",
-            "time": "2026-11-09T13:15:05Z"
+            "time": "2026-11-18T13:30:04Z"
           },
           {
-            "title": "Here’s Why BofA Cut International Flavors & Fragrances (IFF) to Underperform",
+            "title": "Why Veeva Systems (VEEV) Dipped More Than Broader Market Today",
+            "publisher": "Zacks",
+            "time": "2026-11-17T21:45:02Z"
+          },
+          {
+            "title": "Improving Software Sentiment and Positive News Fuel Veeva Systems’ (VEEV) Share Price Appreciation",
             "publisher": "Insider Monkey",
-            "time": "2026-11-08T20:26:14Z"
+            "time": "2026-11-17T16:19:12Z"
           },
           {
-            "title": "International Flavors & Fragrances Q3 Earnings Call Highlights",
-            "publisher": "MarketBeat",
-            "time": "2026-11-08T04:14:19Z"
+            "title": "Vivos Therapeutics, Inc. (VVOS) Reports Q3 Loss, Beats Revenue Estimates",
+            "publisher": "Zacks",
+            "time": "2026-11-16T23:55:01Z"
+          }
+        ]
+      },
+      "ai": {
+        "verdict": "观察",
+        "technical": "RSI 30.7接近超卖，股价低于20日均线9.7%，20日动量-13.5%且放量2倍，相对SPY弱8%。但60日动量仍为正12.3%，贝塔0.6，属短线急跌而非趋势破坏。",
+        "fundamental": "市盈率TTM约45倍、市净率6倍，估值偏高；但前瞻市盈率27倍，ROE14.4%、净利率29.3%、营收增17.6%、盈利增39.5%，基本面稳健。",
+        "news": "券商观点偏正面，软件板块情绪回暖，近日跌幅大于大盘。另有Vivos Therapeutics业绩消息，与VEEV无关。市场层面数据缺失。",
+        "risk": "短线跌破均线且放量，若市场转弱可能延续调整；估值对增长放缓敏感。距参考止损262.98约5%，波动ATR约3.4%。",
+        "summary": "基本面稳健但估值不低，技术面短线超卖且相对走弱，消息面偏中性。列为观察，等待止跌信号，非投资建议。"
+      }
+    },
+    {
+      "ticker": "OXY",
+      "name": "Occidental Petroleum",
+      "score": 29.5,
+      "tag": "超跌反弹",
+      "rsi": 31.3,
+      "bias_pct": -9.59,
+      "drawdown_pct": -14.26,
+      "zscore": -1.99,
+      "atr_pct": 3.36,
+      "momentum_60d_pct": -7.96,
+      "volume_ratio_20d": 1.22,
+      "beta": -0.168,
+      "rs_20d_vs_spy": -8.71,
+      "market_regime": "NORMAL",
+      "technical_score": 5.0,
+      "event_score": 8.0,
+      "quant_score": 22.0,
+      "snapshot_sector": "Energy",
+      "sector": "Energy",
+      "ref_price": 53.76,
+      "stop_loss": 51.05,
+      "confirm": "RSI 回升过 35 且站回 MA20 $59.46",
+      "invalid": "跌破参考止损 $51.05 或 RSI 继续下行",
+      "observe_until": "2026-11-29",
+      "reason": "RSI 31.3 / Bias -9.6% / ZScore -1.99；ATR 3.4% · 20日量比 1.2247；板块 Energy。规则版筛选，未回测。",
+      "enrich": {
+        "sector": "Energy",
+        "industry": "Oil & Gas E&P",
+        "pe_ttm": 11.973274,
+        "pe_forward": 10.15729,
+        "pb": 1.5409751,
+        "roe": 0.13181,
+        "profit_margin": 0.32953998,
+        "revenue_growth": 0.19,
+        "earnings_growth": 1.494,
+        "market_cap": 53754339328.0,
+        "news": [
+          {
+            "title": "Should You Buy Occidental Stock For Its Cash Flow?",
+            "publisher": "Trefis",
+            "time": "2026-11-19T11:39:01Z"
           },
           {
-            "title": "International Flavors & Fragrances Inc (IFF) (Q3 2026) Earnings Call Highlights: ...",
-            "publisher": "GuruFocus.com",
-            "time": "2026-11-07T13:04:01Z"
+            "title": "Why You Should Think About Occidental Petroleum Differently Now",
+            "publisher": "Trefis",
+            "time": "2026-11-18T17:21:47Z"
+          },
+          {
+            "title": "OXY vs. DTM: Which Stock Is the Better Value Option?",
+            "publisher": "Zacks",
+            "time": "2026-11-18T15:40:02Z"
+          },
+          {
+            "title": "The 5 Best Stocks in Berkshire Hathaway’s Portfolio",
+            "publisher": "TIKR",
+            "time": "2026-11-18T15:34:37Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI 31.9接近超卖，但价格低于20日均线9.49%、20日动能-12.92%、跑输SPY 8.15个百分点，技术评分仅5/25，趋势仍偏弱。",
-        "fundamental": "TTM市盈率226.9偏高，远期20.5；ROE为-7.36%、净利率1.68%，营收增长3.9%，盈利质量承压；盈利增速数据缺失。",
-        "news": "美银下调至跑输，叠加海外营收趋势与Q3财报电话会消息，个股消息面偏空；无大盘板块消息数据。",
-        "risk": "技术面弱势且持续跑输大盘，若跌破参考支撑75.82或加剧下行；高估值与负ROE使业绩不及预期时回撤风险放大。",
-        "summary": "技术弱、盈利差、评级遭下调，虽接近超卖但缺乏反转证据，列为谨慎观察，不预测价格。"
+        "technical": "RSI 31.3近超卖，价格低于20日均线9.59%，20日动量-14.26%、跑输标普8.71%，量比1.22且ATR 3.36%，跌势中波动放大，技术分仅5。",
+        "fundamental": "市盈率TTM 12.0、前瞻10.2，市净率1.54，ROE 13.2%，净利率33.0%，营收增19%、盈利增149%，估值偏低但增速可持续性数据缺失。",
+        "news": "个股新闻偏现金流与价值讨论，含巴菲特组合提及；无具体财报或产量数据，市场层面新闻缺失，未提供板块催化。",
+        "risk": "趋势与相对强弱双弱，若油价走弱则盈利预期承压；60日与标普负相关-0.168含义不明，需警惕数据口径问题，参考止损51.05距现价约5%。",
+        "summary": "估值与利润率尚可，但技术面破位下行、相对弱势明显，消息面缺硬催化；列为观察偏谨慎，待企稳信号再评估。"
       }
     }
   ]
