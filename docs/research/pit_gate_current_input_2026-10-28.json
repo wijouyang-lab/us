@@ -1,0 +1,20 @@
+{
+  "member_sessions_expected": 1278758,
+  "member_sessions_observed": 1171451,
+  "ticker_total": 704,
+  "tickers_at_least_90pct_coverage": 593,
+  "missing_historical_tickers_total": 98,
+  "missing_historical_tickers_with_verified_identity_and_ohlcv": 0,
+  "independent_ohlcv_source_verified": false,
+  "max_abs_close_difference_pct": null,
+  "unexplained_corporate_action_breaks": null,
+  "pit_availability_audit_passed": false,
+  "independent_nonoverlapping_oos_windows": 9,
+  "benchmark_adjusted_net_alpha_ci_lower": null,
+  "max_drawdown_pct": null,
+  "robustness_checks_passed": false,
+  "risk_controls_verified": false,
+  "production_regression_tests_passed": false,
+  "paper_trading_days": 0,
+  "human_review_approved": false
+}

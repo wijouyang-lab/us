@@ -1,0 +1,44 @@
+{
+  "research_only": true,
+  "coiltrade": {
+    "current": 503,
+    "all_membership_tickers": 874,
+    "change_rows": 402,
+    "date_min": "1976-07-01",
+    "date_max": "2026-06-30",
+    "failed_overlap": 91,
+    "failed_missing": [
+      "ACS",
+      "CBS",
+      "MYL",
+      "PARA",
+      "PX",
+      "UA.C",
+      "WRK"
+    ],
+    "price_panel_overlap": 493,
+    "membership_not_in_price_panel": 381
+  },
+  "shardul": {
+    "all_membership_tickers": 972,
+    "years": 23,
+    "date_min": "2004",
+    "date_max": "2026",
+    "failed_overlap": 94,
+    "failed_missing": [
+      "TSO",
+      "UA.C",
+      "WYN",
+      "YHOO"
+    ],
+    "price_panel_overlap": 481,
+    "membership_not_in_price_panel": 491
+  },
+  "price_panel_tickers": 503,
+  "failed_tickers": 98,
+  "limitations": [
+    "membership data does not contain OHLCV",
+    "community/derived membership data requires independent date validation",
+    "overlap counts do not prove price availability for delisted names"
+  ]
+}
