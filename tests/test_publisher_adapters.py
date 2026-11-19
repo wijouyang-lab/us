@@ -155,6 +155,14 @@ def test_terminal_task_skipped():
     assert out["ok"] and out["skipped"] is True
 
 
-def test_terminal_task_rejects_invalid_stored_pr_url():
-    out = publish(manifest(), trusted(), Git(), GH(), State({"status": "REVIEW_PENDING", "pr_url": "u"}))
-    assert out == {"ok": False, "reason": "PR_URL_INVALID"}
+def test_terminal_task_rejects_invalid_or_missing_stored_pr_url():
+    invalid_states = [
+        {"status": "REVIEW_PENDING", "pr_url": "u"},
+        {"status": "REVIEW_PENDING", "pr_url": ""},
+        {"status": "REVIEW_PENDING"},
+        {"status": "PASS", "pr_url": ""},
+        {"status": "PASS"},
+    ]
+    for task in invalid_states:
+        out = publish(manifest(), trusted(), Git(), GH(), State(task))
+        assert out == {"ok": False, "reason": "PR_URL_INVALID"}
