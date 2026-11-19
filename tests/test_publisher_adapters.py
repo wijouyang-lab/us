@@ -3,6 +3,20 @@ from tools.automation.publisher_core import Pr, publish
 
 VALID_PR_URL = "https://github.com/wijouyang-lab/us/pull/1"
 
+class OKLock:
+    def acquire(self, key, owner, ttl):
+        from tools.automation.lock_core import LockLease
+        import time
+        return LockLease(key, owner, 1, time.time(), time.time() + ttl, ttl, "ok")
+    def validate(self, lease):
+        return True
+    def release(self, lease):
+        return True
+
+
+OK = OKLock()
+
+
 
 class Git:
     def __init__(self, branch="fix/t", head="a" * 40, base="b" * 40):
@@ -72,7 +86,7 @@ def trusted():
 
 def test_create_draft_with_fakes():
     gh, st = GH(), State()
-    out = publish(manifest(), trusted(), Git(), gh, st)
+    out = publish(manifest(), trusted(), Git(), gh, st, OK)
     assert out["ok"] and out["pr_url"].endswith("/pull/1")
     assert gh.calls == [("list", "fix/t", "main"), ("create", "fix/t", "main", "t"), ("get", VALID_PR_URL)]
     assert st.calls[-1][1] == "t"
@@ -80,18 +94,18 @@ def test_create_draft_with_fakes():
 
 def test_reuse_existing_draft():
     gh = GH([Pr(VALID_PR_URL, True, "fix/t", "main")])
-    out = publish(manifest(), trusted(), Git(), gh, State())
+    out = publish(manifest(), trusted(), Git(), gh, State(), OK)
     assert out["ok"] and out["skipped"] is False
     assert not any(c[0] == "create" for c in gh.calls)
 
 
 def test_reuse_existing_draft_rejects_wrong_head_or_base():
     wrong_head = GH([Pr(VALID_PR_URL, True, "feature/other", "main")])
-    out_head = publish(manifest(), trusted(), Git(), wrong_head, State())
+    out_head = publish(manifest(), trusted(), Git(), wrong_head, State(), OK)
     assert out_head == {"ok": False, "reason": "PR_REF_MISMATCH"}
 
     wrong_base = GH([Pr(VALID_PR_URL, True, "fix/t", "release")])
-    out_base = publish(manifest(), trusted(), Git(), wrong_base, State())
+    out_base = publish(manifest(), trusted(), Git(), wrong_base, State(), OK)
     assert out_base == {"ok": False, "reason": "PR_REF_MISMATCH"}
 
 
@@ -107,16 +121,16 @@ def test_reuse_existing_draft_rejects_noncanonical_url():
     for url in invalid_urls:
         gh = GH([Pr(url, True, "fix/t", "main")])
         st = State()
-        out = publish(manifest(), trusted(), Git(), gh, st)
+        out = publish(manifest(), trusted(), Git(), gh, st, OK)
         assert out == {"ok": False, "reason": "PR_URL_INVALID"}
         assert not any(call[0] == "persist" for call in st.calls)
 
 
 def test_ready_and_multiple_blocked():
     ready = GH([Pr("u", False, "fix/t", "main")])
-    assert publish(manifest(), trusted(), Git(), ready, State())["reason"] == "READY_PR_BLOCKED"
+    assert publish(manifest(), trusted(), Git(), ready, State(), OK)["reason"] == "READY_PR_BLOCKED"
     multi = GH([Pr("u1", True, "fix/t", "main"), Pr("u2", True, "fix/t", "main")])
-    assert publish(manifest(), trusted(), Git(), multi, State())["reason"] == "MULTIPLE_PR_BLOCKED"
+    assert publish(manifest(), trusted(), Git(), multi, State(), OK)["reason"] == "MULTIPLE_PR_BLOCKED"
 
 
 def test_created_pr_url_is_validated_before_readback():
@@ -126,7 +140,7 @@ def test_created_pr_url_is_validated_before_readback():
             return "https://evil.example/pull/1"
 
     gh, st = BadUrlGH(), State()
-    out = publish(manifest(), trusted(), Git(), gh, st)
+    out = publish(manifest(), trusted(), Git(), gh, st, OK)
     assert out == {"ok": False, "reason": "PR_URL_INVALID"}
     assert not any(call[0] == "get" for call in gh.calls)
     assert not any(call[0] == "persist" for call in st.calls)
@@ -139,19 +153,20 @@ def test_created_pr_readback_must_match_created_url():
             return Pr("https://github.com/wijouyang-lab/us/pull/2", True, "fix/t", "main")
 
     gh, st = MismatchedReadbackGH(), State()
-    out = publish(manifest(), trusted(), Git(), gh, st)
-    assert out == {"ok": False, "reason": "DRAFT_PR_VERIFY_FAILED"}
+    out = publish(manifest(), trusted(), Git(), gh, st, OK)
+    assert out["ok"] is False and out["reason"] == "DRAFT_PR_VERIFY_FAILED"
+    assert out["publication_state"] == "PR_CREATED_UNVERIFIED"
     assert not any(call[0] == "persist" for call in st.calls)
 
 
 def test_failures_and_state_failure():
-    assert publish(manifest(), trusted(), Git(), GH(fail_query=True), State())["reason"] == "PR_QUERY_FAILED"
-    assert publish(manifest(), trusted(), Git(), GH(fail_create=True), State())["reason"] == "PR_CREATE_FAILED"
-    assert publish(manifest(), trusted(), Git(), GH(), State(fail=True))["reason"] == "STATE_PERSIST_FAILED"
+    assert publish(manifest(), trusted(), Git(), GH(fail_query=True), State(), OK)["reason"] == "PR_QUERY_FAILED"
+    assert publish(manifest(), trusted(), Git(), GH(fail_create=True), State(), OK)["reason"] == "PR_CREATE_FAILED"
+    assert publish(manifest(), trusted(), Git(), GH(), State(fail=True), OK)["reason"] == "STATE_PERSIST_FAILED"
 
 
 def test_terminal_task_skipped():
-    out = publish(manifest(), trusted(), Git(), GH(), State({"status": "REVIEW_PENDING", "pr_url": VALID_PR_URL}))
+    out = publish(manifest(), trusted(), Git(), GH(), State({"status": "REVIEW_PENDING", "pr_url": VALID_PR_URL}), OK)
     assert out["ok"] and out["skipped"] is True
 
 def test_publish_acquires_and_releases_lock():
@@ -182,5 +197,5 @@ def test_terminal_task_rejects_invalid_or_missing_stored_pr_url():
         {"status": "PASS"},
     ]
     for task in invalid_states:
-        out = publish(manifest(), trusted(), Git(), GH(), State(task))
+        out = publish(manifest(), trusted(), Git(), GH(), State(task), OK)
         assert out == {"ok": False, "reason": "PR_URL_INVALID"}
