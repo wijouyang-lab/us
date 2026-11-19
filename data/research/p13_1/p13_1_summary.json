@@ -1,138 +1,700 @@
 {
-  "coverage": [
-    {
-      "window": "5Y",
+  "coverage": {
+    "5Y": {
       "start": "2020-01-02",
       "end": "2024-12-31",
+      "calendar_days": 1258,
       "expected_member_days": 633971,
       "observed_member_days": 625608,
       "member_day_coverage": 0.986808544870349,
-      "tickers": 581,
-      "median_names": 499.0,
-      "pools": {
-        "broad": 580,
-        "cover80": 581,
-        "cover95": 581,
-        "continuous": 581
-      },
-      "stock_coverage_median": 1.0,
-      "stock_coverage_80": 581,
-      "stock_coverage_95": 581
+      "tickers_expected": 607,
+      "tickers_priced": 581,
+      "ticker_coverage": 0.957166392092257,
+      "median_names": 499.0
     },
-    {
-      "window": "3Y",
+    "calendar": {
+      "spy_duplicate_dates": 0,
+      "spy_missing_business_days": 46,
+      "membership_duplicate_snapshots": 0,
+      "price_duplicate_symbol_days": 0,
+      "snapshot_count": 2720
+    },
+    "3Y": {
       "start": "2022-01-03",
       "end": "2024-12-31",
+      "calendar_days": 753,
       "expected_member_days": 378944,
       "observed_member_days": 373588,
       "member_day_coverage": 0.9858659854754265,
-      "tickers": 541,
-      "median_names": 498.0,
-      "pools": {
-        "broad": 540,
-        "cover80": 541,
-        "cover95": 541,
-        "continuous": 541
-      },
-      "stock_coverage_median": 1.0,
-      "stock_coverage_80": 541,
-      "stock_coverage_95": 541
+      "tickers_expected": 566,
+      "tickers_priced": 541,
+      "ticker_coverage": 0.9558303886925795,
+      "median_names": 498.0
+    },
+    "pools": {
+      "broad": 580,
+      "cover80": 581,
+      "cover95": 580,
+      "3y_cover95": 580,
+      "missing": 26
+    },
+    "missing_price_members": 26
+  },
+  "pools": {
+    "broad": 580,
+    "cover80": 581,
+    "cover95": 580,
+    "3y_cover95": 580,
+    "missing": 26
+  },
+  "alignment": {
+    "rows": 604026,
+    "sample_rows": 20,
+    "entry_exit_same_calendar": true,
+    "return_basis": "CLOSE_PRICE_ONLY_ADJUSTMENT_UNVERIFIED"
+  },
+  "price_results": [
+    {
+      "window": "5Y",
+      "cohort": "broad",
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "dates": 1218,
+      "mean_ic": 0.007011964398545456,
+      "mean_spread": 0.0058358542861822755,
+      "hac_lag19_t": 0.9540808339409755,
+      "p": 0.34023218815795914,
+      "q": 0.8395100789147193
+    },
+    {
+      "window": "5Y",
+      "cohort": "broad",
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "dates": 1218,
+      "mean_ic": -0.005068962127645208,
+      "mean_spread": -0.0031182896260917078,
+      "hac_lag19_t": -0.8071200347662939,
+      "p": 0.41975503945735965,
+      "q": 0.8395100789147193
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "dates": 1218,
+      "mean_ic": 0.007011964398545456,
+      "mean_spread": 0.0058358542861822755,
+      "hac_lag19_t": 0.9540808339409755,
+      "p": 0.34023218815795914,
+      "q": 0.8395100789147193
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "dates": 1218,
+      "mean_ic": -0.005068962127645208,
+      "mean_spread": -0.0031182896260917078,
+      "hac_lag19_t": -0.8071200347662939,
+      "p": 0.41975503945735965,
+      "q": 0.8395100789147193
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "dates": 1218,
+      "mean_ic": 0.007011964398545456,
+      "mean_spread": 0.0058358542861822755,
+      "hac_lag19_t": 0.9540808339409755,
+      "p": 0.34023218815795914,
+      "q": 0.8395100789147193
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "dates": 1218,
+      "mean_ic": -0.005068962127645208,
+      "mean_spread": -0.0031182896260917078,
+      "hac_lag19_t": -0.8071200347662939,
+      "p": 0.41975503945735965,
+      "q": 0.8395100789147193
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "dates": 733,
+      "mean_ic": -0.007772943396379546,
+      "mean_spread": -0.0006534501913887673,
+      "hac_lag19_t": -0.1108917858419685,
+      "p": 0.9117325564053629,
+      "q": 0.9298374539068766
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "dates": 733,
+      "mean_ic": 0.008775677524120005,
+      "mean_spread": -0.0003553238058834115,
+      "hac_lag19_t": -0.08807965857195833,
+      "p": 0.9298374539068766,
+      "q": 0.9298374539068766
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "dates": 733,
+      "mean_ic": -0.007772943396379546,
+      "mean_spread": -0.0006534501913887673,
+      "hac_lag19_t": -0.1108917858419685,
+      "p": 0.9117325564053629,
+      "q": 0.9298374539068766
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "dates": 733,
+      "mean_ic": 0.008775677524120005,
+      "mean_spread": -0.0003553238058834115,
+      "hac_lag19_t": -0.08807965857195833,
+      "p": 0.9298374539068766,
+      "q": 0.9298374539068766
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "factor": "vol20",
+      "direction": "high_minus_low",
+      "dates": 733,
+      "mean_ic": -0.007772943396379546,
+      "mean_spread": -0.0006534501913887673,
+      "hac_lag19_t": -0.1108917858419685,
+      "p": 0.9117325564053629,
+      "q": 0.9298374539068766
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "factor": "mom20",
+      "direction": "high_minus_low",
+      "dates": 733,
+      "mean_ic": 0.008775677524120005,
+      "mean_spread": -0.0003553238058834115,
+      "hac_lag19_t": -0.08807965857195833,
+      "p": 0.9298374539068766,
+      "q": 0.9298374539068766
     }
   ],
-  "price": [
+  "bootstrap": [
     {
+      "window": "5Y",
+      "cohort": "broad",
       "factor": "vol20",
-      "direction": "high_minus_low",
-      "mean": 0.0038998729699799245,
-      "hac_t": 1.0499070672184936,
-      "p": 0.29396591288976015,
-      "dates": 1238,
-      "mean_ic": -0.00033412553901949484,
-      "q": 0.5879318257795203
+      "blocks": 61,
+      "boot_low": -0.004084503846187011,
+      "boot_high": 0.019355209412636444
     },
     {
+      "window": "5Y",
+      "cohort": "broad",
+      "factor": "mom20",
+      "blocks": 61,
+      "boot_low": -0.011405701048932779,
+      "boot_high": 0.003924208344659985
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
       "factor": "vol20",
-      "direction": "low_minus_high",
-      "mean": -0.0038998729699799245,
-      "hac_t": -1.0499070672184936,
-      "p": 0.29396591288976015,
-      "dates": 1238,
-      "mean_ic": -0.00033412553901949484,
-      "q": 0.5879318257795203
+      "blocks": 61,
+      "boot_low": -0.004084503846187011,
+      "boot_high": 0.019355209412636444
     },
     {
+      "window": "5Y",
+      "cohort": "cover80",
       "factor": "mom20",
-      "direction": "high_minus_low",
-      "mean": -0.001420882678732793,
-      "hac_t": -0.5393274732933386,
-      "p": 0.5897579724866933,
-      "dates": 1238,
-      "mean_ic": -0.0019783248979489436,
-      "q": 0.5897579724866933
+      "blocks": 61,
+      "boot_low": -0.011405701048932779,
+      "boot_high": 0.003924208344659985
     },
     {
+      "window": "5Y",
+      "cohort": "cover95",
+      "factor": "vol20",
+      "blocks": 61,
+      "boot_low": -0.004084503846187011,
+      "boot_high": 0.019355209412636444
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
       "factor": "mom20",
-      "direction": "low_minus_high",
-      "mean": 0.001420882678732793,
-      "hac_t": 0.5393274732933386,
-      "p": 0.5897579724866933,
-      "dates": 1238,
-      "mean_ic": -0.0019783248979489436,
-      "q": 0.5897579724866933
+      "blocks": 61,
+      "boot_low": -0.011405701048932779,
+      "boot_high": 0.003924208344659985
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "factor": "vol20",
+      "blocks": 37,
+      "boot_low": -0.011930381900028314,
+      "boot_high": 0.011869630701688989
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "factor": "mom20",
+      "blocks": 37,
+      "boot_low": -0.008784351379579848,
+      "boot_high": 0.006384653173931029
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "factor": "vol20",
+      "blocks": 37,
+      "boot_low": -0.011930381900028314,
+      "boot_high": 0.011869630701688989
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "factor": "mom20",
+      "blocks": 37,
+      "boot_low": -0.008784351379579848,
+      "boot_high": 0.006384653173931029
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "factor": "vol20",
+      "blocks": 37,
+      "boot_low": -0.011930381900028314,
+      "boot_high": 0.011869630701688989
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "factor": "mom20",
+      "blocks": 37,
+      "boot_low": -0.008784351379579848,
+      "boot_high": 0.006384653173931029
     }
   ],
   "oos": [
     {
+      "window": "5Y",
+      "cohort": "broad",
       "segment": "train",
       "factor": "vol20",
-      "dates": 742,
-      "mean_ic": -0.00903814464524144,
-      "high_minus_low": 0.0043647937408404485,
-      "low_minus_high": -0.0043647937408404485
+      "dates": 710,
+      "start": "2020-01-31",
+      "end": "2022-11-22",
+      "mean_ic": 0.0033764841857634054,
+      "mean_spread": 0.0078077700191055265
     },
     {
+      "window": "5Y",
+      "cohort": "broad",
       "segment": "train",
       "factor": "mom20",
-      "dates": 742,
-      "mean_ic": -0.008464086103078037,
-      "high_minus_low": -0.0029409042602046753,
-      "low_minus_high": 0.0029409042602046753
+      "dates": 710,
+      "start": "2020-01-31",
+      "end": "2022-11-22",
+      "mean_ic": -0.015142034165867424,
+      "mean_spread": -0.005379451062848511
     },
     {
+      "window": "5Y",
+      "cohort": "broad",
       "segment": "validation",
       "factor": "vol20",
-      "dates": 248,
-      "mean_ic": 0.06883707008867637,
-      "high_minus_low": 0.013883832821649665,
-      "low_minus_high": -0.013883832821649665
+      "dates": 224,
+      "start": "2022-12-22",
+      "end": "2023-11-13",
+      "mean_ic": 0.03922763807715598,
+      "mean_spread": 0.009873052232010387
     },
     {
+      "window": "5Y",
+      "cohort": "broad",
       "segment": "validation",
       "factor": "mom20",
-      "dates": 248,
-      "mean_ic": -0.005689029065830461,
-      "high_minus_low": -0.0011721706644818564,
-      "low_minus_high": 0.0011721706644818564
+      "dates": 224,
+      "start": "2022-12-22",
+      "end": "2023-11-13",
+      "mean_ic": -0.0073179682557726845,
+      "mean_spread": -0.0022566228892164026
     },
     {
+      "window": "5Y",
+      "cohort": "broad",
       "segment": "test",
       "factor": "vol20",
-      "dates": 248,
-      "mean_ic": -0.04346345755051904,
-      "high_minus_low": -0.007475099833216064,
-      "low_minus_high": 0.007475099833216064
+      "dates": 244,
+      "start": "2023-12-13",
+      "end": "2024-12-02",
+      "mean_ic": -0.04775097211584874,
+      "mean_spread": -0.009886133583797977
     },
     {
+      "window": "5Y",
+      "cohort": "broad",
       "segment": "test",
       "factor": "mom20",
-      "dates": 248,
-      "mean_ic": 0.02113735835947205,
-      "high_minus_low": 0.00287821181287166,
-      "low_minus_high": -0.00287821181287166
+      "dates": 244,
+      "start": "2023-12-13",
+      "end": "2024-12-02",
+      "mean_ic": 0.016698654423693185,
+      "mean_spread": 0.0009654815669672287
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "segment": "train",
+      "factor": "vol20",
+      "dates": 710,
+      "start": "2020-01-31",
+      "end": "2022-11-22",
+      "mean_ic": 0.0033764841857634054,
+      "mean_spread": 0.0078077700191055265
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "segment": "train",
+      "factor": "mom20",
+      "dates": 710,
+      "start": "2020-01-31",
+      "end": "2022-11-22",
+      "mean_ic": -0.015142034165867424,
+      "mean_spread": -0.005379451062848511
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "segment": "validation",
+      "factor": "vol20",
+      "dates": 224,
+      "start": "2022-12-22",
+      "end": "2023-11-13",
+      "mean_ic": 0.03922763807715598,
+      "mean_spread": 0.009873052232010387
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "segment": "validation",
+      "factor": "mom20",
+      "dates": 224,
+      "start": "2022-12-22",
+      "end": "2023-11-13",
+      "mean_ic": -0.0073179682557726845,
+      "mean_spread": -0.0022566228892164026
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "segment": "test",
+      "factor": "vol20",
+      "dates": 244,
+      "start": "2023-12-13",
+      "end": "2024-12-02",
+      "mean_ic": -0.04775097211584874,
+      "mean_spread": -0.009886133583797977
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover80",
+      "segment": "test",
+      "factor": "mom20",
+      "dates": 244,
+      "start": "2023-12-13",
+      "end": "2024-12-02",
+      "mean_ic": 0.016698654423693185,
+      "mean_spread": 0.0009654815669672287
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "segment": "train",
+      "factor": "vol20",
+      "dates": 710,
+      "start": "2020-01-31",
+      "end": "2022-11-22",
+      "mean_ic": 0.0033764841857634054,
+      "mean_spread": 0.0078077700191055265
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "segment": "train",
+      "factor": "mom20",
+      "dates": 710,
+      "start": "2020-01-31",
+      "end": "2022-11-22",
+      "mean_ic": -0.015142034165867424,
+      "mean_spread": -0.005379451062848511
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "segment": "validation",
+      "factor": "vol20",
+      "dates": 224,
+      "start": "2022-12-22",
+      "end": "2023-11-13",
+      "mean_ic": 0.03922763807715598,
+      "mean_spread": 0.009873052232010387
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "segment": "validation",
+      "factor": "mom20",
+      "dates": 224,
+      "start": "2022-12-22",
+      "end": "2023-11-13",
+      "mean_ic": -0.0073179682557726845,
+      "mean_spread": -0.0022566228892164026
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "segment": "test",
+      "factor": "vol20",
+      "dates": 244,
+      "start": "2023-12-13",
+      "end": "2024-12-02",
+      "mean_ic": -0.04775097211584874,
+      "mean_spread": -0.009886133583797977
+    },
+    {
+      "window": "5Y",
+      "cohort": "cover95",
+      "segment": "test",
+      "factor": "mom20",
+      "dates": 244,
+      "start": "2023-12-13",
+      "end": "2024-12-02",
+      "mean_ic": 0.016698654423693185,
+      "mean_spread": 0.0009654815669672287
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "segment": "train",
+      "factor": "vol20",
+      "dates": 419,
+      "start": "2022-01-03",
+      "end": "2023-09-01",
+      "mean_ic": -0.006496955343124091,
+      "mean_spread": 0.0006674452181975831
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "segment": "train",
+      "factor": "mom20",
+      "dates": 419,
+      "start": "2022-01-03",
+      "end": "2023-09-01",
+      "mean_ic": -0.0025849251898332963,
+      "mean_spread": -0.0025550059519764013
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "segment": "validation",
+      "factor": "vol20",
+      "dates": 127,
+      "start": "2023-10-03",
+      "end": "2024-04-04",
+      "mean_ic": 0.03792963322713221,
+      "mean_spread": 0.00998900255222401
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "segment": "validation",
+      "factor": "mom20",
+      "dates": 127,
+      "start": "2023-10-03",
+      "end": "2024-04-04",
+      "mean_ic": -0.0008609774349899173,
+      "mean_spread": -0.00012202560779042903
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "segment": "test",
+      "factor": "vol20",
+      "dates": 147,
+      "start": "2024-05-03",
+      "end": "2024-12-02",
+      "mean_ic": -0.040054844730081196,
+      "mean_spread": -0.012224025513939484
+    },
+    {
+      "window": "3Y",
+      "cohort": "broad",
+      "segment": "test",
+      "factor": "mom20",
+      "dates": 147,
+      "start": "2024-05-03",
+      "end": "2024-12-02",
+      "mean_ic": 0.02693181816859431,
+      "mean_spread": 0.001007505132366615
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "segment": "train",
+      "factor": "vol20",
+      "dates": 419,
+      "start": "2022-01-03",
+      "end": "2023-09-01",
+      "mean_ic": -0.006496955343124091,
+      "mean_spread": 0.0006674452181975831
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "segment": "train",
+      "factor": "mom20",
+      "dates": 419,
+      "start": "2022-01-03",
+      "end": "2023-09-01",
+      "mean_ic": -0.0025849251898332963,
+      "mean_spread": -0.0025550059519764013
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "segment": "validation",
+      "factor": "vol20",
+      "dates": 127,
+      "start": "2023-10-03",
+      "end": "2024-04-04",
+      "mean_ic": 0.03792963322713221,
+      "mean_spread": 0.00998900255222401
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "segment": "validation",
+      "factor": "mom20",
+      "dates": 127,
+      "start": "2023-10-03",
+      "end": "2024-04-04",
+      "mean_ic": -0.0008609774349899173,
+      "mean_spread": -0.00012202560779042903
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "segment": "test",
+      "factor": "vol20",
+      "dates": 147,
+      "start": "2024-05-03",
+      "end": "2024-12-02",
+      "mean_ic": -0.040054844730081196,
+      "mean_spread": -0.012224025513939484
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover80",
+      "segment": "test",
+      "factor": "mom20",
+      "dates": 147,
+      "start": "2024-05-03",
+      "end": "2024-12-02",
+      "mean_ic": 0.02693181816859431,
+      "mean_spread": 0.001007505132366615
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "segment": "train",
+      "factor": "vol20",
+      "dates": 419,
+      "start": "2022-01-03",
+      "end": "2023-09-01",
+      "mean_ic": -0.006496955343124091,
+      "mean_spread": 0.0006674452181975831
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "segment": "train",
+      "factor": "mom20",
+      "dates": 419,
+      "start": "2022-01-03",
+      "end": "2023-09-01",
+      "mean_ic": -0.0025849251898332963,
+      "mean_spread": -0.0025550059519764013
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "segment": "validation",
+      "factor": "vol20",
+      "dates": 127,
+      "start": "2023-10-03",
+      "end": "2024-04-04",
+      "mean_ic": 0.03792963322713221,
+      "mean_spread": 0.00998900255222401
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "segment": "validation",
+      "factor": "mom20",
+      "dates": 127,
+      "start": "2023-10-03",
+      "end": "2024-04-04",
+      "mean_ic": -0.0008609774349899173,
+      "mean_spread": -0.00012202560779042903
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "segment": "test",
+      "factor": "vol20",
+      "dates": 147,
+      "start": "2024-05-03",
+      "end": "2024-12-02",
+      "mean_ic": -0.040054844730081196,
+      "mean_spread": -0.012224025513939484
+    },
+    {
+      "window": "3Y",
+      "cohort": "cover95",
+      "segment": "test",
+      "factor": "mom20",
+      "dates": 147,
+      "start": "2024-05-03",
+      "end": "2024-12-02",
+      "mean_ic": 0.02693181816859431,
+      "mean_spread": 0.001007505132366615
     }
   ],
-  "coverage_thresholds": {
-    "member_day_95": true
-  },
-  "note": "ADJUSTMENT_UNVERIFIED adjusted_close; ATR not retested"
+  "quality": "DATA_BLOCKED",
+  "status": "P13_1_1_COMPLETE"
 }

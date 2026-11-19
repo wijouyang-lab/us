@@ -29,3 +29,5 @@ data/paper_trading/*.sqlite-shm
 data/paper_trading/*.sqlite
 
 data/research/p13/p13_atr_panel.csv
+
+data/research/p13_1/p13_1_aligned_panel.csv

@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""P13.1 coverage-driven universe audit and exploratory price-behaviour study."""
+"""P13.1.1 corrected coverage, calendar alignment, HAC(19), purge and bootstrap."""
 from __future__ import annotations
 
+import bisect
+import hashlib
 import json
 from pathlib import Path
 
@@ -14,9 +16,11 @@ OUT.mkdir(parents=True, exist_ok=True)
 PRICES = Path("../_us_audit/pr512/data/research/pit_data/finsaber_prices_raw.csv")
 MEMBERS = Path("../_us_audit/pr512/data/research/historical_universe/sp500_daily.csv")
 SPY = Path("../_us_audit/pr512/data/research/p9_1_support_resistance/SPY.csv")
+START5, END = pd.Timestamp("2020-01-02"), pd.Timestamp("2024-12-31")
+START3 = pd.Timestamp("2022-01-03")
 
 
-def nw(x, lag=4):
+def nw(x, lag):
     x = np.asarray(x, float); n = len(x); e = x - x.mean(); v = e @ e / n
     for k in range(1, min(lag, n - 1) + 1):
         v += 2 * (1 - k / (lag + 1)) * (e[k:] @ e[:-k]) / n
@@ -30,89 +34,195 @@ def bh(p):
     return q
 
 
+# Calendar from SPY, exact and unique.
+spy_raw = pd.read_csv(SPY, usecols=["Date", "close"])
+spy_raw["date"] = pd.to_datetime(spy_raw.Date, utc=True).dt.tz_convert(None).dt.normalize()
+dup_spy = int(spy_raw.duplicated(["date"]).sum())
+spy = spy_raw.drop_duplicates("date").set_index("date")["close"].sort_index()
+cal = pd.DatetimeIndex([d for d in spy.index if START5 <= d <= END])
+missing_spy_days = int(len(pd.bdate_range(cal.min(), cal.max())) - len(cal))
+
+# Membership snapshots: latest <= date, duplicates detected.
+mem = pd.read_csv(MEMBERS)
+mem["date"] = pd.to_datetime(mem.date)
+dup_snap = int(mem.duplicated(["date"]).sum())
+mem = mem.drop_duplicates("date", keep="last").sort_values("date")
+snap_dates = list(mem.date)
+members = {d: set(str(t).split(",")) for d, t in zip(mem.date, mem.tickers)}
+
+
+def members_at(d):
+    i = bisect.bisect_right(snap_dates, d) - 1
+    return members.get(snap_dates[i], set()) if i >= 0 else set()
+
+
+# Full expected table: every calendar day x member, including missing prices.
+expected = []
+for d in cal:
+    for s in members_at(d):
+        expected.append((s, d))
+exp = pd.DataFrame(expected, columns=["ticker", "date"])
+exp["year"] = exp.date.dt.year
+exp["quarter"] = exp.date.dt.to_period("Q").astype(str)
+
+# Prices: exact symbol/date, no filling.
 raw = pd.read_csv(PRICES, usecols=["date", "symbol", "close", "adjusted_close"])
 raw["date"] = pd.to_datetime(raw.date)
-raw = raw.dropna().sort_values(["symbol", "date"])
-raw["ret"] = raw.groupby("symbol").adjusted_close.pct_change()
-raw["vol20"] = raw.groupby("symbol").ret.transform(lambda x: x.rolling(20, min_periods=20).std() * np.sqrt(252))
-raw["mom20"] = raw.groupby("symbol").adjusted_close.transform(lambda x: x / x.shift(20) - 1)
-raw["fwd20"] = raw.groupby("symbol").adjusted_close.shift(-20) / raw.adjusted_close - 1
-spy = pd.read_csv(SPY, usecols=["Date", "close"]); spy["date"] = pd.to_datetime(spy.Date, utc=True).dt.tz_convert(None).dt.normalize()
-spy = spy.set_index("date")["close"].sort_index()
-raw["spy20"] = raw.date.map(spy.shift(-20) / spy - 1)
-raw["ex20"] = raw.fwd20 - raw.spy20
+dup_px = int(raw.duplicated(["symbol", "date"]).sum())
+raw = raw.drop_duplicates(["symbol", "date"])
+px = raw[raw.date.isin(cal)][["symbol", "date", "close", "adjusted_close"]].rename(columns={"symbol": "ticker"})
+exp = exp.merge(px, on=["ticker", "date"], how="left")
+exp["observed"] = exp["close"].notna()
 
-mem = pd.read_csv(MEMBERS); mem["date"] = pd.to_datetime(mem.date)
-snap = sorted(set(mem.date)); mm = {d: set(str(t).split(",")) for d, t in zip(mem.date, mem.tickers)}
-import bisect
-def members_at(d):
-    i = bisect.bisect_right(snap, d) - 1
-    return mm.get(snap[i], set()) if i >= 0 else set()
+member_days = int(len(exp)); observed = int(exp.observed.sum())
+coverage = {
+    "5Y": {"start": str(cal.min().date()), "end": str(cal.max().date()), "calendar_days": len(cal),
+           "expected_member_days": member_days, "observed_member_days": observed,
+           "member_day_coverage": observed / member_days if member_days else 0,
+           "tickers_expected": int(exp.ticker.nunique()), "tickers_priced": int(exp[exp.observed].ticker.nunique()),
+           "ticker_coverage": exp[exp.observed].ticker.nunique() / max(exp.ticker.nunique(), 1),
+           "median_names": float(exp[exp.observed].groupby("date").size().median())},
+    "calendar": {"spy_duplicate_dates": dup_spy, "spy_missing_business_days": missing_spy_days,
+                 "membership_duplicate_snapshots": dup_snap, "price_duplicate_symbol_days": dup_px,
+                 "snapshot_count": len(snap_dates)},
+}
+# 3Y subset.
+e3 = exp[exp.date >= START3]
+coverage["3Y"] = {"start": str(e3.date.min().date()), "end": str(e3.date.max().date()),
+                  "calendar_days": int(e3.date.nunique()), "expected_member_days": int(len(e3)),
+                  "observed_member_days": int(e3.observed.sum()),
+                  "member_day_coverage": float(e3.observed.mean()),
+                  "tickers_expected": int(e3.ticker.nunique()), "tickers_priced": int(e3[e3.observed].ticker.nunique()),
+                  "ticker_coverage": e3[e3.observed].ticker.nunique() / max(e3.ticker.nunique(), 1),
+                  "median_names": float(e3[e3.observed].groupby("date").size().median())}
+# Per-stock coverage over full expected membership, including missing-price names.
+stock = []
+for t, g in exp.groupby("ticker"):
+    expected_n = len(g); obs = int(g.observed.sum())
+    dates = g.date.tolist(); obs_dates = g[g.observed].date
+    # longest missing streak in calendar positions
+    present = g.observed.to_numpy(); best = cur = 0
+    for v in present:
+        cur = 0 if v else cur + 1; best = max(best, cur)
+    annual = g.groupby("year")["observed"].mean().round(4).to_dict()
+    quarterly = g.groupby("quarter")["observed"].mean().round(4).to_dict()
+    stock.append({"ticker": t, "expected_member_days": expected_n, "observed_member_days": obs,
+                  "coverage": obs / expected_n if expected_n else 0,
+                  "first_expected_date": str(g.date.min().date()), "last_expected_date": str(g.date.max().date()),
+                  "first_observed_date": str(obs_dates.min().date()) if len(obs_dates) else "",
+                  "last_observed_date": str(obs_dates.max().date()) if len(obs_dates) else "",
+                  "missing_sessions": expected_n - obs, "longest_missing_streak": best,
+                  "annual_coverage": json.dumps(annual), "quarterly_coverage": json.dumps(quarterly)})
+stock = pd.DataFrame(stock).sort_values("coverage")
+stock.to_csv(OUT / "p13_1_stock_coverage.csv", index=False)
+missing = stock[stock.observed_member_days == 0]
+missing.to_csv(OUT / "p13_1_missing_price_members.csv", index=False)
+pools = {
+    "broad": stock[stock.observed_member_days >= 20].ticker.tolist(),
+    "cover80": stock[stock.coverage >= .80].ticker.tolist(),
+    "cover95": stock[stock.coverage >= .95].ticker.tolist(),
+    "3y_cover95": stock[(stock.coverage >= .95) & (stock.observed_member_days >= 20)].ticker.tolist(),
+    "missing": missing.ticker.tolist(),
+}
+coverage["pools"] = {k: len(v) for k, v in pools.items()}
+coverage["missing_price_members"] = len(missing)
+(OUT / "p13_1_coverage.json").write_text(json.dumps(coverage, indent=2), encoding="utf-8")
 
+# Price panel on the exact market calendar; no fill.
+p = exp[exp.observed][["ticker", "date", "close", "adjusted_close"]].copy()
+# Use raw close for BOTH stock and SPY because SPY has no adjusted_close.
+wide = p.pivot(index="date", columns="ticker", values="close").reindex(cal)
+spy_series = spy.reindex(cal)
 rows = []
-for start, end, label in [("2020-01-01", "2024-12-31", "5Y"), ("2022-01-01", "2024-12-31", "3Y")]:
-    p = raw[(raw.date >= start) & (raw.date <= end)].copy()
-    p = p[p.apply(lambda r: r.symbol in members_at(r.date), axis=1)]
-    expected = 0; observed = 0
-    for d, g in p.groupby("date"):
-        expected += len(members_at(d)); observed += g.symbol.nunique()
-    # per-stock coverage over member days
-    stock_cov = []
-    for sym, g in p.groupby("symbol"):
-        md = sum(1 for d in g.date if sym in members_at(d))
-        stock_cov.append((sym, md, len(g)))
-    stock = pd.DataFrame(stock_cov, columns=["ticker", "member_days", "observed_days"])
-    stock["coverage"] = stock.observed_days / stock.member_days.replace(0, np.nan)
-    pools = {"broad": stock[stock.member_days >= 20],
-             "cover80": stock[stock.coverage >= .80],
-             "cover95": stock[stock.coverage >= .95],
-             "continuous": stock[stock.coverage >= .95]}
-    rows.append({"window": label, "start": str(p.date.min().date()), "end": str(p.date.max().date()),
-                 "expected_member_days": expected, "observed_member_days": observed,
-                 "member_day_coverage": observed / expected if expected else 0,
-                 "tickers": int(stock.ticker.nunique()), "median_names": float(p.groupby("date").size().median()),
-                 "pools": {k: int(len(v)) for k, v in pools.items()},
-                 "stock_coverage_median": float(stock.coverage.median()),
-                 "stock_coverage_80": int((stock.coverage >= .8).sum()),
-                 "stock_coverage_95": int((stock.coverage >= .95).sum())})
-    if label == "5Y":
-        p5 = p
-        stock5 = stock
+for t in wide.columns:
+    s = wide[t].dropna()
+    if len(s) < 40: continue
+    r = s.reindex(cal)
+    logret = np.log(r / r.shift(1))
+    vol = logret.rolling(20, min_periods=20).std() * np.sqrt(252)
+    mom = r / r.shift(20) - 1
+    for i in range(20, len(cal) - 20):
+        d = cal[i]; exitd = cal[i + 20]
+        if pd.isna(r.iloc[i]) or pd.isna(r.iloc[i + 20]) or pd.isna(spy_series.iloc[i]) or pd.isna(spy_series.iloc[i + 20]):
+            continue
+        if t not in members_at(d):
+            continue
+        sr = r.iloc[i + 20] / r.iloc[i] - 1; br = spy_series.iloc[i + 20] / spy_series.iloc[i] - 1
+        rows.append({"ticker": t, "signal_date": d, "entry_date": d, "exit_date": exitd,
+                     "stock_entry_price": r.iloc[i], "stock_exit_price": r.iloc[i + 20],
+                     "benchmark_entry_price": spy_series.iloc[i], "benchmark_exit_price": spy_series.iloc[i + 20],
+                     "stock_return": sr, "benchmark_return": br, "excess_return": sr - br,
+                     "vol20": vol.iloc[i], "mom20": mom.iloc[i]})
+panel = pd.DataFrame(rows)
+panel.to_csv(OUT / "p13_1_aligned_panel.csv", index=False)
+# sample alignment check 20 rows
+panel.sample(20, random_state=13).to_csv(OUT / "p13_1_alignment_sample.csv", index=False)
+# Cohort daily IC/spread.
+def cohort_daily(panel, tickers, label):
+    g = panel[panel.ticker.isin(tickers)].dropna(subset=["vol20", "mom20", "excess_return"])
+    out = []
+    for d, x in g.groupby("signal_date"):
+        if len(x) < 30: continue
+        row = {"date": d, "n": len(x)}
+        for f in ("vol20", "mom20"):
+            row[f"ic_{f}"] = stats.spearmanr(x[f], x.excess_return).statistic
+            q = pd.qcut(x[f].rank(method="first"), 5, labels=False)
+            row[f"spread_{f}"] = x.excess_return[q == 4].mean() - x.excess_return[q == 0].mean()
+        out.append(row)
+    return pd.DataFrame(out)
 
-(OUT / "p13_1_coverage.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
-stock5.to_csv(OUT / "p13_1_stock_coverage.csv", index=False)
-
-# Price behaviour: daily IC and Q5-Q1 for vol20 and mom20, 20D excess.
-p = p5.dropna(subset=["vol20", "mom20", "ex20"])
-daily = []
-for d, g in p.groupby("date"):
-    if len(g) < 50: continue
-    row = {"date": d, "n": len(g)}
-    for f in ("vol20", "mom20"):
-        row[f"ic_{f}"] = stats.spearmanr(g[f], g.ex20).statistic
-        q = pd.qcut(g[f].rank(method="first"), 5, labels=False)
-        row[f"spread_{f}"] = g.ex20[q == 4].mean() - g.ex20[q == 0].mean()
-        row[f"low_minus_high_{f}"] = g.ex20[q == 0].mean() - g.ex20[q == 4].mean()
-    daily.append(row)
-d = pd.DataFrame(daily); d.to_csv(OUT / "p13_1_price_daily.csv", index=False)
-res = []
-for f in ("vol20", "mom20"):
-    for prefix, col in (("high_minus_low", f"spread_{f}"), ("low_minus_high", f"low_minus_high_{f}")):
-        x = d[col].dropna(); t = nw(x); res.append({"factor": f, "direction": prefix, "mean": x.mean(), "hac_t": t,
-                                                     "p": 2 * stats.t.sf(abs(t), len(x) - 1), "dates": len(x),
-                                                     "mean_ic": d[f"ic_{f}"].mean()})
-r = pd.DataFrame(res); r["q"] = bh(r.p); r.to_csv(OUT / "p13_1_price_hac.csv", index=False)
-# OOS 60/20/20 by date.
-dates = sorted(d.date.unique()); c1, c2 = int(len(dates) * .6), int(len(dates) * .8)
-oos = []
-for label, ds in (("train", dates[:c1]), ("validation", dates[c1:c2]), ("test", dates[c2:])):
-    g = d[d.date.isin(ds)]
-    for f in ("vol20", "mom20"):
-        oos.append({"segment": label, "factor": f, "dates": len(g), "mean_ic": g[f"ic_{f}"].mean(),
-                    "high_minus_low": g[f"spread_{f}"].mean(), "low_minus_high": g[f"low_minus_high_{f}"].mean()})
+results = []; oos = []; boot = []
+for label, start in (("5Y", START5), ("3Y", START3)):
+    pnl = panel[panel.signal_date >= start]
+    for cohort in ("broad", "cover80", "cover95"):
+        d = cohort_daily(pnl, set(pools[cohort]), label)
+        if d.empty: continue
+        for f in ("vol20", "mom20"):
+            x = d[f"spread_{f}"].dropna(); t = nw(x, 19)
+            results.append({"window": label, "cohort": cohort, "factor": f, "direction": "high_minus_low",
+                            "dates": len(x), "mean_ic": d[f"ic_{f}"].mean(), "mean_spread": x.mean(),
+                            "hac_lag19_t": t, "p": 2 * stats.t.sf(abs(t), len(x) - 1)})
+            # 20-day moving block bootstrap
+            arr = x.to_numpy(); rng = np.random.default_rng(20261119); means = []
+            nblocks = int(np.ceil(len(arr) / 20))
+            for _ in range(2000):
+                idx = rng.integers(0, len(arr) - 19, nblocks)
+                means.append(np.concatenate([arr[i:i + 20] for i in idx]).mean())
+            boot.append({"window": label, "cohort": cohort, "factor": f, "blocks": nblocks,
+                         "boot_low": float(np.quantile(means, .025)), "boot_high": float(np.quantile(means, .975))})
+        # OOS purge by signal date; 20D labels may not cross next split.
+        dates = sorted(d.date.unique()); c1, c2 = int(len(dates) * .6), int(len(dates) * .8)
+        b1, b2 = dates[c1], dates[c2]
+        def purge(seg_dates, boundary):
+            keep = []
+            for ds in seg_dates:
+                pos = cal.get_loc(ds)
+                if pos + 20 < len(cal) and cal[pos + 20] < boundary:
+                    keep.append(ds)
+            return keep
+        tr = purge(dates[:c1], b1); va = purge(dates[c1:c2], b2); te = dates[c2:]
+        for seg, ss in (("train", tr), ("validation", va), ("test", te)):
+            sub = d[d.date.isin(ss)]
+            for f in ("vol20", "mom20"):
+                oos.append({"window": label, "cohort": cohort, "segment": seg, "factor": f, "dates": len(sub),
+                            "start": str(min(ss).date()) if ss else "", "end": str(max(ss).date()) if ss else "",
+                            "mean_ic": sub[f"ic_{f}"].mean(), "mean_spread": sub[f"spread_{f}"].mean()})
+res = pd.DataFrame(results); res["q"] = bh(res.p)
+res.to_csv(OUT / "p13_1_price_hac.csv", index=False)
+pd.DataFrame(boot).to_csv(OUT / "p13_1_block_bootstrap.csv", index=False)
 pd.DataFrame(oos).to_csv(OUT / "p13_1_price_oos.csv", index=False)
-summary = {"coverage": rows, "price": r.to_dict("records"), "oos": oos,
-           "coverage_thresholds": {"member_day_95": all(x["member_day_coverage"] >= .95 for x in rows)},
-           "note": "ADJUSTMENT_UNVERIFIED adjusted_close; ATR not retested"}
+summary = {"coverage": coverage, "pools": {k: len(v) for k, v in pools.items()},
+           "alignment": {"rows": len(panel), "sample_rows": 20,
+                         "entry_exit_same_calendar": bool((panel.entry_date == panel.signal_date).all()),
+                         "return_basis": "CLOSE_PRICE_ONLY_ADJUSTMENT_UNVERIFIED"},
+           "price_results": res.to_dict("records"), "bootstrap": boot, "oos": oos,
+           "quality": "DATA_BLOCKED", "status": "P13_1_1_COMPLETE"}
 (OUT / "p13_1_summary.json").write_text(json.dumps(summary, indent=2, default=str), encoding="utf-8")
-print(json.dumps(summary, indent=2, default=str))
+# hashes
+files = {}
+for f in OUT.iterdir():
+    if f.suffix in {".csv", ".json"} and f.name != "p13_1_manifest.json":
+        files[f.name] = {"sha256": hashlib.sha256(f.read_bytes()).hexdigest(), "bytes": f.stat().st_size}
+(OUT / "p13_1_manifest.json").write_text(json.dumps({"outputs": files, "note": "P13.1.1 corrected"}, indent=2), encoding="utf-8")
+print(json.dumps({k: summary[k] for k in ("coverage", "pools", "alignment")}, indent=2, default=str))
+print(res.sort_values("p").head(8).to_string(index=False))

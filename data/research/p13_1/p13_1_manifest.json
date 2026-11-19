@@ -1,55 +1,62 @@
 {
   "outputs": {
+    "p13_1_alignment_sample.csv": {
+      "sha256": "0a480d4e274b29ca4a7da0a2ea26d47b09e6bfae1f6913a84f28cd0f7e983b1f",
+      "bytes": 3974
+    },
+    "p13_1_block_bootstrap.csv": {
+      "sha256": "0e8834608878a09b5e80bcd12cf5bcf296fb67f674818c1a3f3431a80e2e033c",
+      "bytes": 808
+    },
     "p13_1_coverage.json": {
-      "sha256": "55198ac968ee3a4d8c7a8262baa1d0f674f61b853dcd84e1e7d00ffde73a73e2",
-      "bytes": 940
+      "sha256": "ffff5839fa7566fdcd27575ef1e92ac5ab3aec755c6451235d0fabb18a8e65a2",
+      "bytes": 1057
+    },
+    "p13_1_missing_price_members.csv": {
+      "sha256": "871cead54ae47060e38df6eca29eb52795ad30f2704cd5bea92ecdeb767e45e6",
+      "bytes": 4820
     },
     "p13_1_price_daily.csv": {
       "sha256": "cedce137da907dd6ea137d1eace54e3c8b323796aabd7fa6fb627306ff5b8878",
       "bytes": 174290
     },
     "p13_1_price_hac.csv": {
-      "sha256": "89c41f9dbfc1b954755ed161d41534e8e6430911dc32cae803380548e24d3504",
-      "bytes": 569
+      "sha256": "e4b902c1b0d4e44053424fa760a4485afcb3cf8090bae9a202a954b14a6443e2",
+      "bytes": 1749
     },
     "p13_1_price_oos.csv": {
-      "sha256": "554447974918cd0dfb1f441bc2670db5944ea962f80e0918d7ae8db898d86aed",
-      "bytes": 558
+      "sha256": "a9ba12e90fc4732d370b0a44882cc75cf704037cdb61f129e32868cad66e2882",
+      "bytes": 3459
     },
     "p13_1_stock_coverage.csv": {
-      "sha256": "31cd6acfacdab4a3c6b649bb546e2bb7da560ec798b96797e2fa9513872f291c",
-      "bytes": 10894
+      "sha256": "6846ecf16386514061e40f7113acf2cd264dbee888f703c872dc3caf23425d68",
+      "bytes": 256568
     },
     "p13_1_summary.json": {
-      "sha256": "38cca0f74f96b68f9cfb19d5406a803f4bf801678d5165f941083c9556be3af0",
-      "bytes": 3680
+      "sha256": "912b8c0748e3749fb7f05ea5438d4f5bf394b392ca05cda9556d42128489af8c",
+      "bytes": 18245
+    },
+    "p13_1_universe_manifest.json": {
+      "sha256": "979216a7cdfd155a23a2915441b6842cf65f85ec30a38fed7dae4bbcd122b629",
+      "bytes": 155
     }
   },
+  "note": "P13.1.1 corrected; aligned panel is 114MB local-only",
   "sources": {
     "finsaber_prices_raw": {
       "path": "../_us_audit/pr512/data/research/pit_data/finsaber_prices_raw.csv",
-      "exists": true,
       "bytes": 265180873,
       "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
     },
     "sp500_daily": {
       "path": "../_us_audit/pr512/data/research/historical_universe/sp500_daily.csv",
-      "exists": true,
       "bytes": 5533628,
       "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
     },
     "spy": {
       "path": "../_us_audit/pr512/data/research/p9_1_support_resistance/SPY.csv",
-      "exists": true,
       "bytes": 189975,
       "sha256": "4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62"
-    },
-    "sec_panel": {
-      "path": "../_us_audit/fund_p63/universe/sec_fundamentals_panel_p63.csv.gz",
-      "exists": true,
-      "bytes": 67433497,
-      "sha256": "5687b8644ceb5ccf3d94e055f98a0a204502e68edaebfda3a294899e98a99c31"
     }
-  },
-  "note": "P13.1 coverage-driven; adjusted_close supplier convention unverified; quality blocked"
+  }
 }

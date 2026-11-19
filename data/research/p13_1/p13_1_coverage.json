@@ -1,40 +1,41 @@
-[
-  {
-    "window": "5Y",
+{
+  "5Y": {
     "start": "2020-01-02",
     "end": "2024-12-31",
+    "calendar_days": 1258,
     "expected_member_days": 633971,
     "observed_member_days": 625608,
     "member_day_coverage": 0.986808544870349,
-    "tickers": 581,
-    "median_names": 499.0,
-    "pools": {
-      "broad": 580,
-      "cover80": 581,
-      "cover95": 581,
-      "continuous": 581
-    },
-    "stock_coverage_median": 1.0,
-    "stock_coverage_80": 581,
-    "stock_coverage_95": 581
+    "tickers_expected": 607,
+    "tickers_priced": 581,
+    "ticker_coverage": 0.957166392092257,
+    "median_names": 499.0
   },
-  {
-    "window": "3Y",
+  "calendar": {
+    "spy_duplicate_dates": 0,
+    "spy_missing_business_days": 46,
+    "membership_duplicate_snapshots": 0,
+    "price_duplicate_symbol_days": 0,
+    "snapshot_count": 2720
+  },
+  "3Y": {
     "start": "2022-01-03",
     "end": "2024-12-31",
+    "calendar_days": 753,
     "expected_member_days": 378944,
     "observed_member_days": 373588,
     "member_day_coverage": 0.9858659854754265,
-    "tickers": 541,
-    "median_names": 498.0,
-    "pools": {
-      "broad": 540,
-      "cover80": 541,
-      "cover95": 541,
-      "continuous": 541
-    },
-    "stock_coverage_median": 1.0,
-    "stock_coverage_80": 541,
-    "stock_coverage_95": 541
-  }
-]
+    "tickers_expected": 566,
+    "tickers_priced": 541,
+    "ticker_coverage": 0.9558303886925795,
+    "median_names": 498.0
+  },
+  "pools": {
+    "broad": 580,
+    "cover80": 581,
+    "cover95": 580,
+    "3y_cover95": 580,
+    "missing": 26
+  },
+  "missing_price_members": 26
+}
