@@ -1,0 +1,49 @@
+{
+  "outputs": {
+    "p14_block_bootstrap.csv": {
+      "sha256": "f28e2f5b57450a1449d401a3781e58d259caf11cf4b47669bd7841038f14c3be",
+      "bytes": 96
+    },
+    "p14_cost_sensitivity.csv": {
+      "sha256": "5618d3d3927ffa201dbb049c02787441165ca68f5c19da530d2f8a7a9cc86c1b",
+      "bytes": 416
+    },
+    "p14_daily_ic.csv": {
+      "sha256": "687cc3d448a3af9f791290c72295f519fcdbba76dd96c10c56f13296b14eb122",
+      "bytes": 158841
+    },
+    "p14_data_coverage.json": {
+      "sha256": "fe991a56e393702bb600fd3ede21c3095e50a40e4e59af03a5a0b7b2a5e250da",
+      "bytes": 1021
+    },
+    "p14_hac_results.csv": {
+      "sha256": "c3158ab8335184f521e5a93cd321be36a40389008400b978b086f889d8f85ce7",
+      "bytes": 113
+    },
+    "p14_monthly_long_only.csv": {
+      "sha256": "2d4d2a5a14b4ae984e0ff4222426325321e9e5adf6663736cc6f2be21db388d5",
+      "bytes": 7484
+    },
+    "p14_oos_results.csv": {
+      "sha256": "ce7aa1f254c066e646da1679582da90cdcb8a037d3c2aff6c7bf4e097aa4eade",
+      "bytes": 392
+    },
+    "p14_summary.json": {
+      "sha256": "0551be0df92f328a4fefdd14beb7feec54b7ebf2e45c25c3b3c8fbd67a217665",
+      "bytes": 19987
+    }
+  },
+  "sources": {
+    "finsaber_prices_raw": {
+      "path": "../_us_audit/pr512/data/research/pit_data/finsaber_prices_raw.csv",
+      "bytes": 265180873,
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
+    },
+    "sp500_daily": {
+      "path": "../_us_audit/pr512/data/research/historical_universe/sp500_daily.csv",
+      "bytes": 5533628,
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
+    }
+  },
+  "note": "P14; signal panel 38MB local-only; adjusted_close unverified"
+}
