@@ -6,8 +6,10 @@ and without any real Git/GitHub/state access.
 """
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Protocol
+from urllib.parse import urlsplit
 
 
 @dataclass(frozen=True)
@@ -35,6 +37,27 @@ class StatePort(Protocol):
     def persist(self, task_id: str, **fields) -> bool: ...
 
 
+def _valid_pr_url(value: str) -> bool:
+    """Accept only canonical PR URLs from this repository."""
+    if not isinstance(value, str) or not value:
+        return False
+    try:
+        parsed = urlsplit(value)
+        port = parsed.port
+    except ValueError:
+        return False
+    return (
+        parsed.scheme == "https"
+        and parsed.hostname == "github.com"
+        and port in (None, 443)
+        and parsed.username is None
+        and parsed.password is None
+        and re.fullmatch(r"/wijouyang-lab/us/pull/[1-9][0-9]*", parsed.path) is not None
+        and not parsed.query
+        and not parsed.fragment
+    )
+
+
 def choose_pr(prs: list[Pr]) -> tuple[str, str] | tuple[None, str]:
     if len(prs) > 1:
         return None, "MULTIPLE_PR_BLOCKED"
@@ -53,7 +76,10 @@ def publish(manifest: dict, trusted: dict, git: GitPort, github: GitHubPort, sta
             return {"ok": False, "reason": "MANIFEST_INPUT_MISMATCH"}
     existing = state.task(manifest["task_id"])
     if existing and existing.get("status") in {"REVIEW_PENDING", "PASS"}:
-        return {"ok": True, "status": existing["status"], "pr_url": existing.get("pr_url", ""), "skipped": True}
+        pr_url = existing.get("pr_url", "")
+        if pr_url and not _valid_pr_url(pr_url):
+            return {"ok": False, "reason": "PR_URL_INVALID"}
+        return {"ok": True, "status": existing["status"], "pr_url": pr_url, "skipped": True}
     if git.branch() != manifest["branch"]:
         return {"ok": False, "reason": "BRANCH_GUARD"}
     if git.head() != manifest["source_commit_sha"]:
@@ -61,18 +87,34 @@ def publish(manifest: dict, trusted: dict, git: GitPort, github: GitHubPort, sta
     if git.base_sha(manifest["base_branch"]) != manifest["base_commit_sha"]:
         return {"ok": False, "reason": "BASE_COMMIT_MISMATCH"}
     try:
-        choice, value = choose_pr(github.list_prs(manifest["branch"], manifest["base_branch"]))
+        prs = github.list_prs(manifest["branch"], manifest["base_branch"])
+        choice, value = choose_pr(prs)
     except Exception:
         return {"ok": False, "reason": "PR_QUERY_FAILED"}
     if choice != "create" and choice != "reuse":
         return {"ok": False, "reason": value}
-    if choice == "create":
+    if choice == "reuse":
+        pr = prs[0]
+        if not _valid_pr_url(pr.url):
+            return {"ok": False, "reason": "PR_URL_INVALID"}
+        if pr.head != manifest["branch"] or pr.base != manifest["base_branch"]:
+            return {"ok": False, "reason": "PR_REF_MISMATCH"}
+        value = pr.url
+    else:
         try:
             url = github.create_draft(manifest["branch"], manifest["base_branch"], manifest["task_id"])
+            if not _valid_pr_url(url):
+                return {"ok": False, "reason": "PR_URL_INVALID"}
             pr = github.get_pr(url)
         except Exception:
             return {"ok": False, "reason": "PR_CREATE_FAILED"}
-        if not pr.draft or pr.head != manifest["branch"] or pr.base != manifest["base_branch"]:
+        if (
+            not _valid_pr_url(pr.url)
+            or pr.url != url
+            or not pr.draft
+            or pr.head != manifest["branch"]
+            or pr.base != manifest["base_branch"]
+        ):
             return {"ok": False, "reason": "DRAFT_PR_VERIFY_FAILED"}
         value = url
     if not state.persist(manifest["task_id"], status="REVIEW_PENDING", pr_url=value):
