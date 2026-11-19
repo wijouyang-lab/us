@@ -1,0 +1,33 @@
+{
+  "files": {
+    "p12_5_3_event_panel.csv": {
+      "sha256": "b40d13d723396e90f9dc2f0a4af4227e69279e3e931c543c7f881316c0a6ee4d",
+      "bytes": 34158743
+    },
+    "p12_5_3_event_panel_summary.json": {
+      "sha256": "477f4a51175883529998b38e784456af9a69d65946d9c3da79640253e2083a8e",
+      "bytes": 19076
+    },
+    "p12_5_3_event_results.csv": {
+      "sha256": "4ee882ce3985e37c0d5b5747bca39373339b3e931b5af96796f104d96b91439b",
+      "bytes": 7845
+    },
+    "p12_5_3_factor_results.csv": {
+      "sha256": "82d3ec1e34b3a82b7e4af43638aae2c076f51b9d357a07dcb8193486cf7c5fae",
+      "bytes": 34
+    },
+    "p12_5_3_oos_results.csv": {
+      "sha256": "7dc6c384cb86d9c3794747d4742f4f7febd7616db0009496c149b8dfff5e9e94",
+      "bytes": 5334
+    },
+    "p12_5_3_price_source_audit.json": {
+      "sha256": "d9b2a6b951038e340455d4c979c5605e8013a16058588586846288be619d5f24",
+      "bytes": 763
+    },
+    "p12_5_3_universe_manifest.json": {
+      "sha256": "30f95d0c8097338339f0f6b1c45b4748b1dc4fc7e939bb11499c3c9fa1a67067",
+      "bytes": 202
+    }
+  },
+  "note": "exploratory; unadjusted close; no portfolio/cost"
+}

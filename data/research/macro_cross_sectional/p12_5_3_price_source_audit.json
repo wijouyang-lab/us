@@ -1,0 +1,28 @@
+{
+  "verdict": "EXPLORATORY_ONLY",
+  "strict_universe": {
+    "tickers": 0,
+    "reason": "no verified PIT total-return set"
+  },
+  "exploratory_universe": {
+    "tickers": 481,
+    "events": 209,
+    "observations": 87706,
+    "source": "PIT snapshot Price (unadjusted)"
+  },
+  "rejected_universe": {
+    "reason": "FINSABER license/membership not cleared for this run"
+  },
+  "price_quality": "UNADJUSTED_CLOSE_ONLY",
+  "adjusted_close": false,
+  "splits_verified": false,
+  "dividends_verified": false,
+  "delisted_verified": false,
+  "membership_verified": false,
+  "bh_min_q": 0.118368981660981,
+  "bh_min_q_feature": {
+    "horizon": 20,
+    "feature": "ix_initial_payroll_change_beta_iwm",
+    "spread_q": 0.118368981660981
+  }
+}

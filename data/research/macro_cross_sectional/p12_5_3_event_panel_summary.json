@@ -1,0 +1,714 @@
+{
+  "events_total": 236,
+  "events_used": 209,
+  "event_types": {
+    "cpi": 105,
+    "employment": 104
+  },
+  "observations": 87706,
+  "tickers": 481,
+  "mean_names_per_event": {
+    "count": 209.0,
+    "mean": 419.64593301435406,
+    "std": 34.25342480371784,
+    "min": 358.0,
+    "25%": 386.0,
+    "50%": 421.0,
+    "75%": 447.0,
+    "max": 481.0
+  },
+  "best_tests": [
+    {
+      "horizon": 20,
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "events": 104,
+      "mean_n": 419.8173076923077,
+      "mean_ic": -0.08157886390100687,
+      "ic_t": -3.2515350640322636,
+      "ic_p": 0.0015518434247670356,
+      "mean_spread": -0.017551785464655134,
+      "spread_t": -3.0097322937599706,
+      "spread_p": 0.0032880272683605835,
+      "ic_q": 0.05586636329161328,
+      "spread_q": 0.118368981660981
+    },
+    {
+      "horizon": 10,
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "events": 104,
+      "mean_n": 419.8173076923077,
+      "mean_ic": -0.06044550422747413,
+      "ic_t": -2.328957644898219,
+      "ic_p": 0.021813965132020278,
+      "mean_spread": -0.00842836089380261,
+      "spread_t": -2.228837449628386,
+      "spread_p": 0.02799727461122818,
+      "ic_q": 0.24797645050709546,
+      "spread_q": 0.34774026290103444
+    },
+    {
+      "horizon": 5,
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "events": 104,
+      "mean_n": 419.8173076923077,
+      "mean_ic": -0.05512796781121178,
+      "ic_t": -2.163279830401489,
+      "ic_p": 0.0328323177656332,
+      "mean_spread": -0.005823758945856785,
+      "spread_t": -2.2147767255062853,
+      "spread_p": 0.02897835524175287,
+      "ic_q": 0.24797645050709546,
+      "spread_q": 0.34774026290103444
+    },
+    {
+      "horizon": 1,
+      "feature": "ix_initial_headline_value_beta_gld",
+      "events": 95,
+      "mean_n": 413.58947368421053,
+      "mean_ic": 0.02846004790202436,
+      "ic_t": 1.3923238918945,
+      "ic_p": 0.16710941248873182,
+      "mean_spread": 0.0019612668616433163,
+      "spread_t": 2.0480507599376545,
+      "spread_p": 0.04334409286095562,
+      "ic_q": 0.3455873003005394,
+      "spread_q": 0.3616620857244109
+    },
+    {
+      "horizon": 5,
+      "feature": "ix_core_yoy_beta_tlt",
+      "events": 105,
+      "mean_n": 419.4761904761905,
+      "mean_ic": 0.04434756707990963,
+      "ic_t": 2.0755132422158704,
+      "ic_p": 0.040406003768377954,
+      "mean_spread": 0.0039162994099738195,
+      "spread_t": 1.904924939166673,
+      "spread_p": 0.05955228094787291,
+      "ic_q": 0.24797645050709546,
+      "spread_q": 0.3616620857244109
+    },
+    {
+      "horizon": 1,
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "events": 99,
+      "mean_n": 419.8173076923077,
+      "mean_ic": -0.0646098732216335,
+      "ic_t": -2.1910646583538576,
+      "ic_p": 0.03081706741016697,
+      "mean_spread": -0.002558589257482589,
+      "spread_t": -1.8996444773219365,
+      "spread_p": 0.060277014287401814,
+      "ic_q": 0.24797645050709546,
+      "spread_q": 0.3616620857244109
+    },
+    {
+      "horizon": 10,
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "events": 104,
+      "mean_n": 419.8173076923077,
+      "mean_ic": 0.03656636115211011,
+      "ic_t": 1.5102204037543794,
+      "ic_p": 0.13404896452669796,
+      "mean_spread": 0.005694191120126919,
+      "spread_t": 1.754938908778896,
+      "spread_p": 0.08224325176773693,
+      "ic_q": 0.3455873003005394,
+      "spread_q": 0.4013554528622408
+    },
+    {
+      "horizon": 5,
+      "feature": "ix_initial_core_value_beta_tlt",
+      "events": 95,
+      "mean_n": 413.58947368421053,
+      "mean_ic": 0.04795496704482139,
+      "ic_t": 2.068601652015425,
+      "ic_p": 0.04132940841784924,
+      "mean_spread": 0.0037519837365674706,
+      "spread_t": 1.6961643041162995,
+      "spread_p": 0.09316430805245077,
+      "ic_q": 0.24797645050709546,
+      "spread_q": 0.4013554528622408
+    }
+  ],
+  "oos": [
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 1,
+      "split": "train",
+      "events": 63,
+      "mean_ic": -0.01853615782072647
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 1,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.028163516402851932
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 1,
+      "split": "test",
+      "events": 11,
+      "mean_ic": -0.14265314960855854
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 5,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.02837973923440676
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 5,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.027987945030771774
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 5,
+      "split": "test",
+      "events": 11,
+      "mean_ic": -0.061392436312526465
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 10,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.04219621028220301
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 10,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.017423007389861096
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 10,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.06542057601694096
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 20,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.028643338559982915
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 20,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.002515626563695906
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_tlt",
+      "horizon": 20,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.0821048975665834
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 1,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.024691890397718748
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 1,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.04993192307704093
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 1,
+      "split": "test",
+      "events": 11,
+      "mean_ic": -0.04556746301239329
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 5,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.05768911977836993
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 5,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.007383343784652656
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 5,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.06965973670391092
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 10,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.029275912198804353
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 10,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.01281645092953256
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 10,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.08610942524240232
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 20,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.04371926184883508
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 20,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.00039680798184422663
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_core_value_beta_tlt",
+      "horizon": 20,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.09137555684353674
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 1,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.060739973560893196
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 1,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.0003744186939370005
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 1,
+      "split": "test",
+      "events": 11,
+      "mean_ic": -0.10136827191557093
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 5,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.049381405584100306
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 5,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.048148135316692174
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 5,
+      "split": "test",
+      "events": 11,
+      "mean_ic": -0.06499282026352139
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 10,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.024638687041350096
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 10,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.0433697793907427
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 10,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.02126873285259535
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 20,
+      "split": "train",
+      "events": 63,
+      "mean_ic": 0.0008405250219659449
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 20,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.040263299015283374
+    },
+    {
+      "event_type": "cpi",
+      "feature": "ix_initial_headline_value_beta_gld",
+      "horizon": 20,
+      "split": "test",
+      "events": 11,
+      "mean_ic": 0.05441089118057232
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 1,
+      "split": "train",
+      "events": 62,
+      "mean_ic": -0.03498509104432783
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 1,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.053562752113942735
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 1,
+      "split": "test",
+      "events": 21,
+      "mean_ic": -0.007188966891429176
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 5,
+      "split": "train",
+      "events": 62,
+      "mean_ic": -0.08561184978523749
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 5,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": 0.021589685075099015
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 5,
+      "split": "test",
+      "events": 21,
+      "mean_ic": -0.04184558820277995
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 10,
+      "split": "train",
+      "events": 62,
+      "mean_ic": -0.08462134651247263
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 10,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.022888000003413955
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 10,
+      "split": "test",
+      "events": 21,
+      "mean_ic": -0.026626712181538763
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 20,
+      "split": "train",
+      "events": 62,
+      "mean_ic": -0.12752329298174686
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 20,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.0228197700815462
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 20,
+      "split": "test",
+      "events": 21,
+      "mean_ic": -0.004692500434473247
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 1,
+      "split": "train",
+      "events": 62,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 1,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 1,
+      "split": "test",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 5,
+      "split": "train",
+      "events": 62,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 5,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 5,
+      "split": "test",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 10,
+      "split": "train",
+      "events": 62,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 10,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 10,
+      "split": "test",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 20,
+      "split": "train",
+      "events": 62,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 20,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 20,
+      "split": "test",
+      "events": 21,
+      "mean_ic": NaN
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 1,
+      "split": "train",
+      "events": 62,
+      "mean_ic": -0.006489100759994171
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 1,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.004949386436774521
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 1,
+      "split": "test",
+      "events": 21,
+      "mean_ic": 0.06317764518759303
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 5,
+      "split": "train",
+      "events": 62,
+      "mean_ic": -0.006011963207504281
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 5,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.01941559414994472
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 5,
+      "split": "test",
+      "events": 21,
+      "mean_ic": 0.10618132920122732
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 10,
+      "split": "train",
+      "events": 62,
+      "mean_ic": 0.04679961223794356
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 10,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.057663533349367344
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 10,
+      "split": "test",
+      "events": 21,
+      "mean_ic": 0.1005838000668412
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 20,
+      "split": "train",
+      "events": 62,
+      "mean_ic": 0.03435613557443581
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 20,
+      "split": "validation",
+      "events": 21,
+      "mean_ic": -0.09521269945001837
+    },
+    {
+      "event_type": "employment",
+      "feature": "ix_initial_earnings_mom_beta_tlt",
+      "horizon": 20,
+      "split": "test",
+      "events": 21,
+      "mean_ic": 0.04976085272419262
+    }
+  ],
+  "price_quality": "UNADJUSTED_CLOSE_ONLY_EXPLORATORY",
+  "timestamp_quality": "DATE_ONLY_ALFRED_VINTAGE"
+}
