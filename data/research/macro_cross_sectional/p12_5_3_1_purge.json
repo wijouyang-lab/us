@@ -1,0 +1,17 @@
+{
+  "raw_train": 125,
+  "raw_validation": 42,
+  "raw_test": 42,
+  "purged_train": 122,
+  "purged_validation": 40,
+  "purged_test": 42,
+  "removed_train": [
+    "2020-04-10",
+    "2021-04-02",
+    "2023-02-14"
+  ],
+  "removed_validation": [
+    "2023-04-07",
+    "2024-11-13"
+  ]
+}

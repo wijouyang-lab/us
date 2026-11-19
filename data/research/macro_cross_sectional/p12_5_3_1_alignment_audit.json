@@ -1,0 +1,28 @@
+{
+  "price_fields": {
+    "stock": "Price (unadjusted close)",
+    "etf": "Close (unadjusted)",
+    "price_basis": "UNADJUSTED_PRICE_RETURNS"
+  },
+  "calendar": "SPY sessions",
+  "events": 209,
+  "observations": 87706,
+  "valid_by_horizon": {
+    "1": 87706,
+    "5": 87706,
+    "10": 87706,
+    "20": 87706
+  },
+  "names_per_event": {
+    "count": 209.0,
+    "mean": 419.64593301435406,
+    "std": 34.25342480371784,
+    "min": 358.0,
+    "25%": 386.0,
+    "50%": 421.0,
+    "75%": 447.0,
+    "max": 481.0
+  },
+  "missing_entry": 0,
+  "note": "rows missing entry/exit or beta were dropped before panel write"
+}

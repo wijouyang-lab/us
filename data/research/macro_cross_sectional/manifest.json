@@ -1,0 +1,29 @@
+{
+  "files": {
+    "event_data_audit.json": {
+      "sha256": "13a2ff26645c67f16b91e6a84da46c7fcd4039e6bd671601683b30642d0dd945",
+      "bytes": 343
+    },
+    "event_results.csv": {
+      "sha256": "3d7835c3025206cf16b74ea58400699be2d8b6e2620f22b7087d642dc744f1c2",
+      "bytes": 2728
+    },
+    "event_results_hac.csv": {
+      "sha256": "744ed2eacf7c11dc94c9b71f6364e7fb241bbf81f0d4c9d83b9819409d9e16bc",
+      "bytes": 593
+    },
+    "fomc_rate_beta_panel.csv": {
+      "sha256": "05ebe57f4ca5dc1d8016dccf79d7dd83eac99e95b71d93514398f869d94544e6",
+      "bytes": 10450706
+    },
+    "oos_ic.csv": {
+      "sha256": "c100c4644064bae7f0214998de5fd2b7ff6d8cabe163bc2d030648da5a7ddece",
+      "bytes": 449
+    },
+    "summary.json": {
+      "sha256": "acbc33f838be455e7d10cc863c2f732198fad2237e4128dfd7219caeb6592e2e",
+      "bytes": 1859
+    }
+  },
+  "note": "FOMC-only; BLS precise timestamps blocked"
+}

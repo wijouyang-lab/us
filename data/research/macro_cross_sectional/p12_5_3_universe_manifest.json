@@ -1,0 +1,11 @@
+{
+  "strict": [],
+  "exploratory": {
+    "tickers": 481,
+    "events": 209,
+    "source": "PIT snapshot"
+  },
+  "rejected": [
+    "FINSABER adjusted file: license/membership not cleared"
+  ]
+}

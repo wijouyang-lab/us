@@ -1,0 +1,20 @@
+{
+  "status": "PARTIAL",
+  "bls_live": {
+    "cpi": 403,
+    "empsit": 403
+  },
+  "counts": {
+    "cpi": 166,
+    "empsit": 166,
+    "fomc": 168
+  },
+  "precision": {
+    "cpi:DATE_ONLY_NOT_PRECISE": 166,
+    "empsit:DATE_ONLY_NOT_PRECISE": 166,
+    "fomc:ALIGNED": 168
+  },
+  "fomc_time_counts": {
+    "14:00:00": 168
+  }
+}
