@@ -1,0 +1,18 @@
+{
+  "generated_at": "2026-11-09T04:32:28.334466+00:00",
+  "denominator": 1095490,
+  "statuses": {
+    "VALID_VERIFIED_TRADABLE": 981362,
+    "UNKNOWN_MISSING_DATA": 109132,
+    "VERIFIED_CORRUPT": 117,
+    "ZERO_VOLUME_OR_STALE": 4845,
+    "UNRESOLVED": 34,
+    "INVALID_OHLC_RELATION": 0,
+    "INVALID_VOLUME": 0,
+    "DUPLICATE_OR_CONFLICT": 0,
+    "OTHER_INVALID": 0
+  },
+  "sum": 1095490,
+  "duplicate_rows": 0,
+  "policy": "exactly one final status per member-day; priority duplicate > unknown > OHLC > volume > corrupt > unresolved > zero/stale > valid"
+}

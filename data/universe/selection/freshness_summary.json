@@ -1,0 +1,789 @@
+{
+  "generated_at": "2026-11-06T08:11:48.422741+00:00",
+  "as_of": "2026-11-05",
+  "thresholds_days": {
+    "DOMESTIC_US_GAAP": 400,
+    "FPI_IFRS": 540,
+    "MIXED_NONE": "DATA_BLOCKED"
+  },
+  "boundary": "Stored period/filed metadata only; no full subsequent filing history.",
+  "rankings": {
+    "value": {
+      "rows": 5453,
+      "status_counts": {
+        "FUNDAMENTALS_FRESH": 5073,
+        "FUNDAMENTALS_STALE": 114,
+        "FUNDAMENTALS_UPDATE_MISSING": 155,
+        "FUNDAMENTALS_DATA_BLOCKED": 111
+      },
+      "fresh_scored": 846,
+      "original_top50": 50,
+      "fresh_top50": 50,
+      "stale_excluded_from_fresh_top50": [
+        {
+          "ticker": "DOX",
+          "period": "2024-09-30",
+          "filed": "2024-12-17",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D|FILED_OLDER_THAN_400D"
+        },
+        {
+          "ticker": "JL",
+          "period": "2025-03-31",
+          "filed": "2025-07-28",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D|FILED_OLDER_THAN_400D"
+        }
+      ],
+      "top20_original": [
+        {
+          "ticker": "BOSC",
+          "period": "2025-12-31",
+          "filed": "2026-03-31",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "CAAS",
+          "period": "2025-12-31",
+          "filed": "2026-04-22",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "CRMD",
+          "period": "2026-08-10",
+          "filed": "2026-08-13",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "CRMT",
+          "period": "2026-09-09",
+          "filed": "2026-09-09",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "CTRM",
+          "period": "2026-06-30",
+          "filed": "2026-09-14",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "IMMR",
+          "period": "2026-09-08",
+          "filed": "2026-09-14",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "JL",
+          "period": "2025-03-31",
+          "filed": "2025-07-28",
+          "status": "FUNDAMENTALS_STALE"
+        },
+        {
+          "ticker": "KROS",
+          "period": "2026-07-27",
+          "filed": "2026-08-03",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "LIVE",
+          "period": "2026-08-13",
+          "filed": "2026-08-13",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "MNDO",
+          "period": "2025-12-31",
+          "filed": "2026-03-18",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "NATR",
+          "period": "2026-10-23",
+          "filed": "2026-11-04",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "RGS",
+          "period": "2026-08-25",
+          "filed": "2026-09-01",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "VISN",
+          "period": "2026-07-22",
+          "filed": "2026-08-06",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "WETH",
+          "period": "2026-08-14",
+          "filed": "2026-08-14",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "ABG",
+          "period": "2026-10-28",
+          "filed": "2026-10-30",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "EBS",
+          "period": "2026-10-26",
+          "filed": "2026-11-03",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "NUS",
+          "period": "2026-07-31",
+          "filed": "2026-08-10",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "PSFE",
+          "period": "2026-06-30",
+          "filed": "2026-08-13",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "SSTK",
+          "period": "2026-07-31",
+          "filed": "2026-08-07",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "USNA",
+          "period": "2026-08-11",
+          "filed": "2026-08-13",
+          "status": "FUNDAMENTALS_FRESH"
+        }
+      ],
+      "top20_fresh": [
+        {
+          "ticker": "CRMT",
+          "period": "2026-09-09",
+          "filed": "2026-09-09"
+        },
+        {
+          "ticker": "LIVE",
+          "period": "2026-08-13",
+          "filed": "2026-08-13"
+        },
+        {
+          "ticker": "WETH",
+          "period": "2026-08-14",
+          "filed": "2026-08-14"
+        },
+        {
+          "ticker": "SSTK",
+          "period": "2026-07-31",
+          "filed": "2026-08-07"
+        },
+        {
+          "ticker": "CAAS",
+          "period": "2025-12-31",
+          "filed": "2026-04-22"
+        },
+        {
+          "ticker": "CTRM",
+          "period": "2026-06-30",
+          "filed": "2026-09-14"
+        },
+        {
+          "ticker": "VISN",
+          "period": "2026-07-22",
+          "filed": "2026-08-06"
+        },
+        {
+          "ticker": "EBS",
+          "period": "2026-10-26",
+          "filed": "2026-11-03"
+        },
+        {
+          "ticker": "KROS",
+          "period": "2026-07-27",
+          "filed": "2026-08-03"
+        },
+        {
+          "ticker": "NUS",
+          "period": "2026-07-31",
+          "filed": "2026-08-10"
+        },
+        {
+          "ticker": "MNDO",
+          "period": "2025-12-31",
+          "filed": "2026-03-18"
+        },
+        {
+          "ticker": "PSFE",
+          "period": "2026-06-30",
+          "filed": "2026-08-13"
+        },
+        {
+          "ticker": "BOSC",
+          "period": "2025-12-31",
+          "filed": "2026-03-31"
+        },
+        {
+          "ticker": "RGS",
+          "period": "2026-08-25",
+          "filed": "2026-09-01"
+        },
+        {
+          "ticker": "ABG",
+          "period": "2026-10-28",
+          "filed": "2026-10-30"
+        },
+        {
+          "ticker": "CRMD",
+          "period": "2026-08-10",
+          "filed": "2026-08-13"
+        },
+        {
+          "ticker": "USNA",
+          "period": "2026-08-11",
+          "filed": "2026-08-13"
+        },
+        {
+          "ticker": "NATR",
+          "period": "2026-10-23",
+          "filed": "2026-11-04"
+        },
+        {
+          "ticker": "IMMR",
+          "period": "2026-09-08",
+          "filed": "2026-09-14"
+        },
+        {
+          "ticker": "GPI",
+          "period": "2026-10-23",
+          "filed": "2026-10-29"
+        }
+      ]
+    },
+    "quality": {
+      "rows": 5549,
+      "status_counts": {
+        "FUNDAMENTALS_FRESH": 4247,
+        "FUNDAMENTALS_UPDATE_MISSING": 830,
+        "FUNDAMENTALS_STALE": 388,
+        "FUNDAMENTALS_DATA_BLOCKED": 84
+      },
+      "fresh_scored": 2155,
+      "original_top50": 50,
+      "fresh_top50": 50,
+      "stale_excluded_from_fresh_top50": [
+        {
+          "ticker": "INMD",
+          "period": "2023-12-31",
+          "filed": "2024-02-13",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D|FILED_OLDER_THAN_400D"
+        },
+        {
+          "ticker": "JL",
+          "period": "2025-03-31",
+          "filed": "2025-07-28",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D|FILED_OLDER_THAN_400D"
+        }
+      ],
+      "top20_original": [
+        {
+          "ticker": "BDTX",
+          "period": "2025-12-31",
+          "filed": "2026-04-29",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "CRDO",
+          "period": "2026-05-02",
+          "filed": "2026-08-25",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "EVER",
+          "period": "2025-12-31",
+          "filed": "2026-04-23",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "FIZZ",
+          "period": "2026-05-02",
+          "filed": "2026-08-28",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "INMD",
+          "period": "2023-12-31",
+          "filed": "2024-02-13",
+          "status": "FUNDAMENTALS_STALE"
+        },
+        {
+          "ticker": "IRMD",
+          "period": "2025-12-31",
+          "filed": "2026-04-30",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "KROS",
+          "period": "2025-12-31",
+          "filed": "2026-04-22",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "KRYS",
+          "period": "2025-12-31",
+          "filed": "2026-02-17",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "MU",
+          "period": "2026-09-03",
+          "filed": "2026-10-09",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "NVDA",
+          "period": "2026-01-25",
+          "filed": "2026-05-12",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "NVEC",
+          "period": "2026-03-31",
+          "filed": "2026-06-22",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "RAVE",
+          "period": "2026-06-28",
+          "filed": "2026-10-23",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "RIGL",
+          "period": "2025-12-31",
+          "filed": "2026-03-03",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "SNDK",
+          "period": "2026-07-03",
+          "filed": "2026-10-06",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "USLM",
+          "period": "2025-12-31",
+          "filed": "2026-02-26",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "UTHR",
+          "period": "2025-12-31",
+          "filed": "2026-04-29",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "BUDA",
+          "period": "2025-12-31",
+          "filed": "2026-03-26",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "IDR",
+          "period": "2025-12-31",
+          "filed": "2026-03-23",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "MLI",
+          "period": "2025-12-27",
+          "filed": "2026-02-25",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "TPL",
+          "period": "2025-12-31",
+          "filed": "2026-09-25",
+          "status": "FUNDAMENTALS_FRESH"
+        }
+      ],
+      "top20_fresh": [
+        {
+          "ticker": "TPL",
+          "period": "2025-12-31",
+          "filed": "2026-09-25"
+        },
+        {
+          "ticker": "BUDA",
+          "period": "2025-12-31",
+          "filed": "2026-03-26"
+        },
+        {
+          "ticker": "USLM",
+          "period": "2025-12-31",
+          "filed": "2026-02-26"
+        },
+        {
+          "ticker": "IDR",
+          "period": "2025-12-31",
+          "filed": "2026-03-23"
+        },
+        {
+          "ticker": "CRDO",
+          "period": "2026-05-02",
+          "filed": "2026-08-25"
+        },
+        {
+          "ticker": "FIZZ",
+          "period": "2026-05-02",
+          "filed": "2026-08-28"
+        },
+        {
+          "ticker": "MLI",
+          "period": "2025-12-27",
+          "filed": "2026-02-25"
+        },
+        {
+          "ticker": "NVDA",
+          "period": "2026-01-25",
+          "filed": "2026-05-12"
+        },
+        {
+          "ticker": "BDTX",
+          "period": "2025-12-31",
+          "filed": "2026-04-29"
+        },
+        {
+          "ticker": "NVEC",
+          "period": "2026-03-31",
+          "filed": "2026-06-22"
+        },
+        {
+          "ticker": "RAVE",
+          "period": "2026-06-28",
+          "filed": "2026-10-23"
+        },
+        {
+          "ticker": "IRMD",
+          "period": "2025-12-31",
+          "filed": "2026-04-30"
+        },
+        {
+          "ticker": "KROS",
+          "period": "2025-12-31",
+          "filed": "2026-04-22"
+        },
+        {
+          "ticker": "RIGL",
+          "period": "2025-12-31",
+          "filed": "2026-03-03"
+        },
+        {
+          "ticker": "MU",
+          "period": "2026-09-03",
+          "filed": "2026-10-09"
+        },
+        {
+          "ticker": "SNDK",
+          "period": "2026-07-03",
+          "filed": "2026-10-06"
+        },
+        {
+          "ticker": "UTHR",
+          "period": "2025-12-31",
+          "filed": "2026-04-29"
+        },
+        {
+          "ticker": "KRYS",
+          "period": "2025-12-31",
+          "filed": "2026-02-17"
+        },
+        {
+          "ticker": "EVER",
+          "period": "2025-12-31",
+          "filed": "2026-04-23"
+        },
+        {
+          "ticker": "MSGM",
+          "period": "2025-12-31",
+          "filed": "2026-03-10"
+        }
+      ]
+    },
+    "garp": {
+      "rows": 5453,
+      "status_counts": {
+        "FUNDAMENTALS_UPDATE_MISSING": 676,
+        "FUNDAMENTALS_FRESH": 4349,
+        "FUNDAMENTALS_STALE": 342,
+        "FUNDAMENTALS_DATA_BLOCKED": 86
+      },
+      "fresh_scored": 2924,
+      "original_top50": 50,
+      "fresh_top50": 50,
+      "stale_excluded_from_fresh_top50": [
+        {
+          "ticker": "CLSK",
+          "period": "2025-09-30",
+          "filed": "2025-11-25",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D"
+        },
+        {
+          "ticker": "ARWR",
+          "period": "2025-09-30",
+          "filed": "2025-11-25",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D"
+        },
+        {
+          "ticker": "LEDS",
+          "period": "2025-08-31",
+          "filed": "2026-07-14",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D"
+        },
+        {
+          "ticker": "KRUS",
+          "period": "2025-08-31",
+          "filed": "2025-11-06",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D"
+        },
+        {
+          "ticker": "CPOP",
+          "period": "2025-06-30",
+          "filed": "2025-11-17",
+          "status": "FUNDAMENTALS_STALE",
+          "reason": "PERIOD_OLDER_THAN_400D"
+        }
+      ],
+      "top20_original": [
+        {
+          "ticker": "CDZI",
+          "period": "2025-12-31",
+          "filed": "2026-03-31",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "NTRP",
+          "period": "2026-02-28",
+          "filed": "2026-05-29",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "ACTG",
+          "period": "2025-12-31",
+          "filed": "2026-03-12",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "WKSP",
+          "period": "2025-12-31",
+          "filed": "2026-03-26",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "TRAW",
+          "period": "2025-12-31",
+          "filed": "2026-04-15",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "PROP",
+          "period": "2025-12-31",
+          "filed": "2026-03-31",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "QXO",
+          "period": "2025-12-31",
+          "filed": "2026-02-27",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "IBRX",
+          "period": "2025-12-31",
+          "filed": "2026-02-23",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "GEVO",
+          "period": "2025-12-31",
+          "filed": "2026-03-05",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "WKHS",
+          "period": "2025-12-31",
+          "filed": "2026-03-31",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "NIXX",
+          "period": "2025-12-31",
+          "filed": "2026-04-15",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "ONDS",
+          "period": "2025-12-31",
+          "filed": "2026-03-30",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "FDMT",
+          "period": "2025-12-31",
+          "filed": "2026-03-18",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "DVLT",
+          "period": "2025-12-31",
+          "filed": "2026-03-18",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "SPRO",
+          "period": "2025-12-31",
+          "filed": "2026-03-26",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "SPRU",
+          "period": "2025-12-31",
+          "filed": "2026-07-24",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "AEVA",
+          "period": "2025-12-31",
+          "filed": "2026-03-20",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "EOSE",
+          "period": "2025-12-31",
+          "filed": "2026-02-26",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "SMTK",
+          "period": "2025-12-31",
+          "filed": "2026-04-08",
+          "status": "FUNDAMENTALS_FRESH"
+        },
+        {
+          "ticker": "SPWR",
+          "period": "2025-12-28",
+          "filed": "2026-07-24",
+          "status": "FUNDAMENTALS_FRESH"
+        }
+      ],
+      "top20_fresh": [
+        {
+          "ticker": "CDZI",
+          "period": "2025-12-31",
+          "filed": "2026-03-31"
+        },
+        {
+          "ticker": "PROP",
+          "period": "2025-12-31",
+          "filed": "2026-03-31"
+        },
+        {
+          "ticker": "DVLT",
+          "period": "2025-12-31",
+          "filed": "2026-03-18"
+        },
+        {
+          "ticker": "QXO",
+          "period": "2025-12-31",
+          "filed": "2026-02-27"
+        },
+        {
+          "ticker": "GEVO",
+          "period": "2025-12-31",
+          "filed": "2026-03-05"
+        },
+        {
+          "ticker": "SMTK",
+          "period": "2025-12-31",
+          "filed": "2026-04-08"
+        },
+        {
+          "ticker": "NIXX",
+          "period": "2025-12-31",
+          "filed": "2026-04-15"
+        },
+        {
+          "ticker": "EOSE",
+          "period": "2025-12-31",
+          "filed": "2026-02-26"
+        },
+        {
+          "ticker": "WKHS",
+          "period": "2025-12-31",
+          "filed": "2026-03-31"
+        },
+        {
+          "ticker": "ONDS",
+          "period": "2025-12-31",
+          "filed": "2026-03-30"
+        },
+        {
+          "ticker": "SPRU",
+          "period": "2025-12-31",
+          "filed": "2026-07-24"
+        },
+        {
+          "ticker": "NTRP",
+          "period": "2026-02-28",
+          "filed": "2026-05-29"
+        },
+        {
+          "ticker": "WKSP",
+          "period": "2025-12-31",
+          "filed": "2026-03-26"
+        },
+        {
+          "ticker": "IBRX",
+          "period": "2025-12-31",
+          "filed": "2026-02-23"
+        },
+        {
+          "ticker": "SPWR",
+          "period": "2025-12-28",
+          "filed": "2026-07-24"
+        },
+        {
+          "ticker": "TRAW",
+          "period": "2025-12-31",
+          "filed": "2026-04-15"
+        },
+        {
+          "ticker": "SPRO",
+          "period": "2025-12-31",
+          "filed": "2026-03-26"
+        },
+        {
+          "ticker": "AEVA",
+          "period": "2025-12-31",
+          "filed": "2026-03-20"
+        },
+        {
+          "ticker": "ACTG",
+          "period": "2025-12-31",
+          "filed": "2026-03-12"
+        },
+        {
+          "ticker": "FDMT",
+          "period": "2025-12-31",
+          "filed": "2026-03-18"
+        }
+      ]
+    }
+  }
+}

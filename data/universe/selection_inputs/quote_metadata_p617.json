@@ -1,0 +1,13 @@
+{
+  "source": "P6.2 AkShare stock_us_spot_em",
+  "upstream_script": "tools/research/audit_us_market_quotes_p62.py",
+  "generated_at": "2026-11-05T08:34:41.601715+00:00",
+  "documented_snapshot": "2026-11-05T08:16:00Z",
+  "spot_delay_minutes": 15,
+  "per_row_timestamp": false,
+  "timestamp_status": "QUOTE_TIMESTAMP_UNKNOWN",
+  "comparison_rule": "Do not compare P6.2 quote with a later yfinance close as if same timestamp. Mark PRICE_NOT_COMPARABLE.",
+  "price_definition": "latest price from delayed AkShare batch snapshot",
+  "currency": "USD",
+  "note": "The P6.2 mapping CSV contains no per-symbol timestamp. The documented snapshot is a source-level time, not a per-row guarantee."
+}

@@ -1,0 +1,366 @@
+{
+  "generated_at": "2026-11-08T14:29:44.560412+00:00",
+  "status": "AUDIT_COMPLETE_DATA_ISSUE_IDENTIFIED",
+  "price_symbols": 1017,
+  "price_dates": 6290,
+  "member_rows": 2720,
+  "summary": {
+    "MOMENTUM_120": {
+      "months": 293,
+      "cagr": 0.5117741081631986,
+      "max_month": 8.276047440062868,
+      "min_month": -0.1900661085780137,
+      "gross_gt_50pct_months": 5,
+      "avg_gap_days": 30.43959731543624,
+      "top_months": [
+        {
+          "formation": "2009-10-30",
+          "gross": 8.276047440062868,
+          "n": 20
+        },
+        {
+          "formation": "2006-02-28",
+          "gross": 4.5433834662476515,
+          "n": 20
+        },
+        {
+          "formation": "2003-12-31",
+          "gross": 2.79882537963148,
+          "n": 20
+        },
+        {
+          "formation": "2005-02-28",
+          "gross": 2.2145072987352314,
+          "n": 20
+        },
+        {
+          "formation": "2004-11-30",
+          "gross": 1.6964276335405064,
+          "n": 20
+        },
+        {
+          "formation": "2006-07-31",
+          "gross": 0.3778496375189732,
+          "n": 20
+        },
+        {
+          "formation": "2004-06-30",
+          "gross": 0.33852616557748755,
+          "n": 20
+        },
+        {
+          "formation": "2004-03-31",
+          "gross": 0.2652202764307642,
+          "n": 20
+        },
+        {
+          "formation": "2003-03-31",
+          "gross": 0.20642307418311834,
+          "n": 20
+        },
+        {
+          "formation": "2021-01-29",
+          "gross": 0.17489421976174266,
+          "n": 20
+        }
+      ],
+      "top_contributors": [
+        {
+          "ticker": "CBE",
+          "sum_contrib": 11.00169175573744
+        },
+        {
+          "ticker": "ACS",
+          "sum_contrib": 8.189006330611988
+        },
+        {
+          "ticker": "GR",
+          "sum_contrib": 0.44506273816944397
+        },
+        {
+          "ticker": "RAI",
+          "sum_contrib": 0.4155236214039976
+        },
+        {
+          "ticker": "BLL",
+          "sum_contrib": 0.25313725850961816
+        },
+        {
+          "ticker": "NVDA",
+          "sum_contrib": 0.22043808180475025
+        },
+        {
+          "ticker": "WMB",
+          "sum_contrib": 0.11126052912429422
+        },
+        {
+          "ticker": "PBG",
+          "sum_contrib": 0.07795800149674616
+        },
+        {
+          "ticker": "GDW",
+          "sum_contrib": 0.07671351084519826
+        },
+        {
+          "ticker": "MU",
+          "sum_contrib": 0.07526075289694464
+        }
+      ]
+    },
+    "LOW_VOL_60": {
+      "months": 296,
+      "cagr": 0.11019321199185939,
+      "max_month": 0.19263942275202953,
+      "min_month": -0.1386396524334065,
+      "gross_gt_50pct_months": 0,
+      "avg_gap_days": 30.43959731543624,
+      "top_months": [
+        {
+          "formation": "2000-03-31",
+          "gross": 0.19263942275202953,
+          "n": 20
+        },
+        {
+          "formation": "2020-03-31",
+          "gross": 0.14770784716700094,
+          "n": 20
+        },
+        {
+          "formation": "2009-11-30",
+          "gross": 0.14182409363617138,
+          "n": 20
+        },
+        {
+          "formation": "2006-11-30",
+          "gross": 0.13008633744393291,
+          "n": 20
+        },
+        {
+          "formation": "2009-05-29",
+          "gross": 0.11186754910906371,
+          "n": 20
+        },
+        {
+          "formation": "2009-08-31",
+          "gross": 0.10576284677294694,
+          "n": 20
+        },
+        {
+          "formation": "2021-11-30",
+          "gross": 0.08825269197286614,
+          "n": 20
+        },
+        {
+          "formation": "2021-02-26",
+          "gross": 0.08622433867268431,
+          "n": 20
+        },
+        {
+          "formation": "2022-09-30",
+          "gross": 0.08480673920080418,
+          "n": 20
+        },
+        {
+          "formation": "2020-06-30",
+          "gross": 0.07692121109210776,
+          "n": 20
+        }
+      ],
+      "top_contributors": [
+        {
+          "ticker": "RX",
+          "sum_contrib": 0.34927411001104297
+        },
+        {
+          "ticker": "CBE",
+          "sum_contrib": 0.11812380153403644
+        },
+        {
+          "ticker": "AYE",
+          "sum_contrib": 0.08659066712008769
+        },
+        {
+          "ticker": "SO",
+          "sum_contrib": 0.08255588962030243
+        },
+        {
+          "ticker": "HSY",
+          "sum_contrib": 0.0675464593333649
+        },
+        {
+          "ticker": "KO",
+          "sum_contrib": 0.06672198379303165
+        },
+        {
+          "ticker": "ED",
+          "sum_contrib": 0.0644464921239115
+        },
+        {
+          "ticker": "GIS",
+          "sum_contrib": 0.062185283242135875
+        },
+        {
+          "ticker": "AVP",
+          "sum_contrib": 0.056127127585048155
+        },
+        {
+          "ticker": "PG",
+          "sum_contrib": 0.05585665189921823
+        }
+      ]
+    }
+  },
+  "extreme_months": [
+    [
+      "MOMENTUM_120",
+      "2003-12-31",
+      2.79882537963148
+    ],
+    [
+      "MOMENTUM_120",
+      "2004-11-30",
+      1.6964276335405064
+    ],
+    [
+      "MOMENTUM_120",
+      "2005-02-28",
+      2.2145072987352314
+    ],
+    [
+      "MOMENTUM_120",
+      "2006-02-28",
+      4.5433834662476515
+    ],
+    [
+      "MOMENTUM_120",
+      "2009-10-30",
+      8.276047440062868
+    ]
+  ],
+  "note": "Same reproduction logic as P8; audit only, no parameter change.",
+  "data_issue": {
+    "reason": "one-day adjusted-close jump >100%; likely split/symbol-reuse contamination",
+    "excluded_tickers": [
+      "AABA",
+      "ABC",
+      "ACKH",
+      "ACS",
+      "AET",
+      "ALXN",
+      "AMCC",
+      "ANDV",
+      "AT",
+      "AVP",
+      "AYE",
+      "BCR",
+      "BLL",
+      "BRCM",
+      "CAM",
+      "CAR",
+      "CBE",
+      "CERN",
+      "CFC",
+      "CGP",
+      "CIN",
+      "CNG",
+      "COMS",
+      "CPWR",
+      "DNR",
+      "DWDP",
+      "EHC",
+      "EKDKQ",
+      "ENRNQ",
+      "EP",
+      "EQ",
+      "ESRX",
+      "FBF",
+      "FII",
+      "FLTWQ",
+      "FMCC",
+      "FSH",
+      "FTR",
+      "GDW",
+      "GGP",
+      "GLK",
+      "GMCR",
+      "GME",
+      "GR",
+      "GX",
+      "HAR",
+      "HIG",
+      "HM",
+      "HPC",
+      "JOS",
+      "KATE",
+      "KMG",
+      "KRI",
+      "LLL",
+      "LLTC",
+      "MAY",
+      "MDP",
+      "MEL",
+      "MI",
+      "MNK",
+      "MWW",
+      "MZIAQ",
+      "NCC",
+      "NCE",
+      "NCR",
+      "NFX",
+      "NGH",
+      "NRTLQ",
+      "OK",
+      "ONE",
+      "PALM",
+      "PBCT",
+      "PBG",
+      "PSFT",
+      "PX",
+      "QLGC",
+      "RAI",
+      "RAL",
+      "RHT",
+      "RML",
+      "RRD",
+      "RX",
+      "SBNY",
+      "SGP",
+      "SIVB",
+      "SLR",
+      "SOV",
+      "STI",
+      "STJ",
+      "SUNEQ",
+      "SVU",
+      "TIE",
+      "TIN",
+      "TOS",
+      "TOY",
+      "UCM",
+      "UMG",
+      "UPC",
+      "UPR",
+      "UVN",
+      "VSTNQ",
+      "VTSS",
+      "WFT",
+      "WIN",
+      "WLL",
+      "WLTW",
+      "WMB",
+      "WNDXQ",
+      "WWY"
+    ],
+    "excluded_count": 109
+  },
+  "original_vs_corrected": {
+    "MOMENTUM_120": {
+      "original_cagr": 0.5117741081631986,
+      "corrected_cagr": 0.07709449007775881
+    },
+    "LOW_VOL_60": {
+      "original_cagr": 0.11019321199185939,
+      "corrected_cagr": 0.09256063607656517
+    }
+  }
+}

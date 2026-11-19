@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-11-08T14:45:52.089446+00:00",
+  "denominator": "ALL effective-dated S&P member-days, 2000-01-03..2024-12-31",
+  "totals": {
+    "member_days": 1095490,
+    "valid": 986358,
+    "verified": 986198,
+    "quarantined": 160,
+    "unknown": 109132,
+    "original_coverage": 0.90038065,
+    "repaired_coverage": 0.9002346,
+    "quarantine_rate": 0.00014605,
+    "unknown_rate": 0.09961935
+  },
+  "policy": "No member is removed before computing the denominator."
+}

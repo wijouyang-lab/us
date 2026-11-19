@@ -1,0 +1,143 @@
+{
+  "generated_at": "2026-11-08T14:18:46.277698+00:00",
+  "pit": {
+    "sp500_effective_membership": true,
+    "nasdaq100": false,
+    "dow30": false,
+    "historical_price_end": "2024-12-31",
+    "current_price_end": "2026-11-05"
+  },
+  "modules": [
+    {
+      "module": "SEC CompanyFacts / filing parser",
+      "done": true,
+      "reuse": true,
+      "missing": "not every issuer has cached facts",
+      "modify": "reuse; P7 companyfacts refresh already works"
+    },
+    {
+      "module": "yfinance OHLCV",
+      "done": true,
+      "reuse": true,
+      "missing": "free source; not execution-grade",
+      "modify": "reuse with timestamp/quality checks"
+    },
+    {
+      "module": "S&P 500 historical membership",
+      "done": true,
+      "reuse": true,
+      "missing": "latest date 2026-08-18, not 2026-11-05",
+      "modify": "use effective dates; mark latest snapshot"
+    },
+    {
+      "module": "Nasdaq-100 membership",
+      "done": false,
+      "reuse": false,
+      "missing": "no interval file in repo",
+      "modify": "DATA_BLOCKED; do not substitute current list"
+    },
+    {
+      "module": "Dow 30 membership",
+      "done": false,
+      "reuse": false,
+      "missing": "no interval file in repo",
+      "modify": "DATA_BLOCKED; do not substitute current list"
+    },
+    {
+      "module": "Raw PIT price panel",
+      "done": true,
+      "reuse": true,
+      "missing": "2000-01-03..2024-12-31 only; no 2025-2026",
+      "modify": "historical PIT only; current uses yfinance"
+    },
+    {
+      "module": "PIT recovery gate",
+      "done": true,
+      "reuse": true,
+      "missing": "prior 91.61% 10y coverage / 98 missing OHLCV retained",
+      "modify": "do not re-run failed source search"
+    },
+    {
+      "module": "Factor engine",
+      "done": true,
+      "reuse": true,
+      "missing": "current-universe 503 tickers, survivorship-biased",
+      "modify": "use only with PIT membership"
+    },
+    {
+      "module": "HAC / Newey-West",
+      "done": true,
+      "reuse": true,
+      "missing": "no single reusable evaluator",
+      "modify": "P8 implements HAC on monthly returns"
+    },
+    {
+      "module": "Multiple testing",
+      "done": true,
+      "reuse": true,
+      "missing": "P8 first-round BH only",
+      "modify": "reusable gate module"
+    },
+    {
+      "module": "Walk-forward / label purge",
+      "done": true,
+      "reuse": true,
+      "missing": "not yet connected to P8 PIT backtests",
+      "modify": "reuse in deep-validation phase"
+    },
+    {
+      "module": "Transaction cost model",
+      "done": true,
+      "reuse": true,
+      "missing": "5bps slippage + 0.5bps commission paper model; P8 uses 10bps per side research assumption",
+      "modify": "document the difference; do not mix"
+    },
+    {
+      "module": "Qlib",
+      "done": false,
+      "reuse": false,
+      "missing": "no verified Qlib installation/data adapter",
+      "modify": "not used in first round"
+    },
+    {
+      "module": "Value / Quality / GARP",
+      "done": true,
+      "reuse": true,
+      "missing": "P6.17 stale/Quality-GARP data limits",
+      "modify": "P7.1 Value only updated"
+    },
+    {
+      "module": "P7 portfolio builder",
+      "done": true,
+      "reuse": true,
+      "missing": "Value only launchable",
+      "modify": "reuse constraints"
+    },
+    {
+      "module": "Shadow portfolio",
+      "done": true,
+      "reuse": true,
+      "missing": "no completed next session yet",
+      "modify": "persistent, no PAPER interaction"
+    },
+    {
+      "module": "Strategy Lab",
+      "done": true,
+      "reuse": true,
+      "missing": "P8 results not yet wired",
+      "modify": "add P8 read-only section"
+    },
+    {
+      "module": "Event-driven / macro",
+      "done": true,
+      "reuse": true,
+      "missing": "not validated in P8 universe",
+      "modify": "keep as research backlog; no fake events"
+    }
+  ],
+  "notes": [
+    "Historical PIT does not block current research.",
+    "No failed free source is retried in this round.",
+    "Index membership missing for NDX/DJI is DATA_BLOCKED, not silently replaced."
+  ]
+}

@@ -1,0 +1,1 @@
+﻿"""SEC fundamental research."""

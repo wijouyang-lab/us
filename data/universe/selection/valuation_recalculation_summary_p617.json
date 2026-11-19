@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-11-06T08:42:14.569569+00:00",
+  "data_as_of": "2026-11-05",
+  "rows": 50,
+  "status_counts": {
+    "VALUATION_RECALCULATED_VALID": 45,
+    "VALUATION_RECALCULATION_MISMATCH": 5
+  },
+  "mismatch_tickers": [
+    "BOSC",
+    "JL",
+    "DOX",
+    "INMD",
+    "GASS"
+  ],
+  "shares_stale_or_unverified_tickers": [
+    "BOSC",
+    "JL",
+    "DOX",
+    "INMD",
+    "GASS"
+  ],
+  "extreme_tickers": [
+    "CRMT",
+    "LIVE",
+    "WETH",
+    "CTRM",
+    "MNDO",
+    "BOSC",
+    "JL",
+    "CRWS",
+    "EDUC",
+    "XTNT"
+  ],
+  "formula_version": "P6.17_VALUE_RECALC_v1",
+  "boundary": "Raw P6.8 values and P6.9 period/accession; XBRL tags not present in readiness file."
+}

@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-11-06T09:15:16.138211+00:00",
+  "as_of": "2026-11-05",
+  "status": "P7_STRATEGY_RESEARCH",
+  "research_only": true,
+  "min_launch_candidates": 10,
+  "strategy_counts": {
+    "VALUE_V1": {
+      "ELIGIBLE": 13,
+      "BLOCKED": 37
+    },
+    "QUALITY_V1": {
+      "ELIGIBLE": 3,
+      "BLOCKED": 47
+    },
+    "GARP_V1": {
+      "BLOCKED": 50
+    },
+    "BLENDED_V1": {
+      "BLOCKED": 3
+    }
+  },
+  "launchable": {
+    "VALUE_V1": true,
+    "QUALITY_V1": false,
+    "GARP_V1": false,
+    "BLENDED_V1": false
+  },
+  "note": "Missing factors are not zero-filled; BLENDED uses only available factor scores."
+}

@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-11-09T05:07:51.622557+00:00",
+  "all_member_days": 1095490,
+  "p83_panel_rows": 352036,
+  "p83_unique_date_ticker": 205899,
+  "p83_unique_dates": 417,
+  "p83_valid_rows": 314068,
+  "p83_labeled_rows": 320800,
+  "warning": "352,036 panel rows are three horizon samples, not the 1,095,490 member-day denominator; do not mix."
+}

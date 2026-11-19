@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-11-06T08:42:14.917453+00:00",
+  "price_source": "YFINANCE_COMPLETED_SESSION_CLOSE",
+  "price_asof": "PER_ROW_LAST_COMPLETED_SESSION",
+  "liquidity_source": "YFINANCE_1D_UNADJUSTED_CLOSE_RAW_VOLUME",
+  "final_status": "Combines freshness, valuation, quote timestamp and liquidity quality",
+  "scenarios": {
+    "conservative": {
+      "min_price": 5.0,
+      "min_mcap": 2000000000,
+      "min_adv": 5000000
+    },
+    "balanced": {
+      "min_price": 3.0,
+      "min_mcap": 500000000,
+      "min_adv": 2000000
+    },
+    "aggressive": {
+      "min_price": 1.0,
+      "min_mcap": 50000000,
+      "min_adv": 500000
+    }
+  },
+  "research_only": true,
+  "note": "ADV from yfinance current 20/60 completed sessions; ELIGIBLE is a research screen, not trading approval.",
+  "value": {
+    "base_top50": 50,
+    "tradable_rows": 50,
+    "raw_eligible": 18,
+    "eligible": 13,
+    "watch": 5,
+    "blocked": 32,
+    "data_blocked": 0,
+    "scenario_counts": {
+      "conservative": {
+        "BLOCKED": 40,
+        "ELIGIBLE": 10
+      },
+      "balanced": {
+        "BLOCKED": 32,
+        "ELIGIBLE": 18
+      },
+      "aggressive": {
+        "BLOCKED": 13,
+        "ELIGIBLE": 37
+      }
+    },
+    "final_scenario_counts": {
+      "conservative": {
+        "BLOCKED": 41,
+        "ELIGIBLE": 9
+      },
+      "balanced": {
+        "BLOCKED": 34,
+        "ELIGIBLE": 16
+      },
+      "aggressive": {
+        "BLOCKED": 16,
+        "ELIGIBLE": 34
+      }
+    },
+    "top50_overlap_with_eligible": 13,
+    "liquidity_coverage": "QUALITY_FLAGGED"
+  },
+  "quality": {
+    "base_top50": 50,
+    "tradable_rows": 50,
+    "raw_eligible": 37,
+    "eligible": 3,
+    "watch": 34,
+    "blocked": 13,
+    "data_blocked": 0,
+    "scenario_counts": {
+      "conservative": {
+        "ELIGIBLE": 29,
+        "BLOCKED": 21
+      },
+      "balanced": {
+        "ELIGIBLE": 37,
+        "BLOCKED": 13
+      },
+      "aggressive": {
+        "ELIGIBLE": 44,
+        "BLOCKED": 5,
+        "WATCH": 1
+      }
+    },
+    "final_scenario_counts": {
+      "conservative": {
+        "ELIGIBLE": 29,
+        "BLOCKED": 21
+      },
+      "balanced": {
+        "ELIGIBLE": 36,
+        "BLOCKED": 14
+      },
+      "aggressive": {
+        "ELIGIBLE": 43,
+        "BLOCKED": 7
+      }
+    },
+    "top50_overlap_with_eligible": 3,
+    "liquidity_coverage": "QUALITY_FLAGGED"
+  },
+  "garp": {
+    "base_top50": 50,
+    "tradable_rows": 50,
+    "raw_eligible": 17,
+    "eligible": 0,
+    "watch": 20,
+    "blocked": 30,
+    "data_blocked": 0,
+    "scenario_counts": {
+      "conservative": {
+        "BLOCKED": 36,
+        "ELIGIBLE": 12,
+        "WATCH": 2
+      },
+      "balanced": {
+        "BLOCKED": 30,
+        "ELIGIBLE": 17,
+        "WATCH": 3
+      },
+      "aggressive": {
+        "WATCH": 4,
+        "BLOCKED": 20,
+        "ELIGIBLE": 26
+      }
+    },
+    "final_scenario_counts": {
+      "conservative": {
+        "BLOCKED": 39,
+        "ELIGIBLE": 11
+      },
+      "balanced": {
+        "BLOCKED": 34,
+        "ELIGIBLE": 16
+      },
+      "aggressive": {
+        "BLOCKED": 26,
+        "ELIGIBLE": 24
+      }
+    },
+    "top50_overlap_with_eligible": 0,
+    "liquidity_coverage": "QUALITY_FLAGGED"
+  }
+}
