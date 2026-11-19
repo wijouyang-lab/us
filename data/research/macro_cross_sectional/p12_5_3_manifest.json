@@ -1,24 +1,24 @@
 {
   "files": {
     "p12_5_3_event_panel.csv": {
-      "sha256": "b40d13d723396e90f9dc2f0a4af4227e69279e3e931c543c7f881316c0a6ee4d",
-      "bytes": 34158743
+      "sha256": "f58bce925ad11f102e066a9a1152eeed580f74a3598983e136d505db691f47e9",
+      "bytes": 34155595
     },
     "p12_5_3_event_panel_summary.json": {
-      "sha256": "477f4a51175883529998b38e784456af9a69d65946d9c3da79640253e2083a8e",
-      "bytes": 19076
+      "sha256": "c6a3864dbce0b84ff62f171e28556e597da3186b4a2c1829b808a9b27f0898a8",
+      "bytes": 19075
     },
     "p12_5_3_event_results.csv": {
-      "sha256": "4ee882ce3985e37c0d5b5747bca39373339b3e931b5af96796f104d96b91439b",
-      "bytes": 7845
+      "sha256": "7f0e252c047e26f6d3b21030db9b2681f0952457cff3682afe2282548a5ddffa",
+      "bytes": 7846
     },
     "p12_5_3_factor_results.csv": {
       "sha256": "82d3ec1e34b3a82b7e4af43638aae2c076f51b9d357a07dcb8193486cf7c5fae",
       "bytes": 34
     },
     "p12_5_3_oos_results.csv": {
-      "sha256": "7dc6c384cb86d9c3794747d4742f4f7febd7616db0009496c149b8dfff5e9e94",
-      "bytes": 5334
+      "sha256": "5c15d9f31aade5c42dd8d24bcae847bc6e72236c11260879527317d97cfec0d5",
+      "bytes": 5335
     },
     "p12_5_3_price_source_audit.json": {
       "sha256": "d9b2a6b951038e340455d4c979c5605e8013a16058588586846288be619d5f24",
@@ -27,7 +27,27 @@
     "p12_5_3_universe_manifest.json": {
       "sha256": "30f95d0c8097338339f0f6b1c45b4748b1dc4fc7e939bb11499c3c9fa1a67067",
       "bytes": 202
+    },
+    "p12_5_3_1_alignment_audit.json": {
+      "sha256": "8e5ea81480b32bed2fac008b7a4eba9cf0bb20ee9c859d0510fc516818966ace",
+      "bytes": 638
+    },
+    "p12_5_3_1_bootstrap.csv": {
+      "sha256": "15d06c22a1169e0d17fdafdb7f8a34651ad872503b9791677af411871780518f",
+      "bytes": 3957
+    },
+    "p12_5_3_1_hac_sensitivity.csv": {
+      "sha256": "41feda43fbb5f032860d80c9fecdecfaad66fc593a2774b1a6a7d2eed4fa0036",
+      "bytes": 5617
+    },
+    "p12_5_3_1_oos_purged.csv": {
+      "sha256": "a686f38f878afe11be06790afa1d7d9f14ee14014b6a50c027ec5db8bd6d8d96",
+      "bytes": 5331
+    },
+    "p12_5_3_1_purge.json": {
+      "sha256": "4e229bff29148b2d71e7f3c75852f1ea5ec074e385087d68d38c0aa5bcf4824c",
+      "bytes": 296
     }
   },
-  "note": "exploratory; unadjusted close; no portfolio/cost"
+  "note": "P12.5.3.1 strict SPY calendar; unadjusted close; exploratory"
 }

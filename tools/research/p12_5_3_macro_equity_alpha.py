@@ -31,9 +31,9 @@ def load_prices(path):
 
 
 def load_etf(path):
-    df = pd.read_csv(path, usecols=["Date", "Adj Close"])
+    df = pd.read_csv(path, usecols=["Date", "Close"])
     df["date"] = pd.to_datetime(df.Date, utc=True).dt.tz_convert(None).dt.normalize()
-    return df.set_index("date")["Adj Close"].sort_index()
+    return df.set_index("date")["Close"].sort_index()
 
 
 def beta(s, spy, tlt, gld, iwm, end, window=252, min_obs=180):
@@ -46,12 +46,18 @@ def beta(s, spy, tlt, gld, iwm, end, window=252, min_obs=180):
     return {"beta_spy": float(coef[1]), "beta_tlt": float(coef[2]), "beta_gld": float(coef[3]), "beta_iwm": float(coef[4])}
 
 
-def fwd(s, spy, t0, h):
-    idx = s.index[s.index >= t0]
-    sidx = spy.index[spy.index >= t0]
-    if len(idx) < h + 1 or len(sidx) < h + 1:
+def fwd(s, spy, sessions, entry, h):
+    pos = sessions.get_loc(entry)
+    if pos + h >= len(sessions):
         return None
-    return s[idx[h]] / s[idx[0]] - 1 - (spy[sidx[h]] / spy[sidx[0]] - 1)
+    exit_date = sessions[pos + h]
+    if entry not in s.index or exit_date not in s.index:
+        return None
+    p0, p1 = s.get(entry), s.get(exit_date)
+    m0, m1 = spy.get(entry), spy.get(exit_date)
+    if any(pd.isna(v) for v in (p0, p1, m0, m1)):
+        return None
+    return p1 / p0 - 1 - (m1 / m0 - 1)
 
 
 def z_dev(series):
@@ -98,7 +104,7 @@ def main():
             b = beta(s, etfs["spy"], etfs["tlt"], etfs["gld"], etfs["iwm"], signal)
             if b is None:
                 continue
-            f = {h: fwd(s, spy, entry, h) for h in (1, 5, 10, 20)}
+            f = {h: fwd(s, spy, sessions, entry, h) for h in (1, 5, 10, 20)}
             if any(v is None for v in f.values()):
                 continue
             rows.append({"event_id": e.event_id, "event_type": e.event_type, "release_date": e.release_date,
