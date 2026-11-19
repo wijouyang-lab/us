@@ -6,7 +6,7 @@ Repository: `wijouyang-lab/us`
 Branch: `deploy/dsh-automation-p0`  
 PR: https://github.com/wijouyang-lab/us/pull/567  
 Reviewed code HEAD: `bee0f99d2109ac3816c01a842d9ce32c76c58c6c`  
-Audit-document HEAD at this revision: `310b6a861189e09315925f2e387b0ed017b723ad`  
+P0.2.12 audit note first committed at: `310b6a861189e09315925f2e387b0ed017b723ad`  
 Original PR merge base: `42d3a19ee205713fdfa9d959ff04d1fd79d3b65b`
 
 ## 1. Independent review finding
@@ -106,7 +106,7 @@ At the beginning of this review, `main` was at
 GitHub Actions advanced `main` through three scheduled market-data refresh
 commits to `ad72b06255c1baa64f002fc891bb9b9e17f2f945`.
 
-The three commits (`42d3a19`, `cab3b08`, `31146e7`, `ad72b06`) modify only
+The three commits after the original snapshot (`cab3b08`, `31146e7`, `ad72b06`) modify only
 `dashboard/data/*` files. Current compare reports the PR branch as 137 commits
 ahead and 3 behind, with merge base still `42d3a19`. The automated changes do
 not overlap this review's Publisher/DSH/test changes. No branch sync or rebase
