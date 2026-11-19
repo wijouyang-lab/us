@@ -5,7 +5,7 @@ Date: 2026-11-19
 Repository: `wijouyang-lab/us`  
 Branch: `deploy/dsh-automation-p0`  
 Base main: `42d3a19ee205713fdfa9d959ff04d1fd79d3b65b`  
-Reviewed code HEAD: `e5d106b6e8ad274a71ea82cdff604505f8f82767`  
+Reviewed code HEAD: `bee0f99d2109ac3816c01a842d9ce32c76c58c6c`  
 PR: https://github.com/wijouyang-lab/us/pull/567
 
 ## 1. Independent review finding
@@ -17,12 +17,17 @@ constrain the PR URL to this repository. A mismatched Draft could therefore be
 recorded as the task's `REVIEW_PENDING` PR if the core were wired into the
 production publisher.
 
+A related terminal-state gap allowed a task in `REVIEW_PENDING` or `PASS`
+to be reported as a successful skip even if its stored PR URL was missing.
+
 ## 2. Remediation committed
 
 Commits:
 
 - `5895be41e7c9cedd925a38fb66f0d8dbc47c33af` — validate Publisher Draft PR identity.
 - `e5d106b6e8ad274a71ea82cdff604505f8f82767` — add adapter identity regression tests.
+- `80c515ae40b98067c5a3adc4d61c355975e906fb` — require a canonical PR URL for terminal state.
+- `bee0f99d2109ac3816c01a842d9ce32c76c58c6c` — reject terminal tasks without a valid PR URL.
 
 The core now:
 
@@ -34,27 +39,27 @@ The core now:
 - validates a newly created PR URL before fetching it;
 - verifies that the fetched PR URL equals the creation URL and that the PR is
   still Draft with the expected head and base;
-- rejects invalid PR URLs stored in terminal task state before reporting a
+- rejects missing or invalid PR URLs in terminal task state before reporting a
   successful terminal skip.
 
-Five regression-test functions were added for mismatched refs, invalid URLs,
-created-PR readback mismatch, and invalid terminal state.
+Five regression-test functions were added, covering mismatched refs, invalid
+URLs, created-PR readback mismatch, and invalid or missing terminal-state PR URLs.
 
 ## 3. CI evidence
 
-Run: https://github.com/wijouyang-lab/us/actions/runs/44467523585
+Run: https://github.com/wijouyang-lab/us/actions/runs/44468653804
 
-Commit: `e5d106b6e8ad274a71ea82cdff604505f8f82767`
+Code commit: `bee0f99d2109ac3816c01a842d9ce32c76c58c6c`
 
 - Full test suite: **1516 passed, 1 skipped, 8 warnings**
 - `test`: success
 - `dsh-install-verify`: success
 - `dsh-subprocess-isolation`: success
-- `dsh-process-cleanup-windows`: success
+- `dsh-process-cleanup-windows`: success (6 passed, 1 skipped)
 - Dividend Quality frontend tests: passed
 
-This run validates the new adapter-core regression tests. It does not exercise
-the production Publisher write path or a real DSH task.
+This run validates the adapter-core regression tests. It does not exercise the
+production Publisher write path or a real DSH task.
 
 ## 4. Production path remains intentionally blocked
 
