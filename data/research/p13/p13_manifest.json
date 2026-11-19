@@ -1,0 +1,88 @@
+{
+  "coverage": {
+    "start": "2020-01-02",
+    "end": "2024-12-02",
+    "tickers": 581,
+    "rows": 625608,
+    "membership_days": 1258,
+    "member_day_coverage": 0.9868056388000664,
+    "ticker_coverage": 0.957166392092257,
+    "daily_obs_median": 498.0,
+    "price_fields": [
+      "open",
+      "high",
+      "low",
+      "close",
+      "adjusted_close"
+    ],
+    "atr_formula": "Wilder ATR(14)/close",
+    "status": "EXPLORATORY_PIT_MEMBERSHIP_PARTIAL"
+  },
+  "hac": [
+    {
+      "horizon": 5,
+      "mean_spread": 0.001283574784806589,
+      "hac_t": 0.6150086236420114,
+      "p": 0.5386621406588643,
+      "q": 0.5386621406588643
+    },
+    {
+      "horizon": 10,
+      "mean_spread": 0.002276621115731741,
+      "hac_t": 0.7924969512117488,
+      "p": 0.4282229266105612,
+      "q": 0.5386621406588643
+    },
+    {
+      "horizon": 20,
+      "mean_spread": 0.005085011800148711,
+      "hac_t": 1.216550115810876,
+      "p": 0.22400750273088535,
+      "q": 0.5386621406588643
+    }
+  ],
+  "segments": [
+    {
+      "segment": "train",
+      "dates": 718,
+      "start": "2020-01-02",
+      "end": "2022-11-04",
+      "mean_ic20": -0.005811049851776547,
+      "mean_spread20": 0.006534332807862165,
+      "hac_t20": 1.048852020941836,
+      "p20": 0.29459963792259086
+    },
+    {
+      "segment": "validation",
+      "dates": 224,
+      "start": "2022-12-12",
+      "end": "2023-11-01",
+      "mean_ic20": 0.03553946482411675,
+      "mean_spread20": 0.009725786124821206,
+      "hac_t20": 1.0678228769632438,
+      "p20": 0.2867550122977203
+    },
+    {
+      "segment": "test",
+      "dates": 248,
+      "start": "2023-12-07",
+      "end": "2024-12-02",
+      "mean_ic20": -0.04945587092391096,
+      "mean_spread20": -0.007874033746678546,
+      "hac_t20": -1.840781126078285,
+      "p20": 0.06685304974283657
+    }
+  ],
+  "price_basis": "ATR raw OHLC; returns adjusted_close",
+  "portfolio": "NOT_RUN: data admission failed (ticker coverage 95.72%)",
+  "three_year": {
+    "dates": 733,
+    "start": "2022-01-03",
+    "end": "2024-12-02",
+    "mean_ic20": -0.013649028892251596,
+    "mean_spread20": 0.00029654487889539183,
+    "hac_t20": 0.07214576022187916,
+    "p20": 0.9425056171039802
+  },
+  "decision": "P13_ATR_ALPHA=NO_GO"
+}
