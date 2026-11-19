@@ -15,7 +15,7 @@ Status: **NO_GO persists; PRICE_RETURN_ONLY / UNADJUSTED_PRICE**
 3. **Beta:** inner date intersection of stock/SPY/TLT/GLD/IWM; 252-day window,
    minimum 180 returns.
 4. **HAC:** event-level IC/spread series, Newey-West lags 0–4.
-5. **Block bootstrap:** 5,000 resamples by same-date blocks, seed 20261119.
+5. **Event-date cluster bootstrap:** 5,000 resamples of the 104 unique event dates (same-date CPI/Employment kept together), seed 20261119. This is not a moving-block bootstrap and does not preserve time dependence between different dates.
 6. **Purge:** train/validation events whose D20 window reaches the next split
    are removed.
 7. **BH:** all 36 pre-registered interaction/horizon tests.
@@ -29,7 +29,7 @@ Status: **NO_GO persists; PRICE_RETURN_ONLY / UNADJUSTED_PRICE**
 | stock-event observations | 87,706 |
 | tickers | 481 |
 | names/event mean / median | 419.6 / 421 |
-| D1/D5/D10/D20 valid | 87,706 each |
+| D1/D5/D10/D20 valid | **COMPLETE_CASE_PANEL = 87,706**; the same rows require all four horizons, not four independent samples |
 | price basis | unadjusted close |
 | calendars | SPY sessions only |
 
@@ -62,7 +62,7 @@ negative but does not pass ordinary BH 10% (q=0.104).
 HAC makes the payroll sign stronger but BH still fails (q=0.221).  
 The complete lag 0–4 sensitivity is in `p12_5_3_1_hac_sensitivity.csv`.
 
-## 5. Block bootstrap
+## 5. Event-date cluster bootstrap
 
 Payroll × Beta_IWM, 20D:
 
@@ -72,9 +72,9 @@ boot mean = -1.793%
 95% CI = [-2.952%, -0.714%]
 ```
 
-The negative block-bootstrap CI excludes zero, but this is a single
+The unadjusted event-date cluster bootstrap CI excludes zero, but this is a single
 pre-registered interaction among 36 tests and does not survive BH.  
-CPI headline × Beta_TLT 20D bootstrap CI includes zero.
+This bootstrap resamples independent event dates; it does not retain serial dependence and is not multiple-test adjusted. CPI headline × Beta_TLT 20D CI includes zero.
 
 ## 6. Purged OOS
 
@@ -102,7 +102,7 @@ stable negative but attenuates to near zero in test.
 PRICE_BASIS = UNADJUSTED_CLOSE
 DATE_ALIGNMENT = SPY_SESSION_STRICT
 HAC_MAIN = LAG_4
-BOOTSTRAP = 5000_BLOCKS
+BOOTSTRAP = 5000_EVENT_DATE_CLUSTER
 PURGE = D20_BOUNDARY
 BH_MIN_Q_ORDINARY = 0.104
 BH_MIN_Q_HAC = 0.221
