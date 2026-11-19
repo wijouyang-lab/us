@@ -27,3 +27,5 @@ data/sec/cache/
 data/paper_trading/*.sqlite-wal
 data/paper_trading/*.sqlite-shm
 data/paper_trading/*.sqlite
+
+data/research/p14/p14_momentum_signal_panel.csv

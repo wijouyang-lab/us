@@ -1,0 +1,34 @@
+{
+  "rows": 486782,
+  "dates": 983,
+  "tickers": 558,
+  "duplicate_symbol_dates": 0,
+  "price_basis": "adjusted_close",
+  "adjustment": "ADJUSTMENT_UNVERIFIED",
+  "coverage_5y": {
+    "start": "2020-01-02",
+    "end": "2024-12-31",
+    "calendar_days": 1258,
+    "expected_member_days": 633971,
+    "observed_member_days": 625608,
+    "member_day_coverage": 0.986808544870349,
+    "tickers_expected": 607,
+    "tickers_priced": 581,
+    "ticker_coverage": 0.957166392092257,
+    "median_names": 499.0
+  },
+  "coverage_3y": {
+    "start": "2022-01-03",
+    "end": "2024-12-31",
+    "calendar_days": 753,
+    "expected_member_days": 378944,
+    "observed_member_days": 373588,
+    "member_day_coverage": 0.9858659854754265,
+    "tickers_expected": 566,
+    "tickers_priced": 541,
+    "ticker_coverage": 0.9558303886925795,
+    "median_names": 498.0
+  },
+  "missing_price_members": 26,
+  "data_quality": "PARTIAL: adjusted_close supplier convention unverified; membership snapshots sparse"
+}
