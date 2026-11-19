@@ -65,3 +65,23 @@ def test_concurrent_acquire_one_winner():
         t.join()
     assert sum(1 for r in results if r[0] == "ok") == 1
     assert sum(1 for r in results if r[0] == "busy") == 7
+
+import pytest as _pytest
+
+@_pytest.mark.parametrize("n", [5, 10, 20])
+def test_concurrent_acquire_counts(n):
+    backend = FakeLockBackend()
+    adapter = FakeLockAdapter(backend)
+    barrier = threading.Barrier(n)
+    results = []
+    def worker(i):
+        barrier.wait()
+        try:
+            adapter.acquire("branch:main", f"o{i}", 10); results.append("ok")
+        except LockError:
+            results.append("busy")
+    ts = [threading.Thread(target=worker, args=(i,)) for i in range(n)]
+    for t in ts: t.start()
+    for t in ts: t.join()
+    assert results.count("ok") == 1
+    assert results.count("busy") == n - 1
