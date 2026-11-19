@@ -1,0 +1,93 @@
+{
+  "events": 76,
+  "observations": 31779,
+  "tickers": 479,
+  "signal_window": 252,
+  "min_obs": 180,
+  "horizons": [
+    1,
+    5,
+    10,
+    20
+  ],
+  "event_range": [
+    "2017-12-13",
+    "2026-07-29"
+  ],
+  "tests": 12,
+  "oos": [
+    {
+      "split": "train",
+      "horizon": 1,
+      "events": 45,
+      "mean_ic": 0.08889494019257071
+    },
+    {
+      "split": "train",
+      "horizon": 5,
+      "events": 45,
+      "mean_ic": 0.01021776447648566
+    },
+    {
+      "split": "train",
+      "horizon": 10,
+      "events": 45,
+      "mean_ic": 0.008912323502305548
+    },
+    {
+      "split": "train",
+      "horizon": 20,
+      "events": 45,
+      "mean_ic": 0.008615135602062583
+    },
+    {
+      "split": "validation",
+      "horizon": 1,
+      "events": 15,
+      "mean_ic": -0.057037826934110955
+    },
+    {
+      "split": "validation",
+      "horizon": 5,
+      "events": 15,
+      "mean_ic": -0.09559123556212218
+    },
+    {
+      "split": "validation",
+      "horizon": 10,
+      "events": 15,
+      "mean_ic": -0.11567378181191043
+    },
+    {
+      "split": "validation",
+      "horizon": 20,
+      "events": 15,
+      "mean_ic": -0.10477201108679926
+    },
+    {
+      "split": "test",
+      "horizon": 1,
+      "events": 16,
+      "mean_ic": -0.014381177104797388
+    },
+    {
+      "split": "test",
+      "horizon": 5,
+      "events": 16,
+      "mean_ic": -0.00904256014931111
+    },
+    {
+      "split": "test",
+      "horizon": 10,
+      "events": 16,
+      "mean_ic": -0.009405901586912131
+    },
+    {
+      "split": "test",
+      "horizon": 20,
+      "events": 16,
+      "mean_ic": -0.04521015764966969
+    }
+  ],
+  "note": "FOMC only; BLS CPI/Employment precise publication times unavailable. Close-to-close proxy, unadjusted Price."
+}
