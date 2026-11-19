@@ -1,0 +1,18 @@
+{
+  "generated_at_utc": "2026-11-02T18:14:42.931086+00:00",
+  "files": {
+    "events.csv": {
+      "sha256": "5934045894f653c73b0dc7cd173679eee438bd04564c90c6641035636c73e183",
+      "bytes": 241411
+    },
+    "session_alignment.csv": {
+      "sha256": "7cdd7e118dda5eb4b7526a5f2bf6d9b9d43f97d91b41f2c6d6ec86672771b743",
+      "bytes": 38102
+    },
+    "audit.json": {
+      "sha256": "1d24db905e3e5804ec65f776d6441e1b95146850751d5557b65053cbbc3f8f5c",
+      "bytes": 7816
+    }
+  },
+  "study_status": "NOT_RUN_DATA_BLOCKED"
+}
