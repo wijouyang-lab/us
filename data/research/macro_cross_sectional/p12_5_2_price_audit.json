@@ -1,0 +1,30 @@
+{
+  "snapshot": {
+    "rows": 1047578,
+    "tickers": 502,
+    "start": "2016-12-12",
+    "end": "2026-10-13",
+    "columns_checked": [
+      "Price"
+    ],
+    "has_open_high_low_close": false,
+    "has_adj_close": false,
+    "has_split_adjustment": false,
+    "has_dividend_adjustment": false,
+    "pit_membership_verified": false
+  },
+  "events_2017_plus": {
+    "cpi": 118,
+    "employment": 118
+  },
+  "min_names_per_event": 0,
+  "median_names_per_event": 422.0,
+  "events_with_20_names": 228,
+  "verdict": "PARTIAL_PRICE_ONLY",
+  "blockers": [
+    "Price is unadjusted close; no Adj Close, split or dividend adjustment.",
+    "Historical S&P 500 membership and delisted tickers are not fully PIT verified.",
+    "No Open/High/Low; cannot model next-open execution or intrabar timing.",
+    "Macro releases are date-only; exact embargo time is unavailable."
+  ]
+}

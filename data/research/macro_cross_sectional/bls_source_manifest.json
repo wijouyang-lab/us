@@ -3,81 +3,77 @@
     "CPIAUCSL": {
       "family": "cpi_headline_sa",
       "csv": "vintages_starting_1972-07-21.csv",
-      "zip_sha256": "1ec87869f63638d50cbf33267265a4b12a3593a8a21526a180715f72ef290f91",
+      "zip_sha256": "3a5fef05d2b1271e27683c261b3f76fc96044bb2002d7540dec5c12f98045c97",
       "vintages": 671,
       "first_vintage": "1972-07-21",
       "last_vintage": "2026-11-10",
-      "observations": 237
+      "observations": 249
     },
     "CPILFESL": {
       "family": "cpi_core_sa",
       "csv": "vintages_starting_1996-12-12.csv",
-      "zip_sha256": "93faafbdf4f7022f401584ea06966468da81678982098ba4fc2ded6349f029db",
+      "zip_sha256": "3f0a74b1b1f251c96363e04a89413e4093c9b25780daa9a414822d13e8355f51",
       "vintages": 378,
       "first_vintage": "1996-12-12",
       "last_vintage": "2026-11-10",
-      "observations": 237
+      "observations": 249
     },
     "PAYEMS": {
       "family": "payrolls_sa",
       "csv": "vintages_starting_1955-05-06.csv",
-      "zip_sha256": "51ae7fb715d488f8074c1cc3b5eb594ca5a56fda0b35cef8bc307c88210ae3bf",
+      "zip_sha256": "01fc874a236afa4fc8853aad0d52f2629dc3df5757a1508c255fd85b8f336341",
       "vintages": 861,
       "first_vintage": "1955-05-06",
       "last_vintage": "2026-11-06",
-      "observations": 238
+      "observations": 250
     },
     "UNRATE": {
       "family": "unemployment_sa",
       "csv": "vintages_starting_1960-03-15.csv",
-      "zip_sha256": "0710403fc6b861d0b207eee2807e91376072fb5888c8ca3ca3fff91fe0ab2079",
+      "zip_sha256": "99427811cb68a683bc53ae642e959d49dc0ff27f9332141c705df4e3a509574a",
       "vintages": 801,
       "first_vintage": "1960-03-15",
       "last_vintage": "2026-11-06",
-      "observations": 237
+      "observations": 249
     },
     "CES0500000003": {
       "family": "earnings_sa",
       "csv": "vintages_starting_2011-03-04.csv",
-      "zip_sha256": "782576565f6de261a3b98507072804d3d8c17137894a6134850fa9b11a32b392",
+      "zip_sha256": "bc8b2fa4e3bfb295ad61a580b2c33cb8080aca4aa1b39bd9ff9c6f49896e7bf1",
       "vintages": 188,
       "first_vintage": "2011-03-04",
       "last_vintage": "2026-11-06",
-      "observations": 238
+      "observations": 202
     }
   },
   "bls_live": {
     "cpi": 403,
     "empsit": 403
   },
-  "timestamp_policy": "date_only; no inferred 08:30; BLS live 403",
-  "events": 474,
-  "cpi_events": 237,
-  "employment_events": 237,
+  "timestamp_policy": "ALFRED vintage date only; no BLS embargo time inferred",
+  "events": 476,
+  "cpi_events": 238,
+  "employment_events": 238,
   "exact_embargo_time_events": 0,
   "initial_value_coverage": 1.0,
-  "initial_cpi_coverage": 0.9915611814345991,
-  "initial_payroll_coverage": 0.9957805907172996,
+  "initial_cpi_coverage": 0.9957983193277311,
+  "initial_payroll_coverage": 1.0,
   "outputs": {
     "alfred_initial_values.csv": {
-      "sha256": "156a622a8b68d46fa0407d1cd4351c0b089b2b27105bd075e305030c670ae1e9",
-      "bytes": 82298
+      "sha256": "cea21b3cb82259fb4e7b1f41054c2e98539b0fbc2af0714fce97b3df9481bdcd",
+      "bytes": 91283
     },
     "alfred_vintage_audit.json": {
-      "sha256": "a8113795194d50a4b9395968e504190a365a965904a981070b7a6aa8563b571d",
-      "bytes": 1784
+      "sha256": "5cbd4e46ff1be03fbe60d88ddc00691139d6809024187d083ff00997ad49cbf3",
+      "bytes": 1815
     },
     "bls_event_coverage_audit.json": {
-      "sha256": "0fa01ab6e9746886b9802bbd224c44877b4ca74baa7ef79f421226f96beffe45",
-      "bytes": 2171
+      "sha256": "83f158b4d92cc1f41ab63a390f9b9696faa60016a26427db9518710496704266",
+      "bytes": 2906
     },
     "bls_macro_events.csv": {
-      "sha256": "c3e8c7792f92c1adfab7881ce4295cfe73dfc89f1a01455f54ac9c29320bd51f",
-      "bytes": 128927
-    },
-    "bls_source_manifest.json": {
-      "sha256": "c76615938951d02ec05ca993d64a8c8f2503bfd5fea7c9b592cd71b7eae3d45f",
-      "bytes": 2002
+      "sha256": "9c0eef3ca5f1ffd461dfe1fe17e3afb38f81bc6d7761423b8ddeeb2cebc34d78",
+      "bytes": 132719
     },
     "event_data_audit.json": {
       "sha256": "13a2ff26645c67f16b91e6a84da46c7fcd4039e6bd671601683b30642d0dd945",
@@ -98,6 +94,10 @@
     "oos_ic.csv": {
       "sha256": "c100c4644064bae7f0214998de5fd2b7ff6d8cabe163bc2d030648da5a7ddece",
       "bytes": 449
+    },
+    "p12_5_2_price_audit.json": {
+      "sha256": "f03f7081dbea43fb7190409bfe8675e5082517eed115e6e42d92b1d16c369c42",
+      "bytes": 897
     },
     "summary.json": {
       "sha256": "acbc33f838be455e7d10cc863c2f732198fad2237e4128dfd7219caeb6592e2e",

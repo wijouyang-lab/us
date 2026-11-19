@@ -27,7 +27,7 @@ SERIES = {
 BASE = "https://alfred.stlouisfed.org/series/downloaddata?seid={}"
 
 
-def fetch(series: str, cache: Path, start="2007-01-01", end="2026-10-01"):
+def fetch(series: str, cache: Path, start="2006-01-01", end="2026-10-01"):
     cache.mkdir(parents=True, exist_ok=True)
     s = requests.Session()
     html = s.get(BASE.format(series), timeout=60).text
@@ -66,16 +66,22 @@ def initial_events(csv_path: Path, family: str):
             continue
         release, value, idx = first
         prior = None
-        # prior observation's value as known at this vintage
-        if idx > 0:
-            prev_obs = obs - pd.offsets.MonthBegin(1)
-            if prev_obs in df.index:
-                pv = df.loc[prev_obs].iloc[idx]
-                if pd.notna(pv):
-                    prior = float(pv)
+        prior_year = None
+        # Both prior month and prior year must come from this same vintage.
+        prev_obs = obs - pd.offsets.MonthBegin(1)
+        if prev_obs in df.index:
+            pv = df.loc[prev_obs].iloc[idx]
+            if pd.notna(pv):
+                prior = float(pv)
+        py_obs = obs - pd.offsets.DateOffset(years=1)
+        if py_obs in df.index:
+            pyv = df.loc[py_obs].iloc[idx]
+            if pd.notna(pyv):
+                prior_year = float(pyv)
         rows.append({"series": family, "reference_period": obs.strftime("%Y-%m"),
                      "release_date": release.date().isoformat(),
                      "initial_value": value, "prior_value_same_vintage": prior,
+                     "prior_year_value_same_vintage": prior_year,
                      "vintage_column": cols[idx], "vintage_index": idx})
     return pd.DataFrame(rows)
 
@@ -86,7 +92,8 @@ def build(cache: Path, out: Path):
     manifest = {"series": {}, "bls_live": {"cpi": 403, "empsit": 403},
                 "timestamp_policy": "date_only; no inferred 08:30"}
     for sid, fam in SERIES.items():
-        path, sha, dates = fetch(sid, cache)
+        start = "2010-01-01" if sid == "CES0500000003" else "2006-01-01"
+        path, sha, dates = fetch(sid, cache, start=start)
         e = initial_events(path, fam)
         all_series.append(e)
         manifest["series"][sid] = {"family": fam, "csv": path.name, "zip_sha256": sha,

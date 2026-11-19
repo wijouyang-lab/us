@@ -3,49 +3,49 @@
     "CPIAUCSL": {
       "family": "cpi_headline_sa",
       "csv": "vintages_starting_1972-07-21.csv",
-      "zip_sha256": "1ec87869f63638d50cbf33267265a4b12a3593a8a21526a180715f72ef290f91",
+      "zip_sha256": "3a5fef05d2b1271e27683c261b3f76fc96044bb2002d7540dec5c12f98045c97",
       "vintages": 671,
       "first_vintage": "1972-07-21",
       "last_vintage": "2026-11-10",
-      "observations": 237
+      "observations": 249
     },
     "CPILFESL": {
       "family": "cpi_core_sa",
       "csv": "vintages_starting_1996-12-12.csv",
-      "zip_sha256": "93faafbdf4f7022f401584ea06966468da81678982098ba4fc2ded6349f029db",
+      "zip_sha256": "3f0a74b1b1f251c96363e04a89413e4093c9b25780daa9a414822d13e8355f51",
       "vintages": 378,
       "first_vintage": "1996-12-12",
       "last_vintage": "2026-11-10",
-      "observations": 237
+      "observations": 249
     },
     "PAYEMS": {
       "family": "payrolls_sa",
       "csv": "vintages_starting_1955-05-06.csv",
-      "zip_sha256": "51ae7fb715d488f8074c1cc3b5eb594ca5a56fda0b35cef8bc307c88210ae3bf",
+      "zip_sha256": "01fc874a236afa4fc8853aad0d52f2629dc3df5757a1508c255fd85b8f336341",
       "vintages": 861,
       "first_vintage": "1955-05-06",
       "last_vintage": "2026-11-06",
-      "observations": 238
+      "observations": 250
     },
     "UNRATE": {
       "family": "unemployment_sa",
       "csv": "vintages_starting_1960-03-15.csv",
-      "zip_sha256": "0710403fc6b861d0b207eee2807e91376072fb5888c8ca3ca3fff91fe0ab2079",
+      "zip_sha256": "99427811cb68a683bc53ae642e959d49dc0ff27f9332141c705df4e3a509574a",
       "vintages": 801,
       "first_vintage": "1960-03-15",
       "last_vintage": "2026-11-06",
-      "observations": 237
+      "observations": 249
     },
     "CES0500000003": {
       "family": "earnings_sa",
       "csv": "vintages_starting_2011-03-04.csv",
-      "zip_sha256": "782576565f6de261a3b98507072804d3d8c17137894a6134850fa9b11a32b392",
+      "zip_sha256": "bc8b2fa4e3bfb295ad61a580b2c33cb8080aca4aa1b39bd9ff9c6f49896e7bf1",
       "vintages": 188,
       "first_vintage": "2011-03-04",
       "last_vintage": "2026-11-06",
-      "observations": 238
+      "observations": 202
     }
   },
-  "initial_selection": "first non-null vintage per observation",
+  "initial_selection": "first non-null vintage per observation; prior month/year same vintage",
   "timestamp_policy": "vintage date only; no embargo inference"
 }

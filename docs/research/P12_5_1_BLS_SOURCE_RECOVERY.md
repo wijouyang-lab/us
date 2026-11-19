@@ -41,9 +41,9 @@ Output: `data/research/macro_cross_sectional/bls_macro_events.csv`
 
 | family | events | years | initial value coverage |
 |---|---:|---:|---:|
-| CPI | 237 | 20 (2007–2026) | 99.16% headline MoM, 99.16% core MoM |
-| Employment | 237 | 20 (2007–2026) | 99.58% payroll change, 100% unemployment |
-| **Total** | **474** | | |
+| CPI | 238 | 20 (2007–2026) | 99.58% headline MoM, 99.58% core MoM |
+| Employment | 238 | 20 (2007–2026) | 100% payroll change, 100% unemployment |
+| **Total** | **476** | | |
 
 - `initial_headline_value`: CPI MoM SA, percent, from first vintage.
 - `initial_core_value`: core CPI MoM SA, percent.

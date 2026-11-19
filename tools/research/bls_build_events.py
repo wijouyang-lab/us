@@ -7,14 +7,8 @@ out = Path("data/research/macro_cross_sectional")
 p = pd.read_csv(out / "alfred_initial_values.csv")
 p["ref"] = pd.PeriodIndex(p.reference_period, freq="M")
 p["yoy_prior_ref"] = (p.ref - 12).astype(str)
-# Same-vintage year-ago value for YoY.
-lookup = p.set_index(["series", "vintage_column", "reference_period"]).initial_value
-def yoy(r):
-    try:
-        return r.initial_value / lookup.loc[(r.series, r.vintage_column, r.yoy_prior_ref)] - 1
-    except KeyError:
-        return None
-p["yoy"] = p.apply(yoy, axis=1)
+# Same-vintage year-ago value captured by the recovery step.
+p["yoy"] = p.initial_value / p.prior_year_value_same_vintage - 1
 p["mom"] = p.initial_value / p.prior_value_same_vintage - 1
 p["change"] = p.initial_value - p.prior_value_same_vintage
 
@@ -65,6 +59,7 @@ for fam, group in (("cpi", p[p.series.isin(["cpi_headline_sa", "cpi_core_sa"])])
                 row["initial_earnings_yoy"] = round(float(er.yoy) * 100, 3) if pd.notna(er.yoy) else ""
         events.append(row)
 ev = pd.DataFrame(events).sort_values(["release_date", "event_type"])
+ev = ev[ev.release_date >= "2007-01-01"]
 ev.to_csv(out / "bls_macro_events.csv", index=False)
 manifest.update({"events": len(ev), "cpi_events": int((ev.event_type == "cpi").sum()),
                  "employment_events": int((ev.event_type == "employment").sum()),

@@ -6,7 +6,7 @@
   },
   "source": "ALFRED vintage download; BLS live HTML/PDF blocked",
   "cpi": {
-    "events": 237,
+    "events": 238,
     "years": [
       "2007",
       "2008",
@@ -30,12 +30,11 @@
       "2026"
     ],
     "exact_embargo_time": 0,
-    "initial_headline_mom": 235,
-    "initial_core_mom": 235,
-    "missing_years": []
+    "initial_headline_mom": 237,
+    "initial_core_mom": 237
   },
   "employment": {
-    "events": 237,
+    "events": 238,
     "years": [
       "2007",
       "2008",
@@ -59,44 +58,83 @@
       "2026"
     ],
     "exact_embargo_time": 0,
-    "initial_payroll_change": 236,
-    "initial_unemployment": 237,
-    "initial_earnings_mom": 187,
-    "missing_years": []
+    "initial_payroll_change": 238,
+    "initial_unemployment": 238,
+    "initial_earnings_mom": 188
   },
   "coverage": {
     "cpi_years": 20,
     "employment_years": 20,
     "cpi_exact_time_rate": 0.0,
     "employment_exact_time_rate": 0.0,
-    "cpi_initial_rate": 0.9915611814345991,
-    "employment_payroll_initial_rate": 0.9957805907172996
+    "cpi_initial_rate": 0.9957983193277311,
+    "employment_payroll_initial_rate": 1.0,
+    "cpi_per_year": {
+      "2007": 12,
+      "2008": 12,
+      "2009": 12,
+      "2010": 12,
+      "2011": 12,
+      "2012": 12,
+      "2013": 12,
+      "2014": 12,
+      "2015": 12,
+      "2016": 12,
+      "2017": 12,
+      "2018": 12,
+      "2019": 12,
+      "2020": 12,
+      "2021": 12,
+      "2022": 12,
+      "2023": 12,
+      "2024": 12,
+      "2025": 11,
+      "2026": 11
+    },
+    "employment_per_year": {
+      "2007": 12,
+      "2008": 12,
+      "2009": 12,
+      "2010": 12,
+      "2011": 12,
+      "2012": 12,
+      "2013": 12,
+      "2014": 12,
+      "2015": 12,
+      "2016": 12,
+      "2017": 12,
+      "2018": 12,
+      "2019": 12,
+      "2020": 12,
+      "2021": 12,
+      "2022": 12,
+      "2023": 12,
+      "2024": 12,
+      "2025": 11,
+      "2026": 11
+    }
   },
   "special_2025_2026": {
     "cpi_2025_10_missing": true,
     "employment_2025_10_missing": true,
     "employment_2025_09_released": "2025-11-20",
     "cpi_2025_09_released": "2025-10-24",
-    "note": "ALFRED vintage dates show delayed releases; no synthetic fill."
+    "note": "ALFRED vintage dates show delayed/missing releases; no synthetic fill."
   },
   "reconciliation": {
     "old_cpi": 166,
-    "new_cpi": 237,
+    "new_cpi": 238,
     "old_employment": 166,
-    "new_employment": 237,
-    "added_cpi": 71,
-    "added_employment": 71,
-    "old_date_range": [
-      "2007-01-05",
-      "2020-10-13"
-    ],
-    "new_date_range": [
-      "2007-02-02",
-      "2026-11-10"
-    ]
+    "new_employment": 238,
+    "matched_old_events": 332,
+    "missing_from_new": [],
+    "newly_recovered_events": 144,
+    "duplicate_events": 0,
+    "date_mismatches": [],
+    "reference_period_mismatches": []
   },
   "market_consensus": {
     "status": "DATA_BLOCKED",
-    "reason": "No free, auditable pre-release historical consensus snapshot with timestamps."
+    "reason": "No free auditable pre-release consensus snapshots."
   }
 }

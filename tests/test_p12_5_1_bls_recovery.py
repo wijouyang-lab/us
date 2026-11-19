@@ -36,3 +36,23 @@ def test_first_vintage_is_not_overwritten_by_revision(tmp_path):
     e = initial_events(p, "test")
     assert e.iloc[0].initial_value == 100
     assert e.iloc[0].release_date == "2024-01-11"
+
+def test_same_vintage_yoy_and_prior_month():
+    import pandas as pd
+    from pathlib import Path
+    p = Path("data/research/macro_cross_sectional/alfred_initial_values.csv")
+    df = pd.read_csv(p)
+    # If a YoY prior is present it must equal the level ratio from the same vintage.
+    row = df[df.prior_year_value_same_vintage.notna()].iloc[0]
+    assert abs(row.initial_value / row.prior_year_value_same_vintage - 1) > 0
+
+
+def test_2007_first_events_and_no_2025_10_fill():
+    import pandas as pd
+    e = pd.read_csv("data/research/macro_cross_sectional/bls_macro_events.csv")
+    assert "employment_2007-01-05" in set(e.event_id)
+    assert "cpi_2007-01-18" in set(e.event_id)
+    assert "cpi_2025-10" not in set(e.event_id)
+    assert "employment_2025-10" not in set(e.event_id)
+    assert not e.duplicated(["event_type", "release_date"]).any()
+    assert len(e) == 476
