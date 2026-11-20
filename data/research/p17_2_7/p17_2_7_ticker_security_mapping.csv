@@ -1,0 +1,512 @@
+ticker,accession,issuer_cik,security_title,exchange,context_id,context_dimensions
+COO,0000711404-20-000021,0000711404,"Common Stock, $.10 par value",The New York Stock Exchange,FD2020Q2YTD,
+IP,0000051434-20-000017,0000051434,Common Shares,New York Stock Exchange,FD2020Q1YTD,
+FFIV,0001048695-20-000027,0001048695,"Common stock, no par value",NASDAQ Global Select Market,FD2020Q2YTD,
+XRAY,0000818479-20-000023,0000818479,"Common Stock, par value $.01 per share",The Nasdaq Stock Market LLC,icc8243c8a1424cc299412e7fdc3619bf_D20200101-20200331,
+VRSN,0001014473-20-000019,0001014473,"Common Stock, $0.001 par value per share",Nasdaq Global Select Market,FD2020Q1YTD,
+IPGP,0001111928-20-000074,0001111928,"Common Stock, par value $0.0001 per share",Nasdaq Global Select Market,i7f4827d10c2546038baf463e1a43662f_D20200101-20200331,
+IQV,0001478242-20-000029,0001478242,"Common Stock, par value $0.01 per share",New York Stock Exchange,i7fba16d85782460798e57c50c50aa6a4_D20200101-20200331,
+ZTS,0001555280-20-000199,0001555280,"Common Stock, par value $0.01 per share",New York Stock Exchange,i93800216e829464199378cfa90500c97_D20200101-20200331,
+DXC,0001688568-20-000032,0001688568,"Common Stock, $0.01 par value per share",New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+DXC 25,0001688568-20-000032,0001688568,2.750% Senior Notes Due 2025,New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_dxc_SeniorNotesDue2025OneMember,us-gaap:StatementClassOfStockAxis=dxc:SeniorNotesDue2025OneMember
+DXC 26,0001688568-20-000032,0001688568,1.750% Senior Notes Due 2026,New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_dxc_SeniorNotesDue2026Member,us-gaap:StatementClassOfStockAxis=dxc:SeniorNotesDue2026Member
+MHK,0000851968-20-000051,0000851968,"Common Stock, $.01 par value",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_mhk_CommonStock.01parvalueMember,us-gaap:StatementClassOfStockAxis=mhk:CommonStock.01parvalueMember
+AMGN,0000318154-20-000031,0000318154,"Common stock, $0.0001 par value",The NASDAQ Global Select Market,FD2020Q1YTD_dei_EntityListingsExchangeAxis_exch_XNGS_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,dei:EntityListingsExchangeAxis=exch:XNGS;us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+AMGN22,0000318154-20-000031,0000318154,1.250% Senior Notes Due 2022,New York Stock Exchange,FD2020Q1YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_amgn_A1.250SeniorNotesDue2022Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=amgn:A1.250SeniorNotesDue2022Member
+AMGN26,0000318154-20-000031,0000318154,2.00% Senior Notes Due 2026,New York Stock Exchange,FD2020Q1YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_amgn_A2.00SeniorNotesDue2026Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=amgn:A2.00SeniorNotesDue2026Member
+PYPL,0001633917-20-000093,0001633917,"Common stock, $0.0001 par value per share",NASDAQ Global Select Market,FD2020Q1YTD,
+CHTR,0001091667-20-000105,0001091667,Class A Common Stock $.001 Par Value,NASDAQ Global Select Market,i8ae0f1d19ad54006865563857aa3cc55_D20200101-20200331,
+XRX,0001770450-20-000023,0001770450,"Common Stock, $1 par value",New York Stock Exchange,if0740d8fcb3549a09c0924b457818a3a_D20200101-20200331,
+EXR,0001628280-20-007222,0001289490,"Common Stock, $0.01 par value",New York Stock Exchange,i5b49cff37ae947728be6b6c95d8a5905_D20200101-20200331,
+HRB,0001574842-20-000021,0000012659,"Common Stock, without par value",New York Stock Exchange,FD2020Q4YTD,
+KO,0000021344-20-000014,0000021344,"Common Stock, $0.25 Par Value",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_CommonStock0.25ParValueMember,us-gaap:StatementClassOfStockAxis=ko:CommonStock0.25ParValueMember
+KO21B,0000021344-20-000014,0000021344,0.000% Notes Due 2021,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A0.000NotesDue2021Member,us-gaap:StatementClassOfStockAxis=ko:A0.000NotesDue2021Member
+KO21C,0000021344-20-000014,0000021344,Floating Rate Notes Due 2021,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_FloatingRateNotesDue2021Member,us-gaap:StatementClassOfStockAxis=ko:FloatingRateNotesDue2021Member
+KO22,0000021344-20-000014,0000021344,1.125% Notes Due 2022,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A1.125NotesDue2022Member,us-gaap:StatementClassOfStockAxis=ko:A1.125NotesDue2022Member
+KO22B,0000021344-20-000014,0000021344,0.125% Notes Due 2022,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A0.125NotesDue2022Member,us-gaap:StatementClassOfStockAxis=ko:A0.125NotesDue2022Member
+KO23B,0000021344-20-000014,0000021344,0.75% Notes Due 2023,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A0.75NotesDue2023Member,us-gaap:StatementClassOfStockAxis=ko:A0.75NotesDue2023Member
+KO24,0000021344-20-000014,0000021344,0.500% Notes Due 2024,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A0.500NotesDue2024Member,us-gaap:StatementClassOfStockAxis=ko:A0.500NotesDue2024Member
+KO26,0000021344-20-000014,0000021344,1.875% Notes Due 2026,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A1.875NotesDue2026Member,us-gaap:StatementClassOfStockAxis=ko:A1.875NotesDue2026Member
+KO26C,0000021344-20-000014,0000021344,0.750% Notes Due 2026,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A0.750NotesDue2026Member,us-gaap:StatementClassOfStockAxis=ko:A0.750NotesDue2026Member
+KO27,0000021344-20-000014,0000021344,1.125% Notes Due 2027,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A1.125NotesDue2027Member,us-gaap:StatementClassOfStockAxis=ko:A1.125NotesDue2027Member
+KO31,0000021344-20-000014,0000021344,1.250% Notes Due 2031,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A1.250NotesDue2031Member,us-gaap:StatementClassOfStockAxis=ko:A1.250NotesDue2031Member
+KO35,0000021344-20-000014,0000021344,1.625% Notes Due 2035,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A1.625NotesDue2035Member,us-gaap:StatementClassOfStockAxis=ko:A1.625NotesDue2035Member
+KO36,0000021344-20-000014,0000021344,1.100% Notes Due 2036,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ko_A1.100NotesDue2036Member,us-gaap:StatementClassOfStockAxis=ko:A1.100NotesDue2036Member
+FITB,0001193125-20-137598,0000035527,"Common Stock, Without Par Value",NASDAQ,P01_01_2020To03_31_2020_TreasuryStockCommonMemberusgaapCapitalUnitsByClassAxis,us-gaap:CapitalUnitsByClassAxis=us-gaap:TreasuryStockCommonMember
+FITBI,0001193125-20-137598,0000035527,"6.625% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series I",NASDAQ,P01_01_2020To03_31_2020_SeriesIPreferredStockMemberusgaapCapitalUnitsByClassAxis,us-gaap:CapitalUnitsByClassAxis=fitb:SeriesIPreferredStockMember
+FITBP,0001193125-20-137598,0000035527,6.00%,NASDAQ,P01_01_2020To03_31_2020_SeriesAPreferredStockMemberusgaapCapitalUnitsByClassAxis,us-gaap:CapitalUnitsByClassAxis=us-gaap:SeriesAPreferredStockMember
+FITBO,0001193125-20-137598,0000035527,4.95%,NASDAQ,P01_01_2020To03_31_2020_PreferredStockSeriesKMemberusgaapCapitalUnitsByClassAxis,us-gaap:CapitalUnitsByClassAxis=fitb:PreferredStockSeriesKMember
+FTI,0001681459-20-000083,0001681459,"Ordinary shares, $1.00 par value per share",New York Stock Exchange,FD2020Q1YTD,
+WDC,0000106040-20-000024,0000106040,"Common Stock, $.01 Par Value Per Share",The Nasdaq Stock Market LLC,i073d509fc8414e23963a2a952ed15801_D20190629-20200403,
+GE,0000040545-20-000021,0000040545,"Common stock, par value $0.06 per share",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+GE 20E,0000040545-20-000021,0000040545,Floating Rate Notes due 2020,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_FloatingRateNotesDue2020Member,us-gaap:StatementClassOfStockAxis=ge:FloatingRateNotesDue2020Member
+GE 22A,0000040545-20-000021,0000040545,0.375% Notes due 2022,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A0.375NotesDue2022Member,us-gaap:StatementClassOfStockAxis=ge:A0.375NotesDue2022Member
+GE 23E,0000040545-20-000021,0000040545,1.250% Notes due 2023,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A1.250NotesDue2023Member,us-gaap:StatementClassOfStockAxis=ge:A1.250NotesDue2023Member
+GE 25,0000040545-20-000021,0000040545,0.875% Notes due 2025,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A0.875NotesDue2025Member,us-gaap:StatementClassOfStockAxis=ge:A0.875NotesDue2025Member
+GE 27E,0000040545-20-000021,0000040545,1.875% Notes due 2027,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A1.875NotesDue2027Member,us-gaap:StatementClassOfStockAxis=ge:A1.875NotesDue2027Member
+GE 29,0000040545-20-000021,0000040545,1.500% Notes due 2029,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A1.500NotesDue2029Member,us-gaap:StatementClassOfStockAxis=ge:A1.500NotesDue2029Member
+GE /35,0000040545-20-000021,0000040545,7 1/2% Guaranteed Subordinated Notes due 2035,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A7.5GuaranteedSubordinatedNotesDue2035Member,us-gaap:StatementClassOfStockAxis=ge:A7.5GuaranteedSubordinatedNotesDue2035Member
+GE 37,0000040545-20-000021,0000040545,2.125% Notes due 2037,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_ge_A2.125NotesDue2037Member,us-gaap:StatementClassOfStockAxis=ge:A2.125NotesDue2037Member
+VFC,0000103379-20-000006,0000103379,"Common Stock, without par value, stated capital $.25 per share",New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+VFC23,0000103379-20-000006,0000103379,0.625% Senior Notes due 2023,New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_vfc_FixedRateZeroPointSixTwoFivePercentageNotesDueSeptemberTwoThousandTwentyThreeMember,us-gaap:StatementClassOfStockAxis=vfc:FixedRateZeroPointSixTwoFivePercentageNotesDueSeptemberTwoThousandTwentyThreeMember
+VFC28,0000103379-20-000006,0000103379,0.250% Senior Notes due 2028,New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_vfc_FixedRateZeroPointTwoFivePercentageNotesDueTwoThousandTwentyEightMember,us-gaap:StatementClassOfStockAxis=vfc:FixedRateZeroPointTwoFivePercentageNotesDueTwoThousandTwentyEightMember
+VFC32,0000103379-20-000006,0000103379,0.625% Senior Notes due 2032,New York Stock Exchange,FD2020Q4YTD_us-gaap_StatementClassOfStockAxis_vfc_FixedRateZeroPointSixTwoFivePercentageNotesDueTwoThousandThirtyTwoMember,us-gaap:StatementClassOfStockAxis=vfc:FixedRateZeroPointSixTwoFivePercentageNotesDueTwoThousandThirtyTwoMember
+MAR,0001628280-20-007376,0001048286,"Class A Common Stock, $0.01 par value",Nasdaq Global Select Market,FD2020Q1YTD_dei_EntityListingsExchangeAxis_exch_XNGS,dei:EntityListingsExchangeAxis=exch:XNGS
+MAR,0001628280-20-007376,0001048286,"Class A Common Stock, $0.01 par value",Chicago Stock Exchange,FD2020Q1YTD_dei_EntityListingsExchangeAxis_exch_XCHI,dei:EntityListingsExchangeAxis=exch:XCHI
+FDX,0001564590-20-011411,0001048911,"Common Stock, par value $0.10 per share",New York Stock Exchange,C_0001048911_us-gaapStatementClassOfStockAxis_fdxCommonStockParValueZeroPointOneZeroPerShareMember_20190601_20200229,us-gaap:StatementClassOfStockAxis=fdx:CommonStockParValueZeroPointOneZeroPerShareMember
+FDX 22B,0001564590-20-011411,0001048911,0.700% Notes due 2022,New York Stock Exchange,C_0001048911_us-gaapStatementClassOfStockAxis_fdxZeroPointSevenZeroZeroPercentageNotesDueTwoThousandTwentyTwoMember_20190601_20200229,us-gaap:StatementClassOfStockAxis=fdx:ZeroPointSevenZeroZeroPercentageNotesDueTwoThousandTwentyTwoMember
+FDX 23A,0001564590-20-011411,0001048911,1.000% Notes due 2023,New York Stock Exchange,C_0001048911_us-gaapStatementClassOfStockAxis_fdxOnePointZeroZeroZeroPercentageNotesDueTwoThousandTwentyThreeMember_20190601_20200229,us-gaap:StatementClassOfStockAxis=fdx:OnePointZeroZeroZeroPercentageNotesDueTwoThousandTwentyThreeMember
+FDX 25A,0001564590-20-011411,0001048911,0.450% Notes due 2025,New York Stock Exchange,C_0001048911_us-gaapStatementClassOfStockAxis_fdxZeroPointFourFiveZeroPercentageNotesDueTwoThousandTwentyFiveMember_20190601_20200229,us-gaap:StatementClassOfStockAxis=fdx:ZeroPointFourFiveZeroPercentageNotesDueTwoThousandTwentyFiveMember
+FDX 27,0001564590-20-011411,0001048911,1.625% Notes due 2027,New York Stock Exchange,C_0001048911_us-gaapStatementClassOfStockAxis_fdxOnePointSixTwoFivePercentageNotesDueTwoThousandTwentySevenMember_20190601_20200229,us-gaap:StatementClassOfStockAxis=fdx:OnePointSixTwoFivePercentageNotesDueTwoThousandTwentySevenMember
+FDX 31,0001564590-20-011411,0001048911,1.300% Notes due 2031,New York Stock Exchange,C_0001048911_us-gaapStatementClassOfStockAxis_fdxOnePointThreeZeroZeroPercentageNotesDueTwoThousandThirtyOneMember_20190601_20200229,us-gaap:StatementClassOfStockAxis=fdx:OnePointThreeZeroZeroPercentageNotesDueTwoThousandThirtyOneMember
+HD,0000354950-20-000041,0000354950,"Common Stock, $0.05 Par Value Per Share",New York Stock Exchange LLC,icd0b5e347e8f48e0b334fcaafcfc29d4_D20200203-20200503,
+MAS,0000062996-20-000016,0000062996,"Common Stock, $1.00 par value",New York Stock Exchange,FD2020Q1YTD,
+RF,0001281761-20-000048,0001281761,"Common Stock, $.01 par value",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+RF PRA,0001281761-20-000048,0001281761,"6.375% Non-Cumulative Perpetual Preferred Stock, Series A",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_SeriesAPreferredStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesAPreferredStockMember
+RF PRB,0001281761-20-000048,0001281761,"6.375% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series B",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_SeriesBPreferredStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesBPreferredStockMember
+RF PRC,0001281761-20-000048,0001281761,"5.700% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series C",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_SeriesCPreferredStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesCPreferredStockMember
+RHI,0000315213-20-000046,0000315213,"Common Stock, par value $0.001 per share",New York Stock Exchange,i681bb7ab274b4242948f78ff3dbd7316_D20200101-20200331,
+PHM,0000822416-20-000014,0000822416,Series A Junior Participating Preferred Share Purchase Rights,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_phm_SeriesAJuniorParticipatingPreferredSharePurchaseRightsMember,us-gaap:StatementClassOfStockAxis=phm:SeriesAJuniorParticipatingPreferredSharePurchaseRightsMember
+PHM,0000822416-20-000014,0000822416,"Common Shares, par value $0.01",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+CB,0000896159-20-000006,0000896159,"Common Shares, par value CHF 24.15 per share",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonClassAMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+CB/24A,0000896159-20-000006,0000896159,Guarantee of Chubb INA Holdings Inc. 0.30% Senior Notes due 2024,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cb_INASeniorNotesDueDecember2024Member,us-gaap:StatementClassOfStockAxis=cb:INASeniorNotesDueDecember2024Member
+CB/27,0000896159-20-000006,0000896159,Guarantee of Chubb INA Holdings Inc. 0.875% Senior Notes due 2027,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cb_INASeniorNotesDueJune2027Member,us-gaap:StatementClassOfStockAxis=cb:INASeniorNotesDueJune2027Member
+CB/28,0000896159-20-000006,0000896159,Guarantee of Chubb INA Holdings Inc. 1.55% Senior Notes due 2028,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cb_INASeniorNotesDueMarch2028Member,us-gaap:StatementClassOfStockAxis=cb:INASeniorNotesDueMarch2028Member
+CB/29A,0000896159-20-000006,0000896159,Guarantee of Chubb INA Holdings Inc. 0.875% Senior Notes due 2029,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cb_INASeniorNotesDueDecember2029Member,us-gaap:StatementClassOfStockAxis=cb:INASeniorNotesDueDecember2029Member
+CB/31,0000896159-20-000006,0000896159,Guarantee of Chubb INA Holdings Inc. 1.40% Senior Notes due 2031,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cb_INASeniorNotesDueJune2031Member,us-gaap:StatementClassOfStockAxis=cb:INASeniorNotesDueJune2031Member
+CB/38A,0000896159-20-000006,0000896159,Guarantee of Chubb INA Holdings Inc. 2.50% Senior Notes due 2038,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cb_INASeniorNotesDueMarch2038Member,us-gaap:StatementClassOfStockAxis=cb:INASeniorNotesDueMarch2038Member
+D,0001564590-20-021084,0000715957,"Common Stock, no par value",New York Stock Exchange,C_0000715957_us-gaapStatementClassOfStockAxis_us-gaapCommonStockMember_20200101_20200331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+DRUA,0001564590-20-021084,0000715957,2016 Series A 5.25% Enhanced Junior Subordinated Notes,New York Stock Exchange,C_0000715957_us-gaapStatementClassOfStockAxis_dTwoThousandAndSixteenSeriesAFivePointTwoFivePercentageEnhancedJuniorSubordinatedNotesMember_20200101_20200331,us-gaap:StatementClassOfStockAxis=d:TwoThousandAndSixteenSeriesAFivePointTwoFivePercentageEnhancedJuniorSubordinatedNotesMember
+DCUE,0001564590-20-021084,0000715957,2019 Series A Corporate Units,New York Stock Exchange,C_0000715957_us-gaapStatementClassOfStockAxis_dTwoThousandAndNineteenSeriesACorporateUnitsMember_20200101_20200331,us-gaap:StatementClassOfStockAxis=d:TwoThousandAndNineteenSeriesACorporateUnitsMember
+GD,0000040533-20-000029,0000040533,Common Stock,New York Stock Exchange,FD2020Q1QTD,
+CMS,0000811156-20-000007,0000811156,"CMS Energy Corporation Common Stock, $0.01 par value",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+CMSA,0000811156-20-000007,0000811156,CMS Energy Corporation 5.625% Junior Subordinated Notes due 2078,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cms_A5.625JuniorSubordinatedNotesDue2078Member,us-gaap:StatementClassOfStockAxis=cms:A5.625JuniorSubordinatedNotesDue2078Member
+CMSC,0000811156-20-000007,0000811156,CMS Energy Corporation 5.875% Junior Subordinated Notes due 2078,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cms_A5.875JuniorSubordinatedNotesDue2078Member,us-gaap:StatementClassOfStockAxis=cms:A5.875JuniorSubordinatedNotesDue2078Member
+CMSD,0000811156-20-000007,0000811156,CMS Energy Corporation 5.875% Junior Subordinated Notes due 2079,New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_cms_A5.875JuniorSubordinatedNotesDue2079Member,us-gaap:StatementClassOfStockAxis=cms:A5.875JuniorSubordinatedNotesDue2079Member
+CMS-PB,0000811156-20-000007,0000811156,"Consumers Energy Company Cumulative Preferred Stock, $100 par value: $4.50 Series",New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CumulativePreferredStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CumulativePreferredStockMember
+AIV,0001564590-20-023679,0000922864,Class A Common Stock (Aimco Investment and Management Company),New York Stock Exchange,C_0000922864_20200101_20200331,
+ISRG,0001035267-20-000075,0001035267,"Common Stock, par value $0.001 per share",The Nasdaq Global Select Market,id0ebbf7b5d2445329bd8219f19887a7a_D20200101-20200331,
+TPR,0001116132-20-000012,0001116132,"Common Stock, par value $.01 per share",New York Stock Exchange,FD2020Q3YTD,
+FISV,0000798354-20-000013,0000798354,"Common Stock, par value $0.01 per share",The NASDAQ Stock Market LLC,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+FISV23,0000798354-20-000013,0000798354,0.375% Senior Notes due 2023,The NASDAQ Stock Market LLC,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_fisv_SeniorNotesDue2023Member,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2023Member
+FISV27,0000798354-20-000013,0000798354,1.125% Senior Notes due 2027,The NASDAQ Stock Market LLC,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_fisv_SeniorNotesDue2027Member,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2027Member
+FISV30,0000798354-20-000013,0000798354,1.625% Senior Notes due 2030,The NASDAQ Stock Market LLC,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_fisv_SeniorNotesDue2030Member,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2030Member
+FISV25,0000798354-20-000013,0000798354,2.250% Senior Notes due 2025,The NASDAQ Stock Market LLC,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_fisv_SeniorNotesDue2025Member,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2025Member
+FISV31,0000798354-20-000013,0000798354,3.000% Senior Notes due 2031,The NASDAQ Stock Market LLC,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_fisv_SeniorNotesDue2031Member,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2031Member
+SLB,0001564590-20-017823,0000087347,"common stock, par value $0.01 per share",New York Stock Exchange,C_0000087347_20200101_20200331,
+HON,0000773840-20-000025,0000773840,"Common Stock, par value $1 per share*",The New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+HON 23A,0000773840-20-000025,0000773840,1.300% Senior Notes due 2023,The New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_hon_EuroNotes130Due2023Member,us-gaap:StatementClassOfStockAxis=hon:EuroNotes130Due2023Member
+HON 24A,0000773840-20-000025,0000773840,0.000% Senior Notes due 2024,The New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_hon_Euro00TermLoanDue2024Member,us-gaap:StatementClassOfStockAxis=hon:Euro00TermLoanDue2024Member
+HON 28A,0000773840-20-000025,0000773840,2.250% Senior Notes due 2028,The New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_hon_EuroNotes225Due2028Member,us-gaap:StatementClassOfStockAxis=hon:EuroNotes225Due2028Member
+HON 32,0000773840-20-000025,0000773840,0.750% Senior Notes due 2032,The New York Stock Exchange,FD2020Q1YTD_us-gaap_StatementClassOfStockAxis_hon_Euro75TermLoanDue2032Member,us-gaap:StatementClassOfStockAxis=hon:Euro75TermLoanDue2032Member
+AAP,0001158449-20-000149,0001158449,"Common Stock, $0.0001 par value",New York Stock Exchange,i6b4e86a093c04dcf85b03c129229fde7_D20191229-20200418,
+ALGN,0001097149-20-000025,0001097149,"Common Stock, $0.0001 par value",NASDAQ,i2a0b340528204e7482f8b32d0f8dafbe_D20200101-20200331,
+FLS,0000030625-20-000066,0000030625,"Common Stock, $1.25 Par Value",New York Stock Exchange,i539153a660924a6bbec2df04a029509f_D20200101-20200331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+FLS22A,0000030625-20-000066,0000030625,1.25% Senior Notes due 2022,New York Stock Exchange,i866cca2dae0e41cf98b111047322ab84_D20200101-20200331,us-gaap:StatementClassOfStockAxis=fls:A2022SeniornotesMember
+APD,0000002969-20-000019,0000002969,"Common Stock, par value $1.00 per share",New York Stock Exchange,FD2020Q2YTD_us-gaap_StatementClassOfStockAxis_us-gaap_CommonClassAMember,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+APD20,0000002969-20-000019,0000002969,2.000% Euro Notes due 2020,New York Stock Exchange,FD2020Q2YTD_us-gaap_StatementClassOfStockAxis_apd_EuroNotesDue2020TwoPercentMember,us-gaap:StatementClassOfStockAxis=apd:EuroNotesDue2020TwoPercentMember
+APD21B,0000002969-20-000019,0000002969,0.375% Euro Notes due 2021,New York Stock Exchange,FD2020Q2YTD_us-gaap_StatementClassOfStockAxis_apd_EuroNotesDue2021PointThreeSevenFivePercentMember,us-gaap:StatementClassOfStockAxis=apd:EuroNotesDue2021PointThreeSevenFivePercentMember
+APD25,0000002969-20-000019,0000002969,1.000% Euro Notes due 2025,New York Stock Exchange,FD2020Q2YTD_us-gaap_StatementClassOfStockAxis_apd_EuroNotesDue2025OnePercentMember,us-gaap:StatementClassOfStockAxis=apd:EuroNotesDue2025OnePercentMember
+BDX,0000010795-20-000019,0000010795,"Common stock, par value $1.00",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+BDX22A,0000010795-20-000019,0000010795,"1.000% Notes due December 15, 2022",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes1.000dueDecember152022Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes1.000dueDecember152022Member
+BDX26,0000010795-20-000019,0000010795,"1.900% Notes due December 15, 2026",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes1.900dueDecember152026Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes1.900dueDecember152026Member
+BDX23A,0000010795-20-000019,0000010795,"1.401% Notes due May 24, 2023",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes1.401dueMay242023Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes1.401dueMay242023Member
+BDX25,0000010795-20-000019,0000010795,"3.020% Notes due May 24, 2025",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes3.020dueMay242025Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes3.020dueMay242025Member
+BDX/21,0000010795-20-000019,0000010795,"0.174% Notes due June 4, 2021",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes0.174dueJune42021Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes0.174dueJune42021Member
+BDX/23A,0000010795-20-000019,0000010795,"0.632% Notes due June 4, 2023",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes0.632dueJune42023Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes0.632dueJune42023Member
+BDX/26A,0000010795-20-000019,0000010795,"1.208% Notes due June 4, 2026",New York Stock Exchange,FD2020Q2YTD_dei_EntityListingsExchangeAxis_exch_XNYS_us-gaap_StatementClassOfStockAxis_bdx_Notes1.208dueJune42026Member,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=bdx:Notes1.208dueJune42026Member
+ALK,0000766421-20-000046,0000766421,"Common stock, $0.01 par value",New York Stock Exchange,ic3920e3e7a4b412bae854bdc7bc03c4b_D20200101-20200331,
+DPZ,0001193125-20-115907,0001286681,Common Stock,New York Stock Exchange,P12_30_2019To03_22_2020,
+HUM,0000049071-20-000083,0000049071,"Common stock, $0.16 2/3 par value",New York Stock Exchange,FD2020Q1YTD,
+ADBE,0000796343-20-000143,0000796343,"Common Stock, $0.0001 par value per share",NASDAQ,FD2020Q2YTD,
+KSS,0001564590-20-028487,0000885639,"Common Stock, $.01 par value",New York Stock Exchange,C_0000885639_20200202_20200502,
+CARR,0001783180-20-000019,0001783180,Common Stock ($0.01 par value),New York Stock Exchange,if7d904668cd44a669cfa81ad34918f7e_D20200101-20200331,
+ILMN,0001110803-20-000033,0001110803,"Common Stock, $0.01 par value",The NASDAQ Global Select Market,FD2020Q1YTD,
+TJX,0000109198-20-000007,0000109198,"Common Stock, par value $1.00 per share",New York Stock Exchange,i30be60cfebd24a798e7c94d41fe16d13_D20200202-20200502,
+TROW,0001113169-20-000022,0001113169,"Common stock, $.20 par value per share",The NASDAQ Stock Market LLC,FD2020Q1YTD,
+NOV,0001564590-20-019212,0001021860,"Common Stock, par value $.01 per share",New York Stock Exchange,C_0001021860_20200101_20200331,
+LRCX,0000707549-20-000081,0000707549,"Common Stock, Par Value $0.001 Per Share",The Nasdaq Stock Market,FD2020Q3YTD,
+PVH,0000078239-20-000061,0000078239,"Common Stock, $1.00 par value",New York Stock Exchange,i82d25a01959d4731b923b7f39dd0d974_D20200203-20200503,
+PEP,0000077476-20-000041,0000077476,"Common Stock, par value 1-2/3 cents per share",The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_Commonstockparvalue123centspershareMember,us-gaap:CapitalUnitsByClassAxis=pep:Commonstockparvalue123centspershareMember
+PEP22a,0000077476-20-000041,0000077476,2.500% Senior Notes Due 2022,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_TwoPointFivePercentNotesDue2022Member,us-gaap:CapitalUnitsByClassAxis=pep:TwoPointFivePercentNotesDue2022Member
+PEP21a,0000077476-20-000041,0000077476,1.750% Senior Notes Due 2021,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_OnePointSevenFivePercentNotesDue2021Member,us-gaap:CapitalUnitsByClassAxis=pep:OnePointSevenFivePercentNotesDue2021Member
+PEP26,0000077476-20-000041,0000077476,2.625% Senior Notes Due 2026,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_TwoPointSixTwoFivePercentNotesDue2026Member,us-gaap:CapitalUnitsByClassAxis=pep:TwoPointSixTwoFivePercentNotesDue2026Member
+PEP28,0000077476-20-000041,0000077476,0.875% Senior Notes Due 2028,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_ZeroPointEightSevenFivePercentNotesDue2028Member,us-gaap:CapitalUnitsByClassAxis=pep:ZeroPointEightSevenFivePercentNotesDue2028Member
+PEP27,0000077476-20-000041,0000077476,0.750% Senior Notes Due 2027,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_ZeroPointSevenFivePercentNotesDue2027Member,us-gaap:CapitalUnitsByClassAxis=pep:ZeroPointSevenFivePercentNotesDue2027Member
+PEP31,0000077476-20-000041,0000077476,1.125% Senior Notes Due 2031,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_OnePointOneTwoFivePercentNotesDue2031Member,us-gaap:CapitalUnitsByClassAxis=pep:OnePointOneTwoFivePercentNotesDue2031Member
+PEP39,0000077476-20-000041,0000077476,0.875% Senior Notes Due 2039,The Nasdaq Stock Market LLC,FD2020Q1YTD_us-gaap_CapitalUnitsByClassAxis_pep_ZeroPointEightSevenFiveNotesDue2039Member,us-gaap:CapitalUnitsByClassAxis=pep:ZeroPointEightSevenFiveNotesDue2039Member
+PRGO,0001585364-20-000049,0001585364,Ordinary shares,New York Stock Exchange,FD2020Q1YTD,
+KMX,0001170010-20-000033,0001170010,Common Stock,New York Stock Exchange,FD2020Q4YTD,
+,0000950170-22-006389,0001278021,,,C_88750209-253d-475a-9c35-ada741314a20,
+GNRC,0001437749-22-011515,0001474735,"Common Stock, $0.01 par value",New York Stock Exchange,d_2022-01-01_2022-03-31,
+TRV,0000086312-22-000029,0000086312,"Common stock, without par value",New York Stock Exchange,i16c2060f06b5442686e2139d18a88de5_D20220101-20220331,
+DRI,0000940944-22-000021,0000940944,"Common Stock, without par value",New York Stock Exchange,i442bb642247e4e4999896e25fb07eda2_D20210531-20220227,
+PEG,0001628280-22-012019,0000788784,Common Stock without par value,New York Stock Exchange,if148977550e24eb3932a4938db5e6829_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+PEG37D,0001628280-22-012019,0000788784,"8.00% First and Refunding Mortgage Bonds, due 2037",New York Stock Exchange,i925306cd1d154717acf37dc054fa7224_D20220101-20220331,dei:LegalEntityAxis=pseg:PublicServiceElectricandGasCompanyMember;us-gaap:StatementClassOfStockAxis=pseg:FirstandRefundingMortgageBondsEightPercentDueTwoThousandThirtySevenMember
+PEG37J,0001628280-22-012019,0000788784,"5.00% First and Refunding Mortgage Bonds, due 2037",New York Stock Exchange,i7a14dfc95157448f8294a0c338b49626_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pseg:FirstandRefundingMortgageBondsFivePercentDueTwoThousandThirtySevenMember;dei:LegalEntityAxis=pseg:PublicServiceElectricandGasCompanyMember
+HPQ,0000047217-22-000037,0000047217,"Common stock, par value $0.01 per share",New York Stock Exchange,i0a50e857ac134264a85a0d8fabf36bcd_D20211101-20220430,
+TT,0001466258-22-000103,0001466258,"Ordinary Shares, Par Value $1.00 per Share",New York Stock Exchange,i6de886697ee7497ea83af3f21e4073b0_D20220101-20220331,
+BBWI,0000701985-22-000017,0000701985,"Common Stock, $0.50 Par Value",The New York Stock Exchange,if01fccf4be594332b4cfbc440cad43e9_D20220130-20220430,
+MTB,0001564590-22-018282,0000036270,"Common Stock, $.50 par value",New York Stock Exchange,C_0000036270_us-gaapStatementClassOfStockAxis_us-gaapCommonStockMember_20220101_20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+MTBPrH,0001564590-22-018282,0000036270,,New York Stock Exchange,C_0000036270_us-gaapStatementClassOfStockAxis_us-gaapSeriesHPreferredStockMember_20220101_20220331,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesHPreferredStockMember
+VNO,0000899689-22-000021,0000899689,"Common Shares of beneficial interest, $.04 par value per share",New York Stock Exchange,iacea3c17e62a4e7488298009b0a446f5_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+VNO/PL,0000899689-22-000021,0000899689,5.40% Series L,New York Stock Exchange,i256255720edb4e7dacd72d9ca695cfeb_D20220101-20220331,us-gaap:StatementClassOfStockAxis=vno:SeriesLPreferredStockMember;dei:EntityListingsExchangeAxis=exch:XNYS
+VNO/PM,0000899689-22-000021,0000899689,5.25% Series M,New York Stock Exchange,i65cd8dd2ea8c4a11a30a0a01653e2424_D20220101-20220331,us-gaap:StatementClassOfStockAxis=vno:SeriesMPreferredStockMember;dei:EntityListingsExchangeAxis=exch:XNYS
+VNO/PN,0000899689-22-000021,0000899689,5.25% Series N,New York Stock Exchange,i4c6aec038c9f45f2ab87269cbf5eabc3_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=vno:SeriesNPreferredStockMember
+VNO/PO,0000899689-22-000021,0000899689,4.45% Series O,New York Stock Exchange,if3b7dfe4488244e28aa89385a0a4a177_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=vno:SeriesOPreferredStockMember
+HLT,0001585689-22-000082,0001585689,"Common Stock, $0.01 par value per share",New York Stock Exchange,i11455b7dde9c40b6a3533c7aaa1d24e8_D20220101-20220331,
+WAT,0001193125-22-141543,0001000697,Common Stock,New York Stock Exchange,P01_01_2022To04_02_2022,
+ZION,0000109380-22-000155,0000109380,"Common Stock, par value $0.001",The NASDAQ Stock Market LLC,if4752b98336e4878a24190a599b6a185_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+ZIONP,0000109380-22-000155,0000109380,Series A Floating-Rate Non-Cumulative Perpetual Preferred Stock,The NASDAQ Stock Market LLC,i78a66ee0a5c24e9c8eb14a34cc610738_D20220101-20220331,us-gaap:StatementClassOfStockAxis=zions:SeriesAFloatingRateNonCumulativePerpetualPreferredStockMember
+ZIONO,0000109380-22-000155,0000109380,Series G Fixed/Floating-Rate Non-Cumulative Perpetual Preferred Stock,The NASDAQ Stock Market LLC,if44dff20409f4d2a9cfb876bc101cd49_D20220101-20220331,us-gaap:StatementClassOfStockAxis=zions:SeriesGFixedFloatingRateNonCumulativePerpetualPreferredStockMember
+ZIONL,0000109380-22-000155,0000109380,"6.95% Fixed-to-Floating Rate Subordinated Notes due September 15, 2028",The NASDAQ Stock Market LLC,i041f8a9936d3454dbc510e8c31183b79_D20220101-20220331,us-gaap:StatementClassOfStockAxis=zions:FixedToFloatingRateSubordinatedNotesMember
+DVA,0000927066-22-000077,0000927066,"Common Stock, $0.001 par value",NYSE,ib82b2302f3894763a2638992b80cde6c_D20220101-20220331,
+LDOS,0001336920-22-000024,0001336920,"Common stock, par value $.0001 per share",New York Stock Exchange,i6aa651ed8278456db579bf4607014bac_D20220101-20220401,
+LRCX,0000707549-22-000067,0000707549,"Common Stock, Par Value $0.001 Per Share",The Nasdaq Stock Market,ic21c697dd8ef4e979af8a677050f6b5e_D20210628-20220327,
+NWL,0000814453-22-000069,0000814453,"Common stock, $1 par value per share",Nasdaq Stock Market LLC,ia9e5a405868a4e619e5346e569e78a04_D20220101-20220331,
+UPS,0001090727-22-000022,0001090727,"Class B common stock, par value $0.01 per share",New York Stock Exchange,i1c010fe4de7c4a178c55fd27fd63a898_D20220101-20220331,
+UPS23A,0001090727-22-000022,0001090727,0.375% Senior Notes due 2023,New York Stock Exchange,i7c91e99a0cbb4dba906439739d68d48b_D20220101-20220331,us-gaap:DebtInstrumentAxis=ups:SeniorNotes0.375Due2023Member
+UPS25,0001090727-22-000022,0001090727,1.625% Senior Notes due 2025,New York Stock Exchange,i59d45037951545378b2c400ba1ec088a_D20220101-20220331,us-gaap:DebtInstrumentAxis=ups:SeniorNotes1.625Due2025Member
+UPS28,0001090727-22-000022,0001090727,1% Senior Notes due 2028,New York Stock Exchange,i7d1619ae43734ce4bd5ab4e307e26c96_D20220101-20220331,us-gaap:DebtInstrumentAxis=ups:SeniorNotes1Due2028Member
+UPS32,0001090727-22-000022,0001090727,1.500% Senior Notes due 2032,New York Stock Exchange,i90b21fa0c5e743fe9f3cdf8fa9895c49_D20220101-20220331,us-gaap:DebtInstrumentAxis=ups:SeniorNotes1.500Due2032Member
+CHRW,0001043277-22-000019,0001043277,"Common Stock, $0.10 par value",Nasdaq Global Select Market,i3fb3111c97e44f9a8522257086a0bc4b_D20220101-20220331,
+XRAY,0000818479-22-000015,0000818479,"Common Stock, par value $.01 per share",The Nasdaq Stock Market LLC,id383836afaad4d489a813823e477a6f0_D20210101-20211231,
+LOW,0000060667-22-000079,0000060667,"Common Stock, par value $0.50 per share",New York Stock Exchange,i6a050291cab04380b8414b5c7f0fd1ce_D20220129-20220429,
+OGN,0001821825-22-000006,0001821825,Common Stock ($0.01 par value),New York Stock Exchange,i02dee5e909134a438fc1839385aedf4d_D20220101-20220331,
+,0001130310-22-000063,0001130310,,The New York Stock Exchange,ide16f8f95f294898b6746f69cc70a0df_D20220101-20220331,dei:EntityListingsExchangeAxis=cnp:NewYorkStockExchangeMember;us-gaap:StatementClassOfStockAxis=cnp:CommonStock0.01ParValueMember
+CNP,0001130310-22-000063,0001130310,"Common Stock, $0.01 par value","Chicago Stock Exchange, Inc.",ieb5ae67c23f14dfdb5da9eac7a3e9309_D20220101-20220331,dei:EntityListingsExchangeAxis=cnp:ChicagoStockExchangeMember;us-gaap:StatementClassOfStockAxis=cnp:CommonStock0.01ParValueMember
+WYNN,0001174922-22-000085,0001174922,"Common stock, par value $0.01",Nasdaq Global Select Market,i320a4434ebd74411a5196b3758875d07_D20220101-20220331,
+LUMN,0000018926-22-000022,0000018926,"Common Stock, par value $1.00 per share",New York Stock Exchange,i0fa1d6912d7f4c11b9ca0fa819c913ab_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+,0000950170-22-007089,0000860730,,,C_61b0fbf3-8a8b-4988-b584-bd50405f2aa6,
+URI,0001067701-22-000018,0001067701,"Common Stock, $.01 par value, of United Rentals, Inc.",New York Stock Exchange,i59e4addc57af4373a3679f8a5a7c2adf_D20220101-20220331,
+TFX,0000096943-22-000039,0000096943,"Common Stock, par value $1.00 per share",New York Stock Exchange,i9bfaf80c3dd94e60935a39d606d86a5a_D20220101-20220327,
+,0000059558-22-000022,0000059558,,,Duration_1_1_2022_To_3_31_2022,
+KMX,0001170010-22-000063,0001170010,Common Stock,New York Stock Exchange,if097a3c489924dc594fd0f15e0d1b5da_D20220301-20220531,
+JCI,0000833444-22-000017,0000833444,"Ordinary Shares, Par Value $0.01",New York Stock Exchange,i694234fe92544ec689c5f24e86851e0f_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:OrdinarySharesParValue0.01Domain
+JCI23,0000833444-22-000017,0000833444,4.625% Notes due 2023,New York Stock Exchange,i49cc4bc5cb984eb48f1dddf965c7657d_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes4.625PercentDue2023Domain
+JCI23A,0000833444-22-000017,0000833444,1.000% Senior Notes due 2023,New York Stock Exchange,i0c147534df0445b7b30ceb84541131ab_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes1.000PercentDue2023Domain
+JCI24A,0000833444-22-000017,0000833444,3.625% Senior Notes due 2024,New York Stock Exchange,i1832f35368594e4dbd26c1a88adbe969_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes3.625PercentDue2024Domain
+JCI25A,0000833444-22-000017,0000833444,1.375% Notes due 2025,New York Stock Exchange,i1378d79ac36e4505aca9db695707f640_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes1.375PercentDue2025Domain
+JCI26A,0000833444-22-000017,0000833444,3.900% Notes due 2026,New York Stock Exchange,i8d5c6ad3b9b142709bb6a8a22acadbff_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes3.900PercentDue2026Domain
+JCI27,0000833444-22-000017,0000833444,0.375% Senior Notes due 2027,New York Stock Exchange,i846d6c82e89143e1b3bbcc8fd664bf63_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes0375PercentDue2027Domain
+JCI30,0000833444-22-000017,0000833444,1.750% Senior Notes due 2030,New York Stock Exchange,i02cc2b175c184b138e6051b698c05411_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes1750PercentDue2030Domain
+JCI31,0000833444-22-000017,0000833444,2.000% Sustainability-Linked Senior Notes due 2031,New York Stock Exchange,i3b82ad4942164fe988cfc47661b0f2c9_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:SustainabilityNotes2000PercentDue2031Domain
+JCI32,0000833444-22-000017,0000833444,1.000% Senior Notes due 2032,New York Stock Exchange,id541bee83ab84069ad31c42bcffa4c53_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes1000PercentDue2032Domain
+JCI36A,0000833444-22-000017,0000833444,6.000% Notes due 2036,New York Stock Exchange,i5629c8e9f0ad491d8d87818054139d75_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes6.000PercentDue2036Domain
+JCI41B,0000833444-22-000017,0000833444,5.70% Senior Notes due 2041,New York Stock Exchange,i74c4bdceccb14a119691f38311c0d1c6_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes5.700PercentDue2041Domain
+JCI41C,0000833444-22-000017,0000833444,5.250% Senior Notes due 2041,New York Stock Exchange,ifbb7298eefd44f6784ae3a70f5dec14b_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes5.250PercentDue2041Domain
+JCI44A,0000833444-22-000017,0000833444,4.625% Senior Notes due 2044,New York Stock Exchange,id9ebf293f1f1411bb4fd68407db3ccf9_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes4.625Percentdue2044Domain
+JCI45B,0000833444-22-000017,0000833444,5.125% Notes due 2045,New York Stock Exchange,i70b07078b6c2423eb41e17e4deb706b1_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes5.125PercentDue2045Domain
+JCI45A,0000833444-22-000017,0000833444,"6.950% Debentures due December 1, 2045",New York Stock Exchange,i8846cf6f38f04a8ea1c3c8b214544646_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Debentures6.950PercentDueDecember12045Domain
+JCI47,0000833444-22-000017,0000833444,4.500% Senior Notes due 2047,New York Stock Exchange,i495ebdfb91184b57bca1fcc3710868c8_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes4.500PercentDue2047Domain
+JCI64A,0000833444-22-000017,0000833444,4.950% Senior Notes due 2064,New York Stock Exchange,if1e9613020bf44668c063e343c7b3740_D20211001-20220331,us-gaap:StatementClassOfStockAxis=jci:Notes4.950PercentDue2064Domain
+FISV,0000798354-22-000009,0000798354,"Common Stock, par value $0.01 per share",The NASDAQ Stock Market LLC,i6fb74f6a08df4968b52e17cde971bd17_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+FISV23,0000798354-22-000009,0000798354,0.375% Senior Notes due 2023,The NASDAQ Stock Market LLC,ia3b54a5802524976aa41e1489c09144f_D20220101-20220331,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2023Member
+FISV27,0000798354-22-000009,0000798354,1.125% Senior Notes due 2027,The NASDAQ Stock Market LLC,i2eff7e854a6941afaef40b4ac1ac96fc_D20220101-20220331,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2027Member
+FISV30,0000798354-22-000009,0000798354,1.625% Senior Notes due 2030,The NASDAQ Stock Market LLC,iccd3ba941b9d4095b83a38d96f2ebb3c_D20220101-20220331,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2030Member
+FISV25,0000798354-22-000009,0000798354,2.250% Senior Notes due 2025,The NASDAQ Stock Market LLC,i243c3bc658484d7f87b996b0005d164a_D20220101-20220331,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2025Member
+FISV31,0000798354-22-000009,0000798354,3.000% Senior Notes due 2031,The NASDAQ Stock Market LLC,i95cb812565fb4fa98c45ebe240bff4a5_D20220101-20220331,us-gaap:StatementClassOfStockAxis=fisv:SeniorNotesDue2031Member
+NVR,0000906163-22-000030,0000906163,"Common stock, par value $0.01 per share",New York Stock Exchange,i68bcbb6beea64ce28860ca1dbbef66ae_D20220101-20220331,
+HD,0000354950-22-000158,0000354950,"Common Stock, $0.05 Par Value Per Share",New York Stock Exchange,i304121a5fa5d41f1a498a57ff24fe12b_D20220131-20220501,
+PENN,0000921738-22-000019,0000921738,"Common Stock, $0.01 par value per share",The Nasdaq Stock Market LLC,i68204d8243734e7c92fd608dfae24543_D20220101-20220331,
+EXPD,0001564590-22-018771,0000746515,"Common Stock, par value $0.01 per share",NASDAQ Global Select Market,C_0000746515_20220101_20220331,
+,0001213900-22-027094,0001826011,,,c0,
+ETSY,0001370637-22-000049,0001370637,Common Stock,The Nasdaq Global Select Market,i03df11e6b79e402683c13ef6d88f50e8_D20220101-20220331,
+CCI,0001051470-22-000115,0001051470,"Common Stock, $0.01 par value",New York Stock Exchange,i3a2c3b2d6c9c45e9821aed2d8a838822_D20220101-20220331,
+VFC,0000103379-22-000006,0000103379,"Common Stock, without par value, stated capital $.25 per share",New York Stock Exchange,icbd399eee0c64dbcb5f2a4ba78f04a63_D20210404-20220402,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+VFC23,0000103379-22-000006,0000103379,0.625% Senior Notes due 2023,New York Stock Exchange,icecde4044c244bb18644e8b499d6c5be_D20210404-20220402,us-gaap:StatementClassOfStockAxis=vfc:FixedRateZeroPointSixTwoFivePercentageNotesDueSeptemberTwoThousandTwentyThreeMember
+VFC28,0000103379-22-000006,0000103379,0.250% Senior Notes due 2028,New York Stock Exchange,i420c6a431454454f952ddf88b9e3951b_D20210404-20220402,us-gaap:StatementClassOfStockAxis=vfc:FixedRateZeroPointTwoFivePercentageNotesDueTwoThousandTwentyEightMember
+VFC32,0000103379-22-000006,0000103379,0.625% Senior Notes due 2032,New York Stock Exchange,i4c190d79fbc84689b3cd7579667cc9ef_D20210404-20220402,us-gaap:StatementClassOfStockAxis=vfc:FixedRateZeroPointSixTwoFivePercentageNotesDueTwoThousandThirtyTwoMember
+AEE,0001002910-22-000061,0001002910,"Common Stock, $0.01 par value per share",New York Stock Exchange,i72d5288ed45e4cd685cc7b85cb1c90aa_D20220101-20220331,
+AAL,0000006201-22-000046,0000006201,"Common Stock, $0.01 par value per share",The Nasdaq Global Select Market,ibe141a51ba7e486cbdc22527abfbc3bc_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+ALK,0000766421-22-000036,0000766421,"Common stock, $0.01 par value",New York Stock Exchange,i963c8f9c5a0c4d6085667dd25fb32d7d_D20220101-20220331,
+ALGN,0001097149-22-000036,0001097149,"Common Stock, $0.0001 par value",The NASDAQ Stock Market LLC,i39f328c5cdf64eb3a48c202022c02f7e_D20220101-20220331,
+RHI,0000315213-22-000044,0000315213,"Common Stock, par value $0.001 per share",New York Stock Exchange,i5af98032d46240cb8923e82bbe92c0e2_D20220101-20220331,
+OXY,0000797468-22-000018,0000797468,"Common Stock, $0.20 par value",New York Stock Exchange,i920967de53914758a76efce5a37b967c_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+OXY WS,0000797468-22-000018,0000797468,"Warrants to Purchase Common Stock, $0.20 par value",New York Stock Exchange,i11370e65a06142ee90e125998061864d_D20220101-20220331,us-gaap:StatementClassOfStockAxis=oxy:WarrantsToPurchaseCommonStockMember
+PRU,0001137774-22-000050,0001137774,"Common Stock, Par Value $.01",New York Stock Exchange,ide793019d5964b26bbc218f09499fb30_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+PRS,0001137774-22-000050,0001137774,5.625% Junior Subordinated Notes,New York Stock Exchange,ia771fe416b63430388e88765f1155f2b_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pru:A5.625JuniorSubordinatedNotesMember
+PFH,0001137774-22-000050,0001137774,4.125% Junior Subordinated Notes,New York Stock Exchange,i8ffa1d379a764271aa6b319f296bb98d_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pru:A4125JuniorSubordinatedNotesMember
+SEDG,0001178913-22-001805,0001419612,"Common stock, par value $0.0001 per share",NASDAQ,C_20220101to20220331,
+NEE,0000753308-22-000033,0000753308,"Common Stock, $0.01 Par Value",New York Stock Exchange,i89fa2540c90f4165949f3c39eacc024e_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+NEE.PRO,0000753308-22-000033,0000753308,4.872% Corporate Units,New York Stock Exchange,i2f2a4147866244e9a9e40cd99d995990_D20220101-20220331,us-gaap:StatementClassOfStockAxis=nee:CorporateUnitsMember
+NEE.PRP,0000753308-22-000033,0000753308,5.279% Corporate Units,New York Stock Exchange,i07c41d90fde949c99af7db0c617c12d4_D20220101-20220331,us-gaap:StatementClassOfStockAxis=nee:CorporateUnits5.279Member
+NEE.PRQ,0000753308-22-000033,0000753308,6.219% Corporate Units,New York Stock Exchange,icb0d46d3fd6f4f9587740bc102a29ea8_D20220101-20220331,us-gaap:StatementClassOfStockAxis=nee:CorporateUnits6.219Member
+AAP,0001158449-22-000176,0001158449,"Common Stock, $0.0001 par value",New York Stock Exchange,i982cc807dce84f60a611fc22020dea8a_D20220102-20220423,
+CSCO,0000858877-22-000009,0000858877,"Common Stock, par value $0.001 per share",The Nasdaq Stock Market LLC,ie1cc588ab23348ffbb9da1c8eee6cce4_D20210801-20220430,
+ILMN,0001110803-22-000021,0001110803,"Common Stock, $0.01 par value",The NASDAQ Stock Market LLC,i14ec2d64af1745c6a74c19d70ca87685_D20220103-20220403,
+DXC,0001688568-22-000027,0001688568,"Common Stock, $0.01 par value per share",The New York Stock Exchange,i260031da083d43b2847cd19bd3858fbc_D20210401-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+DXC 26,0001688568-22-000027,0001688568,1.750% Senior Notes Due 2026,The New York Stock Exchange,i3bbfc0f2b6514631be4c3f5592b9f7ab_D20210401-20220331,us-gaap:StatementClassOfStockAxis=dxc:SeniorNotesDue2026Member
+PM,0001413329-22-000035,0001413329,"Common Stock, no par value",New York Stock Exchange,i5f22d1558a78422190d340db9fd1c28e_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+PM22B,0001413329-22-000035,0001413329,2.375% Notes due 2022,New York Stock Exchange,if01bcc13d29343dfa41ec2f5c47a7002_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.375Notesdue2022Member
+PM22,0001413329-22-000035,0001413329,2.500% Notes due 2022,New York Stock Exchange,ica7a41a2ad454bb6b53e1c9a7cdbac23_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.500Notesdue20221Member
+PM22C,0001413329-22-000035,0001413329,2.500% Notes due 2022,New York Stock Exchange,ied9cb624105d46bda01bdefa0b3b6fa1_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.500Notesdue20222Member
+PM23,0001413329-22-000035,0001413329,2.625% Notes due 2023,New York Stock Exchange,ib941f5d11ccc4c4e9dead14858ad484c_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.625Notesdue2023Member
+PM23B,0001413329-22-000035,0001413329,2.125% Notes due 2023,New York Stock Exchange,i8c62945a61774c81952072a03d33abf9_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.125Notesdue2023Member
+PM23A,0001413329-22-000035,0001413329,3.600% Notes due 2023,New York Stock Exchange,if7901bf056754e66b785f5f698f088ff_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.600Notesdue2023Member
+PM24,0001413329-22-000035,0001413329,2.875% Notes due 2024,New York Stock Exchange,ic5cd1ef2a1c8428fa3d099fa5ae99bd1_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.875Notesdue20241Member
+PM24C,0001413329-22-000035,0001413329,2.875% Notes due 2024,New York Stock Exchange,i815581bd20114f1c996339cd32b40269_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.875Notesdue20242Member
+PM24B,0001413329-22-000035,0001413329,0.625% Notes due 2024,New York Stock Exchange,if3c766da66654acfa655b1bce76b5999_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A0.625Notesdue2024Member
+PM24A,0001413329-22-000035,0001413329,3.250% Notes due 2024,New York Stock Exchange,i98eedd8d9e7f4f9784db988a9218b139_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.250Notesdue2024Member
+PM25,0001413329-22-000035,0001413329,2.750% Notes due 2025,New York Stock Exchange,i991d767a78da4b24ab8782a4bdc6f519_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.750Notesdue2025Member
+PM25A,0001413329-22-000035,0001413329,3.375% Notes due 2025,New York Stock Exchange,i0c291475c012425ba45b65426cac3139_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.375Notesdue2025Member
+PM26A,0001413329-22-000035,0001413329,2.750% Notes due 2026,New York Stock Exchange,i37459bb6c1a34687bd228a78af9848df_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.750Notesdue2026Member
+PM26,0001413329-22-000035,0001413329,2.875% Notes due 2026,New York Stock Exchange,ifcf4de38bccb4e189f65e5ca5a3b66d7_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.875Notesdue2026Member
+PM26B,0001413329-22-000035,0001413329,0.125% Notes due 2026,New York Stock Exchange,ib1c273fa3c744d25a851890ad0af6e82_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A0.125Notesdue2026Member
+PM27,0001413329-22-000035,0001413329,3.125% Notes due 2027,New York Stock Exchange,i7d87afa222764b1487cf3362833ad5f2_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.125Notesdue2027Member
+PM28,0001413329-22-000035,0001413329,3.125% Notes due 2028,New York Stock Exchange,i02d97dc0e56d49d2ae72115b92954746_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.125Notesdue2028Member
+PM29,0001413329-22-000035,0001413329,2.875% Notes due 2029,New York Stock Exchange,i707d2595a75f4131a3ddb6895b7efe1f_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.875Notesdue2029Member
+PM29A,0001413329-22-000035,0001413329,3.375% Notes due 2029,New York Stock Exchange,if7fa28a9bbd14a19860a2e19f9895e44_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.375Notesdue2029Member
+PM31,0001413329-22-000035,0001413329,0.800% Notes due 2031,New York Stock Exchange,i93612c2e946048f5a8db0f8e045f9921_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A0.800Notesdue2031Member
+PM33,0001413329-22-000035,0001413329,3.125% Notes due 2033,New York Stock Exchange,i04b8596c4a9b480ea3d85f6afb2aeff4_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.125Notesdue2033Member
+PM36,0001413329-22-000035,0001413329,2.000% Notes due 2036,New York Stock Exchange,ie13e8b80714f49458cda922c10303980_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A2.000Notesdue2036Member
+PM37A,0001413329-22-000035,0001413329,1.875% Notes due 2037,New York Stock Exchange,i3176b1405a4c4e43938704a4dd2c09a6_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A1.875Notesdue2037Member
+PM38,0001413329-22-000035,0001413329,6.375% Notes due 2038,New York Stock Exchange,ied487a506caf44eebdb15f5af40e3290_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A6.375Notesdue2038Member
+PM39,0001413329-22-000035,0001413329,1.450% Notes due 2039,New York Stock Exchange,i511a91118be3442f82c2c98a2625ffea_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A1.450Notesdue2039Member
+PM41,0001413329-22-000035,0001413329,4.375% Notes due 2041,New York Stock Exchange,ie8979e4811394e2d98fc54d6f3f8523c_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A4.375Notesdue2041Member
+PM42,0001413329-22-000035,0001413329,4.500% Notes due 2042,New York Stock Exchange,i0336ae204aa646c4b34ae63afab04214_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A4.500Notesdue2042Member
+PM42A,0001413329-22-000035,0001413329,3.875% Notes due 2042,New York Stock Exchange,i1280db68599f42608f6bd393f4bab379_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A3.875Notesdue2042Member
+PM43,0001413329-22-000035,0001413329,4.125% Notes due 2043,New York Stock Exchange,i17c43c03b2224b4db7f8031d92ad8e3e_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A4.125Notesdue2043Member
+PM43A,0001413329-22-000035,0001413329,4.875% Notes due 2043,New York Stock Exchange,i92e2a674fca04a87ba232414aa0d436d_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A4.875Notesdue2043Member
+PM44,0001413329-22-000035,0001413329,4.250% Notes due 2044,New York Stock Exchange,i6021a46d55eb4679aeadfa464ed12e86_D20220101-20220331,us-gaap:StatementClassOfStockAxis=pm:A4.250Notesdue2044Member
+NKE,0000320187-22-000017,0000320187,Class B Common Stock,New York Stock Exchange,i3eac6f3a61284de8823d80c2c151a34c_D20210601-20220228,
+PVH,0000078239-22-000070,0000078239,"Common Stock, $1.00 par value",New York Stock Exchange,i3824094c0e7847e4b4d631b35cc2970a_D20220131-20220501,
+GPN,0001123360-22-000013,0001123360,"Common stock, no par value",New York Stock Exchange,i8a864beaea404688a40b506450e45f04_D20220101-20220331,
+WHR,0000106640-22-000091,0000106640,,New York Stock Exchange,i23ce1a173fe643e1a90f6daf1c7395ea_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS
+,0000106640-22-000091,0000106640,"Common stock, par value $1.00 per share",Chicago Stock Exchange,ibda3cf66c4634e6f9618af7eec8dce07_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XCHI
+MMM,0000066740-22-000036,0000066740,,New York Stock Exchange,ie332e46b2a5b40d89d2dbdd61cb97744_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+MMM,0000066740-22-000036,0000066740,"Common Stock, Par Value $.01 Per Share","Chicago Stock Exchange, Inc.",id14c8b0d614f45b388b9387255958a80_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XCHI;us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+MMM23,0000066740-22-000036,0000066740,0.950% Notes due 2023,New York Stock Exchange,i749da1bd797d4ce4b76e61475b40ca0d_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=mmm:Notes0950PercentDue2023Member
+MMM26,0000066740-22-000036,0000066740,1.500% Notes due 2026,New York Stock Exchange,i61bce409311345668abda7bdb6b7a277_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=mmm:Notes1500PercentDue2026Member
+MMM30,0000066740-22-000036,0000066740,1.750% Notes due 2030,New York Stock Exchange,id0a671d073c44b40895965ff50a19f52_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=mmm:Notes1750PercentDue2030Member
+MMM31,0000066740-22-000036,0000066740,1.500% Notes due 2031,New York Stock Exchange,iedaf0d9e72e84b58b117d961319c78b3_D20220101-20220331,dei:EntityListingsExchangeAxis=exch:XNYS;us-gaap:StatementClassOfStockAxis=mmm:Notes1.500PercentDue2031Member
+,0001558370-22-009401,0001403568,,,Duration_1_30_2022_To_4_30_2022_iIYCtphKrEW8VX5JfFSXEQ,
+CUK,0000815097-22-000054,0000815097,Ordinary Shares ($1.66 par value),New York Stock Exchange,i88a032dc4acd42b488c29c0cc3214626_D20211201-20220531,us-gaap:StatementClassOfStockAxis=ccl:OrdinarySharesMember;dei:LegalEntityAxis=ccl:CarnivalPublicLimitedCompanyMember
+CCL,0000815097-22-000054,0000815097,Common Stock ($0.01 par value),New York Stock Exchange,i119e595947954830a35f0bba8819cb70_D20211201-20220531,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+CUK22,0000815097-22-000054,0000815097,1.875% Senior Notes due 2022,New York Stock Exchange LLC,ib2f4ae1a68e646fc8f0ff35dd73bb4f9_D20211201-20220531,us-gaap:StatementClassOfStockAxis=ccl:A1875SeniorNotesDue2022Member;dei:LegalEntityAxis=ccl:CarnivalPublicLimitedCompanyMember
+CUK29,0000815097-22-000054,0000815097,1.000% Senior Notes due 2029,New York Stock Exchange LLC,i682593e1c78d4d0a8478d136c5089f90_D20211201-20220531,us-gaap:StatementClassOfStockAxis=ccl:A1000SeniorNotesDue2029Member;dei:LegalEntityAxis=ccl:CarnivalPublicLimitedCompanyMember
+EMN,0000915389-22-000023,0000915389,"Common Stock, par value $0.01 per share",New York Stock Exchange,ib8fc404d97804f5aacec4b6a9a68d59d_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+EMN23,0000915389-22-000023,0000915389,1.50% Notes Due 2023,New York Stock Exchange,i25f237cdc7ac4f6881c2ed66562e67d9_D20220101-20220331,us-gaap:StatementClassOfStockAxis=emn:NotesDue2023Member
+EMN26,0000915389-22-000023,0000915389,1.875% Notes Due 2026,New York Stock Exchange,ifdab1b7cc1234a86a83f270d0e219f60_D20220101-20220331,us-gaap:StatementClassOfStockAxis=emn:A1.875notesdueNovember2026Member
+MDLZ,0001103982-22-000007,0001103982,"Class A Common Stock, no par value",The Nasdaq Global Select Market,i291601bb965a46a7a7c2e73d9f7ebd99_D20220101-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+MDLZ27,0001103982-22-000007,0001103982,1.625% Notes due 2027,The Nasdaq Stock Market LLC,i59902d1a3377498d84e6f31d64725061_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:OnePointSixTwentyFivePercentNotesDue2027Member
+MDLZ28,0001103982-22-000007,0001103982,0.250% Notes due 2028,The Nasdaq Stock Market LLC,ib2f09389ee984bc68bea2fbafeda9114_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:ZeroPointTwoFiftyPercentNotesDue2028Member
+MDLZ33,0001103982-22-000007,0001103982,0.750% Notes due 2033,The Nasdaq Stock Market LLC,i02f5678738d0429f91ab20db2c7ce9f1_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:ZeroPointSevenFiftyPercentNotesDue2033Member
+MDLZ35,0001103982-22-000007,0001103982,2.375% Notes due 2035,The Nasdaq Stock Market LLC,i4bdf37fa60944cb39ce8da5468d76ffb_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:TwoPointThreeSeventyFivePercentNotesDue2035Member
+MDLZ35A,0001103982-22-000007,0001103982,4.500% Notes due 2035,The Nasdaq Stock Market LLC,id7f2b9a697ac446ab0a35bfbbe0a210a_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:FourPointFivePercentNotesDue2035Member
+MDLZ41,0001103982-22-000007,0001103982,1.375% Notes due 2041,The Nasdaq Stock Market LLC,i5f80eafe008544b79c39663502440f60_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:OnePointThreeSeventyFivePercentNotesDue2041Member
+MDLZ45,0001103982-22-000007,0001103982,3.875% Notes due 2045,The Nasdaq Stock Market LLC,i9c3c74e29b52465d8486e9ada5793b25_D20220101-20220331,us-gaap:StatementClassOfStockAxis=mdlz:ThreePointEightSeventyFivePercentNotesDue2045Member
+CF,0001324404-22-000016,0001324404,"common stock, par value $0.01 per share",New York Stock Exchange,i70efdfbf4e754876bfbd9cd5ac203abd_D20220101-20220331,
+KMI,0001506307-22-000037,0001506307,Class P Common Stock,New York Stock Exchange,i32bda10b8d004c8abc8ffabf568ecf71_D20220101-20220331,us-gaap:StatementClassOfStockAxis=kmi:ClassPMember
+KMI 27 A,0001506307-22-000037,0001506307,2.250% Senior Notes due 2027,New York Stock Exchange,i873e2107399742e4bc4a0af753cd0746_D20220101-20220331,us-gaap:StatementClassOfStockAxis=kmi:A2.25DueMarch2027NotesMember
+VTR,0000740260-22-000125,0000740260,Common Stock $0.25 par value,New York Stock Exchange,i19ab0cb677b242e7967f4fdc415935be_D20220101-20220331,
+BIIB,0000875045-22-000016,0000875045,"Common Stock, $0.0005 par value",The Nasdaq Global Select Market,i5177bf3a09ce4d90a64c0992b77a070d_D20220101-20220331,
+,0001558370-22-007828,0001063761,,,Duration_1_1_2022_To_3_31_2022_us-gaap_StatementClassOfStockAxis_us-gaap_CommonClassAMember_-fL6R1d1fEuWupH44Wibug,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+,0001558370-22-007828,0001063761,,,Duration_1_1_2022_To_3_31_2022_us-gaap_StatementClassOfStockAxis_spg_SeriesJPreferredStockMember_x8mJB8bzvkaTuX-FPE7fyw,us-gaap:StatementClassOfStockAxis=spg:SeriesJPreferredStockMember
+TSN,0000100493-22-000064,0000100493,Class A Common Stock,New York Stock Exchange,i1d3b314cf8124e828e45cd38df4ace66_D20211003-20220402,
+APD,0000002969-22-000026,0000002969,"Common Stock, par value $1.00 per share",New York Stock Exchange,i508956cb799f47d8acad1d63ce0ec6f8_D20211001-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+APD25,0000002969-22-000026,0000002969,1.000% Euro Notes due 2025,New York Stock Exchange,ia3f25a89773e4f24b5979fc8d1b2e3d3_D20211001-20220331,us-gaap:StatementClassOfStockAxis=apd:EuroNotesDue2025OnePercentMember
+APD28,0000002969-22-000026,0000002969,0.500% Euro Notes due 2028,New York Stock Exchange,i1a676e2ac8524a4fbafccb9b3aff0d60_D20211001-20220331,us-gaap:StatementClassOfStockAxis=apd:A0500NotesDue2028Member
+APD32,0000002969-22-000026,0000002969,0.800% Euro Notes due 2032,New York Stock Exchange,i061cb79125c94830be39430da171e4cf_D20211001-20220331,us-gaap:StatementClassOfStockAxis=apd:A0800NotesDue2032Member
+DHI,0000882184-22-000115,0000882184,"Common Stock, par value $.01 per share",New York Stock Exchange,ia66b59628d6e4ebeb6bb8e254729e52c_D20211001-20220331,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+DHI 23A,0000882184-22-000115,0000882184,5.750% Senior Notes due 2023,New York Stock Exchange,ief64ed015d2744508acea27b020862a4_D20211001-20220331,us-gaap:StatementClassOfStockAxis=dhi:SeniorNotesdue2023Member
+CDNS,0000813672-24-000092,0000813672,"Common Stock, $0.01 par value per share",Nasdaq Global Select Market,c-1,
+,0000950170-24-055683,0000352915,,,C_8ac9b626-e636-41c8-93fb-984becb8d842,
+AES,0000874761-24-000038,0000874761,"Common Stock, par value $0.01 per share",New York Stock Exchange,c-1,
+BBWI,0000701985-24-000018,0000701985,"Common Stock, $0.50 Par Value",The New York Stock Exchange,c-1,
+DE,0001558370-24-008770,0000315189,"Common stock, $1 par value",New York Stock Exchange,Duration_10_30_2023_To_4_28_2024_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember_ZtOhLGlTzEKQl2jn_RHU-w,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+DE28,0001558370-24-008770,0000315189,6.55% Debentures Due 2028,New York Stock Exchange,Duration_10_30_2023_To_4_28_2024_us-gaap_StatementClassOfStockAxis_de_Debentures6.55PercentDue2028Member_4EU976mQLES1dVC_OWudVQ,us-gaap:StatementClassOfStockAxis=de:Debentures6.55PercentDue2028Member
+CCL,0000815097-24-000057,0000815097,Common Stock ($0.01 par value),New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+CUK,0000815097-24-000057,0000815097,Ordinary Shares each represented by American Depositary Shares ($1.66 par value),New York Stock Exchange,c-4,dei:LegalEntityAxis=ccl:CarnivalPublicLimitedCompanyMember;us-gaap:StatementClassOfStockAxis=ccl:OrdinarySharesMember
+CUK29,0000815097-24-000057,0000815097,1.000% Senior Notes due 2029,New York Stock Exchange LLC,c-5,dei:LegalEntityAxis=ccl:CarnivalPublicLimitedCompanyMember;us-gaap:StatementClassOfStockAxis=ccl:A1000SeniorNotesDue2029Member
+AAL,0000006201-24-000032,0000006201,"Common Stock, $0.01 par value per share",The Nasdaq Global Select Market,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+ETSY,0001370637-24-000030,0001370637,"Common Stock, $0.001 par value per share",The Nasdaq Global Select Market,c-1,
+AVY,0000008818-24-000009,0000008818,"Common stock, $1 par value",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+AVY25,0000008818-24-000009,0000008818,1.25% Senior Notes due 2025,Nasdaq Stock Market,c-3,us-gaap:StatementClassOfStockAxis=avy:SeniorNotesDue2025Member
+,0000074208-24-000039,0000074208,,,Duration_1_1_2024_To_3_31_2024_86OqmMmOik6I38CxNzSkmA,
+,0000950170-24-052097,0001136869,,,C_1ca808d2-62dd-4fdf-a2c0-83c966eb9c5d,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+,0000950170-24-052097,0001136869,,,C_9c3635dc-b4d8-4906-9134-e54f5c88ae5f,us-gaap:StatementClassOfStockAxis=zbh:TwoPointFourTwoFivePercentageNotesDueTwoThousandTwentySixMember
+,0000950170-24-052097,0001136869,,,C_32232022-0db9-45eb-bc0b-72b9286aab08,us-gaap:StatementClassOfStockAxis=zbh:OnePointOneSixFourPercentageNotesDueTwoThousandTwentySevenMember
+SBUX,0000829224-24-000024,0000829224,"Common Stock, par value $0.001 per share",Nasdaq Global Select Market,c-1,
+CFG,0000759944-24-000090,0000759944,"Common stock, $0.01 par value per share",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+CFG PrD,0000759944-24-000090,0000759944,"Depositary Shares, each representing a 1/40th interest in a share of 6.350% Fixed-to-Floating Rate Non-Cumulative Perpetual Preferred Stock, Series D",New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesDPreferredStockMember
+CFG PrE,0000759944-24-000090,0000759944,"Depositary Shares, each representing a 1/40th interest in a share of 5.000% Fixed-Rate Non-Cumulative Perpetual Preferred Stock, Series E",New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesEPreferredStockMember
+RTX,0000101829-24-000012,0000101829,Common Stock ($1 par value),New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+RTX 30,0000101829-24-000012,0000101829,2.150% Notes due 2030,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=rtx:Notes2.150Due2030Member
+VTRS,0001792044-24-000017,0001792044,"Common Stock, par value $0.01 per share",The NASDAQ Stock Market,c-1,
+,0000950170-24-048421,0001045609,,,C_3ee4c45f-9e4c-46ea-a343-8ddbf052e07b,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+,0000950170-24-048421,0001045609,,,C_253690d6-9fe8-4a82-9ea0-481502a2be10,us-gaap:StatementClassOfStockAxis=pld:ThreePointZeroZeroZeroPercentNotesDueTwoThousandTwentySixMember;dei:LegalEntityAxis=pld:PrologisLimitedPartnershipMember
+,0000950170-24-048421,0001045609,,,C_05eef343-7448-4af1-83bb-efc019720b38,dei:LegalEntityAxis=pld:PrologisLimitedPartnershipMember;us-gaap:StatementClassOfStockAxis=pld:TwoPointTwoFiveZeroPercentNotesDueTwoThousandTwentyNineMember
+WMB,0000107263-24-000063,0000107263,"Common Stock, $1.00 par value",New York Stock Exchange,c-1,
+IFF,0000051253-24-000016,0000051253,"Common Stock, par value 12 1/2¢ per share",New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+IFF 26,0000051253-24-000016,0000051253,1.800% Senior Notes due 2026,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=iff:A1.800SeniorNotesDue2026Member
+OTIS,0001781335-24-000022,0001781335,Common Stock ($0.01 par value),New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+OTIS/26,0001781335-24-000022,0001781335,0.318% Notes due 2026,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=otis:A0318NotesDue2026Member
+OTIS/31,0001781335-24-000022,0001781335,0.934% Notes due 2031,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=otis:A0934NotesDue2031Member
+FSLR,0001274494-24-000022,0001274494,"Common stock, $0.001 par value",The NASDAQ Stock Market LLC,c-1,
+COR,0001140859-24-000072,0001140859,"Common stock, par value $0.01 per share",New York Stock Exchange,c-1,
+TT,0001466258-24-000159,0001466258,"Ordinary Shares, Par Value $1.00 per Share",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+TT33,0001466258-24-000159,0001466258,5.250% Senior Notes due 2033,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=tt:FivePointTwoFivePercentSeniorNotesDueTwoThousandThirtyThreeMember
+TDG,0001260221-24-000046,0001260221,"Common Stock, $0.01 par value",New York Stock Exchange,c-1,
+FIS,0001136893-24-000063,0001136893,"Common Stock, par value $0.01 per share",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=fis:CommonStockParValue001PerShareMember
+FIS24A,0001136893-24-000063,0001136893,1.100% Senior Notes due 2024,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=fis:OnePointOneZeroZeroPercentSeniorNotesDueTwoThousandTwentyFourMember
+FIS25B,0001136893-24-000063,0001136893,0.625% Senior Notes due 2025,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=fis:ZeroPointSixTwoFivePercentSeniorNotesDueTwoThousandTwentyFiveMember
+FIS27,0001136893-24-000063,0001136893,1.500% Senior Notes due 2027,New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=fis:OnePointFiveZeroZeroPercentSeniorNotesDueTwoThousandTwentySevenMember
+FIS28,0001136893-24-000063,0001136893,1.000% Senior Notes due 2028,New York Stock Exchange,c-6,us-gaap:StatementClassOfStockAxis=fis:OnePointZeroZeroZeroPercentSeniorNotesDueTwoThousandTwentyEightMember
+FIS29,0001136893-24-000063,0001136893,2.250% Senior Notes due 2029,New York Stock Exchange,c-7,us-gaap:StatementClassOfStockAxis=fis:TwoPointTwoFiveZeroPercentSeniorNotesDueTwoThousandTwentyNineMember
+FIS30,0001136893-24-000063,0001136893,2.000% Senior Notes due 2030,New York Stock Exchange,c-8,us-gaap:StatementClassOfStockAxis=fis:TwoPointZeroZeroZeroPercentSeniorNotesDueTwoThousandThirtyMember
+FIS31,0001136893-24-000063,0001136893,3.360% Senior Notes due 2031,New York Stock Exchange,c-9,us-gaap:StatementClassOfStockAxis=fis:ThreePointThreeSixZeroPercentSeniorNotesDueTwoThousandThirtyOneMember
+FIS39,0001136893-24-000063,0001136893,2.950% Senior Notes due 2039,New York Stock Exchange,c-10,us-gaap:StatementClassOfStockAxis=fis:TwoPointNineFiveZeroPercentSeniorNotesDueTwoThousandThirtyNineMember
+BXP,0001656423-24-000028,0001037540,"Common Stock, par value $0.01 per share",New York Stock Exchange,c-3,
+CCI,0001051470-24-000143,0001051470,"Common Stock, $0.01 par value",New York Stock Exchange,c-1,
+CEG,0001868275-24-000026,0001868275,"Common Stock, without par value",The Nasdaq Stock Market LLC,c-1,
+,0000950170-24-052860,0000857005,,,C_63501b0c-8d18-4b55-9590-8967b78fc56b,
+FTV,0001659166-24-000108,0001659166,"Common stock, par value $0.01 per share",New York Stock Exchange,c-1,
+FTV26A,0001659166-24-000108,0001659166,3.700% Notes due 2026,New York Stock Exchange,c-2,us-gaap:DebtInstrumentAxis=ftv:EuroDenominatedSeniorNotes3Point7PercentDue2026Member
+FTV29,0001659166-24-000108,0001659166,3.700% Notes due 2029,New York Stock Exchange,c-3,us-gaap:DebtInstrumentAxis=ftv:EuroDenominatedSeniorNotes3Point7PercentDue2029Member
+AMCR,0001748790-24-000016,0001748790,"Ordinary Shares, Par Value $0.01 Per Share",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+AUKF/27,0001748790-24-000016,0001748790,1.125% Guaranteed Senior Notes Due 2027,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=amcr:OnePointOneTwentyFivePercentGuaranteedSeniorNotesDue2027Member
+EVRG,0001711269-24-000013,0001711269,"Evergy, Inc. common stock",The Nasdaq Stock Market LLC,c-1,
+KEY,0000091576-24-000066,0000091576,"Common Shares, $1 par value",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+KEY PrI,0000091576-24-000066,0000091576,"Perpetual Non-Cumulative Preferred Stock, Series E)",New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesEPreferredStockMember
+KEY PrJ,0000091576-24-000066,0000091576,"Cumulative Preferred Stock, Series F)",New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesFPreferredStockMember
+KEY PrK,0000091576-24-000066,0000091576,"Cumulative Preferred Stock, Series G)",New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesGPreferredStockMember
+KEY PrL,0000091576-24-000066,0000091576,"Cumulative Preferred Stock, Series H)",New York Stock Exchange,c-6,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesHPreferredStockMember
+MRNA,0001682852-24-000027,0001682852,"Common stock, par value $0.0001 per share",The Nasdaq Stock Market LLC,c-1,
+VTR,0000740260-24-000139,0000740260,Common Stock $0.25 par value,New York Stock Exchange,c-1,
+CMG,0001058090-24-000015,0001058090,"Common stock, par value $0.01 per share",New York Stock Exchange,c-1,
+PFG,0001410578-24-000583,0001126328,Common Stock,Nasdaq,Duration_1_1_2024_To_3_31_2024_N-UaqnBvgUeTyKLYM84huQ,
+ADSK,0000769397-24-000091,0000769397,"Common Stock, par value $0.01 per share",The Nasdaq Global Select Market,c-1,
+ANET,0001596532-24-000173,0001596532,"Common Stock, $0.0001 par value",New York Stock Exchange,c-1,
+MRK,0001628280-24-020283,0000310158,Common Stock ($0.50 par value),New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+MRK 24,0001628280-24-020283,0000310158,0.500% Notes due 2024,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=mrk:A0.500Notesdue2024Member
+MRK/26,0001628280-24-020283,0000310158,1.875% Notes due 2026,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=mrk:A1.875Notesdue2026Member
+MRK/34,0001628280-24-020283,0000310158,2.500% Notes due 2034,New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=mrk:A2.500Notesdue2034Member
+MRK 36A,0001628280-24-020283,0000310158,1.375% Notes due 2036,New York Stock Exchange,c-6,us-gaap:StatementClassOfStockAxis=mrk:A1.375Notesdue2036Member
+LMT,0000936468-24-000052,0000936468,"Common Stock, $1 par value",New York Stock Exchange,c-1,
+KLAC,0000319201-24-000012,0000319201,"Common Stock, $0.001 par value per share","The Nasdaq Stock Market, LLC",c-1,
+BEN,0000038777-24-000069,0000038777,"Common Stock, par value $0.10 per share",New York Stock Exchange,c-1,
+,0001558370-24-005734,0000823768,,,Duration_1_1_2024_To_3_31_2024_PlrktJTkIEKUEtpm9zzjtw,
+MCO,0001059556-24-000090,0001059556,"Common Stock, par value $0.01 per share",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+MCO 27,0001059556-24-000090,0001059556,1.75% Senior Notes Due 2027,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=mco:TwoThousandAndFifteenSeniorNotesDueTwoThousandAndTwentySevenMember
+MCO 30,0001059556-24-000090,0001059556,0.950% Senior Notes Due 2030,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=mco:A950SeniorNotesDueTwoThousandAndThirtyMember
+NRG,0001013871-24-000010,0001013871,"Common Stock, par value $0.01",New York Stock Exchange,c-1,
+SO,0000092122-24-000042,0000092122,"Common Stock, par value $5 per share",New York Stock Exchange,c-7,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+SOJC,0000092122-24-000042,0000092122,Series 2017B 5.25% Junior Subordinated Notes due 2077,NYSE,c-8,us-gaap:StatementClassOfStockAxis=so:Series2017B5.25JuniorSubordinatedNotesDue2077Member
+SOJD,0000092122-24-000042,0000092122,Series 2020A 4.95% Junior Subordinated Notes due 2080,NYSE,c-9,us-gaap:StatementClassOfStockAxis=so:Series2020A4.95JuniorSubordinatedNotesDue2080Member
+SOJE,0000092122-24-000042,0000092122,Series 2020C 4.20% Junior Subordinated Notes due 2060,NYSE,c-10,us-gaap:StatementClassOfStockAxis=so:Series2020C420JuniorSubordinatedNotesDue2060Member
+SO 81,0000092122-24-000042,0000092122,Series 2021B 1.875% Fixed-to-Fixed Reset Rate Junior Subordinated Notes due 2081,NYSE,c-11,us-gaap:StatementClassOfStockAxis=so:Series2021B1875FixedToFixedResetRateJuniorSubordinatedNotesDue2081Member
+GPJA,0000092122-24-000042,0000092122,Series 2017A 5.00% Junior Subordinated Notes due 2077,NYSE,c-12,us-gaap:StatementClassOfStockAxis=so:Series2017A5.00JuniorSubordinatedNotesDue2077Member;dei:LegalEntityAxis=so:GeorgiaPowerMember
+SO/26A,0000092122-24-000042,0000092122,Series 2016B 1.850% Senior Notes due 2026,NYSE,c-13,us-gaap:StatementClassOfStockAxis=so:Series2016B1.850SeniorNotesDue2026Member;dei:LegalEntityAxis=so:SouthernPowerMember
+,0000950170-24-052195,0000860730,,,C_778f5b04-480b-4b69-88d8-7d638251603c,
+IP,0000051434-24-000034,0000051434,Common Shares,New York Stock Exchange,c-1,
+MSI,0000068505-24-000016,0000068505,Common Stock,New York Stock Exchange,c-1,
+SJM,0000091419-24-000054,0000091419,"Common shares, no par value",New York Stock Exchange,c-1,
+IVZ,0000914208-24-000276,0000914208,"Common stock, $0.20 par value",New York Stock Exchange,c-1,
+NTRS,0000073124-24-000159,0000073124,"Common Stock, $1.66 2/3 Par Value",The NASDAQ Stock Market LLC,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+NTRSO,0000073124-24-000159,0000073124,"Depositary Shares, each representing 1/1,000th interest in a share of Series E Non-Cumulative Perpetual Preferred Stock",The NASDAQ Stock Market LLC,c-3,us-gaap:StatementClassOfStockAxis=ntrs:DepositarySharesMember
+,0001558370-24-006535,0000031462,,,Duration_1_1_2024_To_3_31_2024_us-gaap_StatementClassOfStockAxis_us-gaap_CommonStockMember_QRgsIrFpRUmhA0i0QP-5OQ,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+,0001558370-24-006535,0000031462,,,Duration_1_1_2024_To_3_31_2024_us-gaap_StatementClassOfStockAxis_ecl_EuroNotesDue2025Member_b6ByxtLQAUyWeFIMxtsVBA,us-gaap:StatementClassOfStockAxis=ecl:EuroNotesDue2025Member
+DD,0001666700-24-000013,0001666700,"Common Stock, par value $0.01 per share",New York Stock Exchange,c-1,
+PYPL,0001633917-24-000048,0001633917,"Common stock, $0.0001 par value per share",NASDAQ Global Select Market,c-1,
+AMZN,0001018724-24-000083,0001018724,"Common Stock, par value $.01 per share",Nasdaq Global Select Market,c-1,
+F,0000037996-24-000075,0000037996,"Common Stock, par value $.01 per share",New York Stock Exchange,c-1,
+FPRB,0000037996-24-000075,0000037996,"6.200% Notes due June 1, 2059",New York Stock Exchange,c-2,f:FixedRateDebtSecurityAxis=f:FPRBMember
+FPRC,0000037996-24-000075,0000037996,"6.000% Notes due December 1, 2059",New York Stock Exchange,c-3,f:FixedRateDebtSecurityAxis=f:FPRCMember
+FPRD,0000037996-24-000075,0000037996,"6.500% Notes due August 15, 2062",New York Stock Exchange,c-4,f:FixedRateDebtSecurityAxis=f:FPRDMember
+BKR,0001701605-24-000067,0001701605,"Class A Common Stock, par value $0.0001 per share",The Nasdaq Stock Market LLC,c-1,
+DTE,0000936340-24-000116,0000936340,"Common stock, without par value",New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+DTW,0000936340-24-000116,0000936340,2017 Series E 5.25% Junior Subordinated Debentures due 2077,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=dte:SeriesE20175.25JuniorSubordinatedDebenturesDue2077Member
+DTB,0000936340-24-000116,0000936340,2020 Series G 4.375% Junior Subordinated Debentures due 2080,New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=dte:SeriesG20204375JuniorSubordinatedDebenturesDue2080Member
+DTG,0000936340-24-000116,0000936340,2021 Series E 4.375% Junior Subordinated Debentures due 2081,New York Stock Exchange,c-6,us-gaap:StatementClassOfStockAxis=dte:SeriesE20214375JuniorSubordinatedDebenturesDue2081Member
+TXT,0000217346-24-000052,0000217346,"Common stock, $0.125 par value",NYSE,c-1,
+T,0000732717-24-000022,0000732717,Common Shares (Par Value $1.00 Per Share),New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+T PRA,0000732717-24-000022,0000732717,,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesAPreferredStockMember
+T PRC,0000732717-24-000022,0000732717,,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=us-gaap:SeriesCPreferredStockMember
+T 24A,0000732717-24-000022,0000732717,"AT&T Inc. 2.400% Global Notes due March 15, 2024",New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=t:ATTInc2400GlobalNotesDueMarch152024Member
+T 25A,0000732717-24-000022,0000732717,"AT&T Inc. Floating Rate Global Notes due March 6, 2025",New York Stock Exchange,c-6,us-gaap:StatementClassOfStockAxis=t:ATTIncFloatingRateGlobalNotesMarch6Due2025Member
+T 25B,0000732717-24-000022,0000732717,"AT&T Inc. 3.550% Global Notes due November 18, 2025",New York Stock Exchange,c-7,us-gaap:StatementClassOfStockAxis=t:ATTInc3550GlobalNotesDueNovember182025Member
+T 25,0000732717-24-000022,0000732717,"AT&T Inc. 3.500% Global Notes due December 17, 2025",New York Stock Exchange,c-8,us-gaap:StatementClassOfStockAxis=t:ATTInc3500GlobalNotesDueDecember172025Member
+T 26E,0000732717-24-000022,0000732717,"AT&T Inc. 0.250% Global Notes due March 4, 2026",New York Stock Exchange,c-9,us-gaap:StatementClassOfStockAxis=t:ATTInc0250GlobalNotesDueMarch42026Member
+T 26D,0000732717-24-000022,0000732717,"AT&T Inc. 1.800% Global Notes due September 5, 2026",New York Stock Exchange,c-10,us-gaap:StatementClassOfStockAxis=t:ATTInc1800GlobalNotesDueSeptember52026Member
+T 26A,0000732717-24-000022,0000732717,"AT&T Inc. 2.900% Global Notes due December 4, 2026",New York Stock Exchange,c-11,us-gaap:StatementClassOfStockAxis=t:ATTInc2900PercentGlobalNotesDueDecember42026Member
+T 28C,0000732717-24-000022,0000732717,"AT&T Inc. 1.600% Global Notes due May 19, 2028",New York Stock Exchange,c-12,us-gaap:StatementClassOfStockAxis=t:AttInc1600GlobalNotesDueMay192028Member
+T 29D,0000732717-24-000022,0000732717,"AT&T Inc. 2.350% Global Notes due September 5, 2029",New York Stock Exchange,c-13,us-gaap:StatementClassOfStockAxis=t:ATTInc2350GlobalNotesDueSeptember52029Member
+T 29B,0000732717-24-000022,0000732717,"AT&T Inc. 4.375% Global Notes due September 14, 2029",New York Stock Exchange,c-14,us-gaap:StatementClassOfStockAxis=t:ATTInc4375GlobalNotesDueSeptember142029Member
+T 29A,0000732717-24-000022,0000732717,"AT&T Inc. 2.600% Global Notes due December 17, 2029",New York Stock Exchange,c-15,us-gaap:StatementClassOfStockAxis=t:ATTInc2600GlobalNotesDueDecember172029Member
+T 30B,0000732717-24-000022,0000732717,"AT&T Inc. 0.800% Global Notes due March 4, 2030",New York Stock Exchange,c-16,us-gaap:StatementClassOfStockAxis=t:ATTInc0800GlobalNotesDueMarch42030Member
+T 31F,0000732717-24-000022,0000732717,"AT&T Inc. 3.950% Global Notes due April 30, 2031",New York Stock Exchange,c-17,us-gaap:StatementClassOfStockAxis=t:ATTInc3950GlobalNotesDueApril302031Member
+T 32A,0000732717-24-000022,0000732717,"AT&T Inc. 2.050% Global Notes due May 19, 2032",New York Stock Exchange,c-18,us-gaap:StatementClassOfStockAxis=t:AttInc2050GlobalNotesDueMay192032Member
+T 32,0000732717-24-000022,0000732717,"AT&T Inc. 3.550% Global Notes due December 17, 2032",New York Stock Exchange,c-19,us-gaap:StatementClassOfStockAxis=t:ATTInc3550GlobalNotesDueDecember172032Member
+T 33,0000732717-24-000022,0000732717,"AT&T Inc. 5.200% Global Notes due November 18, 2033",New York Stock Exchange,c-20,us-gaap:StatementClassOfStockAxis=t:ATTInc5200GlobalNotesDueNovember182033Member
+T 34,0000732717-24-000022,0000732717,"AT&T Inc. 3.375% Global Notes due March 15, 2034",New York Stock Exchange,c-21,us-gaap:StatementClassOfStockAxis=t:ATTInc3375GlobalNotesDueMarch152034Member
+T 34C,0000732717-24-000022,0000732717,"AT&T Inc. 4.300% Global Notes due November 18, 2034",New York Stock Exchange,c-22,us-gaap:StatementClassOfStockAxis=t:ATTInc4300GlobalNotesDueNovember182034Member
+T 35,0000732717-24-000022,0000732717,"AT&T Inc. 2.450% Global Notes due March 15, 2035",New York Stock Exchange,c-23,us-gaap:StatementClassOfStockAxis=t:ATTInc2450GlobalNotesDueMarch152035Member
+T 36A,0000732717-24-000022,0000732717,"AT&T Inc. 3.150% Global Notes due September 4, 2036",New York Stock Exchange,c-24,us-gaap:StatementClassOfStockAxis=t:ATTInc3150GlobalNotesDueSeptember42036Member
+T 38C,0000732717-24-000022,0000732717,"AT&T Inc. 2.600% Global Notes due May 19, 2038",New York Stock Exchange,c-25,us-gaap:StatementClassOfStockAxis=t:AttInc2600GlobalNotesDueMay192038Member
+T 39B,0000732717-24-000022,0000732717,"AT&T Inc. 1.800% Global Notes due September 14, 2039",New York Stock Exchange,c-26,us-gaap:StatementClassOfStockAxis=t:ATTInc1800GlobalNotesDueSeptember142039Member
+T 40,0000732717-24-000022,0000732717,"AT&T Inc. 7.000% Global Notes due April 30, 2040",New York Stock Exchange,c-27,us-gaap:StatementClassOfStockAxis=t:ATTInc7000GlobalNotesDueApril302040Member
+T 43,0000732717-24-000022,0000732717,"AT&T Inc. 4.250% Global Notes due June 1, 2043",New York Stock Exchange,c-28,us-gaap:StatementClassOfStockAxis=t:ATTInc4250GlobalNotesDueJune12043Member
+T 44,0000732717-24-000022,0000732717,"AT&T Inc. 4.875% Global Notes due June 1, 2044",New York Stock Exchange,c-29,us-gaap:StatementClassOfStockAxis=t:ATTInc4875GlobalNotesDueJune12044Member
+T 49A,0000732717-24-000022,0000732717,"AT&T Inc. 4.000% Global Notes due June 1, 2049",New York Stock Exchange,c-30,us-gaap:StatementClassOfStockAxis=t:AttInc4000GlobalNotesDueJune12049Member
+T 50,0000732717-24-000022,0000732717,"AT&T Inc. 4.250% Global Notes due March 1, 2050",New York Stock Exchange,c-31,us-gaap:StatementClassOfStockAxis=t:AttInc4250GlobalNotesDueMarch12050Member
+T 50A,0000732717-24-000022,0000732717,"AT&T Inc. 3.750% Global Notes due September 1, 2050",New York Stock Exchange,c-32,us-gaap:StatementClassOfStockAxis=t:AttInc3750GlobalNotesDueSeptember12050Member
+TBB,0000732717-24-000022,0000732717,"AT&T Inc. 5.350% Global Notes due November 1, 2066",New York Stock Exchange,c-33,us-gaap:StatementClassOfStockAxis=t:ATTInc5350GlobalNotesDueNovember12066Member
+TBC,0000732717-24-000022,0000732717,"AT&T Inc. 5.625% Global Notes due August 1, 2067",New York Stock Exchange,c-34,us-gaap:StatementClassOfStockAxis=t:ATTInc5625GlobalNotesDueAugust12067Member
+,0001558370-24-007736,0001022671,,,Duration_1_1_2024_To_3_31_2024_iLRuuGBjAUqdBpV3us-_2A,
+FTNT,0001262039-24-000020,0001262039,"Common Stock, $0.001 Par Value",The Nasdaq Stock Market LLC,c-1,
+LW,0001679273-24-000021,0001679273,"Common Stock, $1.00 par value",New York Stock Exchange,c-1,
+ELV,0001156039-24-000066,0001156039,"Common Stock, $0.01 par value",New York Stock Exchange,c-1,
+AIZ,0001267238-24-000026,0001267238,"Common Stock, $0.01 Par Value",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+AIZN,0001267238-24-000026,0001267238,5.25% Subordinated Notes due 2061,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=us-gaap:SeniorSubordinatedNotesMember
+,0001558370-24-006975,0000009389,,,Duration_1_1_2024_To_3_31_2024_fcOCi8pNuUiW8j3g2cQ8Gw,
+CRM,0001108524-24-000009,0001108524,"Common Stock, par value $0.001 per share",New York Stock Exchange,c-1,
+AME,0001037868-24-000030,0001037868,Common Stock,New York Stock Exchange,c-1,
+NKE,0000320187-24-000019,0000320187,Class B Common Stock,New York Stock Exchange,c-1,
+NXPI,0001413447-24-000038,0001413447,"Common shares, EUR 0.20 par value",The Nasdaq Global Select Market,c-1,
+PG,0000080424-24-000051,0000080424,"Common Stock, without Par Value",,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+PG24A,0000080424-24-000051,0000080424,0.500% Notes due 2024,NYSE,c-4,us-gaap:StatementClassOfStockAxis=pg:A0.500due2024Domain
+PG24B,0000080424-24-000051,0000080424,0.625% Notes due 2024,NYSE,c-5,us-gaap:StatementClassOfStockAxis=pg:A0.625due2024Domain
+PG25,0000080424-24-000051,0000080424,1.375% Notes due 2025,NYSE,c-6,us-gaap:StatementClassOfStockAxis=pg:A1.375due2025Domain
+PG26D,0000080424-24-000051,0000080424,0.110% Notes due 2026,NYSE,c-7,us-gaap:StatementClassOfStockAxis=pg:A0110Due2026Domain
+PG26E,0000080424-24-000051,0000080424,3.250% EUR Notes due 2026,NYSE,c-8,us-gaap:StatementClassOfStockAxis=pg:A3250EURNotesDue2026Domain
+PG27A,0000080424-24-000051,0000080424,4.875% EUR Notes due May 2027,NYSE,c-9,us-gaap:StatementClassOfStockAxis=pg:A4.875EURdueMay2027Domain
+PG28,0000080424-24-000051,0000080424,1.200% Notes due 2028,NYSE,c-10,us-gaap:StatementClassOfStockAxis=pg:A1.200due2028Domain
+PG29B,0000080424-24-000051,0000080424,1.250% Notes due 2029,NYSE,c-11,us-gaap:StatementClassOfStockAxis=pg:A1.250due2029Domain
+PG29A,0000080424-24-000051,0000080424,1.800% Notes due 2029,NYSE,c-12,us-gaap:StatementClassOfStockAxis=pg:A1.800due2029Domain
+PG30,0000080424-24-000051,0000080424,6.250% GBP Notes due January 2030,NYSE,c-13,us-gaap:StatementClassOfStockAxis=pg:A6.250GBPdueJanuary2030Domain
+PG30C,0000080424-24-000051,0000080424,0.350% Notes due 2030,NYSE,c-14,us-gaap:StatementClassOfStockAxis=pg:A0350Due2030Domain
+PG31A,0000080424-24-000051,0000080424,0.230% Notes due 2031,NYSE,c-15,us-gaap:StatementClassOfStockAxis=pg:A0230Due2031Domain
+PG31B,0000080424-24-000051,0000080424,3.250% EUR Notes due 2031,NYSE,c-16,us-gaap:StatementClassOfStockAxis=pg:A3250EURNotesDue2031Domain
+PG33,0000080424-24-000051,0000080424,5.250% GBP Notes due January 2033,NYSE,c-17,us-gaap:StatementClassOfStockAxis=pg:A5.250GBPdueJanuary2033Domain
+PG38,0000080424-24-000051,0000080424,1.875% Notes due 2038,NYSE,c-18,us-gaap:StatementClassOfStockAxis=pg:A1.875due2038Domain
+PG41,0000080424-24-000051,0000080424,0.900% Notes due 2041,NYSE,c-19,us-gaap:StatementClassOfStockAxis=pg:A0900Due2041Domain
+V,0001403161-24-000030,0001403161,"Class A Common Stock, par value $0.0001 per share",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonClassAMember
+V26,0001403161-24-000030,0001403161,1.500% Senior Notes due 2026,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=v:A2026NotesMember
+V29,0001403161-24-000030,0001403161,2.000% Senior Notes due 2029,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=v:A2029NotesMember
+V34,0001403161-24-000030,0001403161,2.375% Senior Notes due 2034,New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=v:A2034NotesMember
+MO,0000764180-24-000057,0000764180,"Common Stock, $0.33 1/3 par value",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=mo:CommonStock0.3313ParValueMember
+MO25,0000764180-24-000057,0000764180,1.700% Notes due 2025,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=mo:CommonStock1.700NotesDue2025Member
+MO27,0000764180-24-000057,0000764180,2.200% Notes due 2027,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=mo:CommonStock2.200NotesDue2027Member
+MO31,0000764180-24-000057,0000764180,3.125% Notes due 2031,New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=mo:CommonStock3.125NotesDue2031Member
+SYK,0000310764-24-000064,0000310764,"Common Stock, $.10 Par Value",New York Stock Exchange,c-2,us-gaap:StatementClassOfStockAxis=us-gaap:CommonStockMember
+SYK24A,0000310764-24-000064,0000310764,0.250% Notes due 2024,New York Stock Exchange,c-3,us-gaap:StatementClassOfStockAxis=syk:SeniorUnsecuredNotes0.250Due2024Member
+SYK27,0000310764-24-000064,0000310764,2.125% Notes due 2027,New York Stock Exchange,c-4,us-gaap:StatementClassOfStockAxis=syk:SeniorUnsecuredNotes2.125Due2027Member
+SYK28,0000310764-24-000064,0000310764,3.375% Notes due 2028,New York Stock Exchange,c-5,us-gaap:StatementClassOfStockAxis=syk:SeniorUnsecuredNotes3375Due2028Member
+SYK29,0000310764-24-000064,0000310764,0.750% Notes due 2029,New York Stock Exchange,c-6,us-gaap:StatementClassOfStockAxis=syk:SeniorUnsecuredNotes0.750Due2029Member
+SYK30,0000310764-24-000064,0000310764,2.625% Notes due 2030,New York Stock Exchange,c-7,us-gaap:StatementClassOfStockAxis=syk:SeniorUnsecuredNotes2.625Due2030Member
+SYK31,0000310764-24-000064,0000310764,1.000% Notes due 2031,New York Stock Exchange,c-8,us-gaap:StatementClassOfStockAxis=syk:SeniorUnsecuredNotes1.000Due2031Member
+URI,0001067701-24-000016,0001067701,"Common Stock, $.01 par value, of United Rentals, Inc.",New York Stock Exchange,c-1,
+RVTY,0000031791-24-000014,0000031791,,,c-3,pki:TradingSymbolAxis=pki:RVTYMember
+RVTY 26,0000031791-24-000014,0000031791,,,c-6,pki:TradingSymbolAxis=pki:RVTY21AMember
+VLTO,0001967680-24-000059,0001967680,"Common stock, $0.01 par value",New York Stock Exchange,c-1,
+MPC,0001510295-24-000047,0001510295,"Common Stock, par value $.01",New York Stock Exchange,c-1,
+ON,0001628280-24-018814,0001097864,"Common Stock, par value $0.01 per share",The Nasdaq Stock Market LLC,c-1,
+ETN,0001551182-24-000013,0001551182,Ordinary shares ($0.01 par value),New York Stock Exchange,c-1,
+CAH,0000721371-24-000038,0000721371,Common shares (without par value),New York Stock Exchange,c-1,
+MNST,0001410578-24-000605,0000865752,Common Stock,Nasdaq Global Select Market,Duration_1_1_2024_To_3_31_2024_0ElobZmdfE2pCxOl7zCELw,
+CVX,0000093410-24-000021,0000093410,"Common stock, par value $.75 per share",New York Stock Exchange,c-1,
+CPB,0000016732-24-000082,0000016732,"Capital Stock, par value $.0375",New York Stock Exchange,c-1,
+EBAY,0001065088-24-000076,0001065088,Common stock,The Nasdaq Global Select Market,c-1,
+NVDA,0001045810-24-000124,0001045810,"Common Stock, $0.001 par value per share",The Nasdaq Global Select Market,c-1,
+AEE,0001002910-24-000090,0001002910,"Common Stock, $0.01 par value per share",New York Stock Exchange,c-1,
