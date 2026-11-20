@@ -1,0 +1,28 @@
+{
+  "outputs": {
+    "p17_2_8_1_19_exception_reconciliation.csv": {
+      "sha256": "d431fe53796a77f538cf572890fcaf0b1a4de68b3ae99718ccc692bdd825b4bc",
+      "bytes": 4204
+    },
+    "p17_2_8_1_anchor_coverage.csv": {
+      "sha256": "6b421dc50bb13a4afddd3f379a3835c8f60ec711461f785343e14132a34c7fbe",
+      "bytes": 141
+    },
+    "p17_2_8_1_anchor_identity_results.csv": {
+      "sha256": "892fca4fb0d403a06239b64d0ff9013f4cdb361ecaee34f971f94ea348430948",
+      "bytes": 82456
+    },
+    "p17_2_8_1_historical_cik_candidates.csv": {
+      "sha256": "2ed771c752d8c3c52a7848b8627db02af7bd863fd6946e7ecb2f756954c1d836",
+      "bytes": 15754
+    },
+    "p17_2_8_1_request_audit.csv": {
+      "sha256": "7a5679bbd5e180c452654fbfa18fc81c81657f3c13a1aefbcc1f929c93fcda3c",
+      "bytes": 11827
+    },
+    "p17_2_8_1_summary.json": {
+      "sha256": "9cf0d2f8965598648b1df0c332fa2e9ef4bec556c7d86a3aa5bf1cbfed8ccb11",
+      "bytes": 824
+    }
+  }
+}
