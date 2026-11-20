@@ -1,0 +1,39 @@
+{
+  "pr390_rows": 98,
+  "missing_current_rows": 67,
+  "overlap_rows": 46,
+  "overlap_tickers": 36,
+  "pr390_high_rows": 44,
+  "pr390_medium_rows": 2,
+  "recovered_verified": 38,
+  "network_requests": 76,
+  "cache_hits": 0,
+  "anchor": [
+    {
+      "anchor": "A",
+      "anchor_date": "2020-06-30",
+      "sampled": 100,
+      "cik_candidates": 89,
+      "filings": 77,
+      "verified": 77
+    },
+    {
+      "anchor": "B",
+      "anchor_date": "2022-06-30",
+      "sampled": 100,
+      "cik_candidates": 93,
+      "filings": 87,
+      "verified": 76
+    },
+    {
+      "anchor": "C",
+      "anchor_date": "2024-06-28",
+      "sampled": 100,
+      "cik_candidates": 97,
+      "filings": 95,
+      "verified": 84
+    }
+  ],
+  "status": "PARTIAL_COVERAGE_ONLY",
+  "verified_total": 237
+}
