@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-20T15:02:09Z",
+  "generated_at": "2026-11-20T15:17:06Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -47,6 +47,17 @@
       "unit": "%",
       "released_at": null,
       "impact": "实际 0.4% vs 预期 0.2%（+0.2）。"
+    },
+    {
+      "key": "umich",
+      "indicator": "密歇根消费者信心",
+      "period": "2026年11月",
+      "forecast": 48.0,
+      "actual": 51.5,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 51.5% vs 预期 48.0%（+3.5）。"
     },
     {
       "key": "ism",

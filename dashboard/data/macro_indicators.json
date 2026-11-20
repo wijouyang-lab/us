@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-20T15:02:06Z",
+  "generated_at": "2026-11-20T15:17:03Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -68,7 +68,7 @@
     {
       "key": "umich",
       "name": "密歇根大学消费者信心指数终值",
-      "value": 51.0,
+      "value": 51.5,
       "unit": "",
       "date": null,
       "prev": null,
