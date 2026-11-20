@@ -1,0 +1,17 @@
+ticker,issuer_cik,security_title,security_class_member,exchange,accession,identity_status
+AAPL,,"Common Stock, $0.00001 par value per share",,The Nasdaq Stock Market LLC,000032019321000065,VERIFIED_SECURITY_TICKER_POINT
+NEE,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330821000014,VERIFIED_SECURITY_TICKER_POINT
+NEE.PRO,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330821000014,IDENTITY_CONFLICT
+NEE.PRP,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330821000014,IDENTITY_CONFLICT
+NEE.PRQ,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330821000014,IDENTITY_CONFLICT
+NEE,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330823000019,VERIFIED_SECURITY_TICKER_POINT
+NEE.PRP,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330823000019,IDENTITY_CONFLICT
+NEE.PRQ,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330823000019,IDENTITY_CONFLICT
+NEE.PRR,,"Common Stock, $0.01 Par Value",,New York Stock Exchange,000075330823000019,IDENTITY_CONFLICT
+NVDA,,"Common Stock, $0.001 par value per share",,The Nasdaq Global Select Market,000104581021000163,VERIFIED_SECURITY_TICKER_POINT
+NVDA,,"Common Stock, $0.001 par value per share",,The Nasdaq Global Select Market,000104581022000079,VERIFIED_SECURITY_TICKER_POINT
+NVDA,,"Common Stock, $0.001 par value per share",,The Nasdaq Global Select Market,000104581024000316,VERIFIED_SECURITY_TICKER_POINT
+GOOGL,,"Class A Common Stock, $0.001 par value",,Nasdaq Stock Market LLC,000165204423000016,VERIFIED_SECURITY_TICKER_POINT
+GOOG,,"Class A Common Stock, $0.001 par value",,Nasdaq Stock Market LLC,000165204423000016,IDENTITY_CONFLICT
+GOOGL,,"Class A Common Stock, $0.001 par value",,Nasdaq Stock Market LLC,000165204423000045,VERIFIED_SECURITY_TICKER_POINT
+GOOG,,"Class A Common Stock, $0.001 par value",,Nasdaq Stock Market LLC,000165204423000045,IDENTITY_CONFLICT
