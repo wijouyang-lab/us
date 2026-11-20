@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T05:02:28Z",
+  "generated_at": "2026-11-20T05:17:35Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -78,7 +78,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-11-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-11-20T05:02:17Z",
+        "computed_at": "2026-11-20T05:17:24Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -102,7 +102,7 @@
         "change_1d": -2.1935,
         "change_5d": -6.1189,
         "change_20d": -7.1327,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -120,7 +120,7 @@
         "change_1d": -2.0181,
         "change_5d": -5.4867,
         "change_20d": -6.3627,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -138,7 +138,7 @@
         "change_1d": -2.2541,
         "change_5d": -5.8617,
         "change_20d": -8.1882,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -156,7 +156,7 @@
         "change_1d": 0.0,
         "change_5d": 52.0856,
         "change_20d": 49.4482,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -174,7 +174,7 @@
         "change_1d": 0.0,
         "change_5d": -0.9994,
         "change_20d": 1.9988,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -192,7 +192,7 @@
         "change_1d": -0.5236,
         "change_5d": -0.5236,
         "change_20d": 0.0,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -210,7 +210,7 @@
         "change_1d": 0.0,
         "change_5d": -1.5976,
         "change_20d": 2.0554,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -228,7 +228,7 @@
         "change_1d": 0.0,
         "change_5d": -0.589,
         "change_20d": 2.1562,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -242,16 +242,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 103.802,
-        "change_1d": -0.0943,
-        "change_5d": 0.6126,
-        "change_20d": 2.1573,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "price": 103.789,
+        "change_1d": -0.1068,
+        "change_5d": 0.6,
+        "change_20d": 2.1445,
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795151220,
         "last_bar_date": "2026-11-19"
       },
       {
@@ -260,16 +260,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 3531.0,
-        "change_1d": -4.1921,
-        "change_5d": -9.119,
-        "change_20d": -13.0381,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "price": 3526.3,
+        "change_1d": -4.3196,
+        "change_5d": -9.24,
+        "change_20d": -13.1539,
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795151220,
         "last_bar_date": "2026-11-19"
       },
       {
@@ -278,16 +278,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 41.41,
-        "change_1d": -6.5617,
-        "change_5d": -17.1336,
-        "change_20d": -24.3846,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "price": 41.18,
+        "change_1d": -7.0806,
+        "change_5d": -17.5939,
+        "change_20d": -24.8046,
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795151220,
         "last_bar_date": "2026-11-19"
       },
       {
@@ -296,16 +296,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 5.493,
-        "change_1d": -2.3467,
-        "change_5d": -11.1524,
-        "change_20d": -13.666,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "price": 5.491,
+        "change_1d": -2.3822,
+        "change_5d": -11.1848,
+        "change_20d": -13.6974,
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795151220,
         "last_bar_date": "2026-11-19"
       },
       {
@@ -314,16 +314,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 83.07,
-        "change_1d": -0.1682,
-        "change_5d": -6.3895,
-        "change_20d": -16.4874,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "price": 83.02,
+        "change_1d": -0.2283,
+        "change_5d": -6.4458,
+        "change_20d": -16.5377,
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795151160,
         "last_bar_date": "2026-11-19"
       },
       {
@@ -332,16 +332,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 90.05,
-        "change_1d": -2.0983,
-        "change_5d": -6.0217,
-        "change_20d": -20.4294,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "price": 90.02,
+        "change_1d": -2.1309,
+        "change_5d": -6.053,
+        "change_20d": -20.4559,
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795150800,
         "last_bar_date": "2026-11-19"
       },
       {
@@ -354,12 +354,12 @@
         "change_1d": -1.0098,
         "change_5d": -3.1437,
         "change_20d": 15.701,
-        "updated_at": "2026-11-20T05:02:17Z",
+        "updated_at": "2026-11-20T05:17:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": null,
+        "quote_ts": 1795151040,
         "last_bar_date": "2026-11-19"
       }
     ],
@@ -372,12 +372,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-11-20T05:02:27Z"
+    "updated_at": "2026-11-20T05:17:33Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-11-20 00:02:28",
+    "as_of_us": "2026-11-20 00:17:35",
     "window_start": "2026-10-21",
     "core_closed_count": 0,
     "core_open_count": 3,
@@ -12097,8 +12097,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-11-20T05:02:27Z",
-    "technical_updated_at": "2026-11-20T05:02:28Z",
+    "market_updated_at": "2026-11-20T05:17:33Z",
+    "technical_updated_at": "2026-11-20T05:17:35Z",
     "counts": {
       "core": 1,
       "observation": 0,
@@ -12200,11 +12200,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-11-20T05:02:16Z",
+    "generated_at": "2026-11-20T05:17:23Z",
     "fear_greed": {
-      "score": 18.68,
+      "score": 18.59,
       "rating": "extreme fear",
-      "timestamp": "2026-11-19T23:59:41+00:00",
+      "timestamp": "2026-11-20T01:00:00+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 1.2,
@@ -12227,7 +12227,7 @@
           "rating": "extreme fear"
         },
         "junk_bond_demand": {
-          "score": 38.6,
+          "score": 38,
           "rating": "fear"
         },
         "safe_haven_demand": {
@@ -12237,8 +12237,13 @@
       },
       "history_30d": [
         {
+          "date": "2026-11-20",
+          "score": 18.59,
+          "rating": "extreme fear"
+        },
+        {
           "date": "2026-11-19",
-          "score": 18.68,
+          "score": 18.59,
           "rating": "extreme fear"
         },
         {
@@ -12407,7 +12412,7 @@
   },
   "macro_forecast": {
     "schema": 1,
-    "generated_at": "2026-11-20T05:02:09Z",
+    "generated_at": "2026-11-20T05:17:15Z",
     "as_of": null,
     "source": "TradingEconomics 指标页（自动解析）",
     "count": 6,
@@ -12488,7 +12493,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-11-20T05:02:07Z",
+    "generated_at": "2026-11-20T05:17:11Z",
     "count": 11,
     "ok": 11,
     "items": [
@@ -12627,8 +12632,8 @@
     ]
   },
   "decision_inputs": {
-    "generated_at": "2026-11-20T05:02:14Z",
-    "asof": "2026-11-20T05:02:07Z",
+    "generated_at": "2026-11-20T05:17:21Z",
+    "asof": "2026-11-20T05:17:11Z",
     "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
     "count": 15,
     "features": [
@@ -12865,7 +12870,7 @@
     "error": null
   },
   "serenity_verified": {
-    "generated_at": "2026-11-20T05:02:13Z",
+    "generated_at": "2026-11-20T05:17:21Z",
     "source": "SEC EDGAR + yfinance + news_data",
     "count": 10,
     "items": [
