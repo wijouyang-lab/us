@@ -1,0 +1,35 @@
+{
+  "filings": 8,
+  "contexts": 3043,
+  "dei_facts": 321,
+  "symbol_points": 16,
+  "verified_security_points": 16,
+  "unresolved": 0,
+  "unique_verified_tickers": 9,
+  "verified_intervals": 0,
+  "goog": [
+    {
+      "ticker": "GOOG",
+      "security_title": "Class C Capital Stock, $0.001 par value",
+      "identity_status": "VERIFIED_SECURITY_TICKER_POINT"
+    },
+    {
+      "ticker": "GOOG",
+      "security_title": "Class C Capital Stock, $0.001 par value",
+      "identity_status": "VERIFIED_SECURITY_TICKER_POINT"
+    }
+  ],
+  "googl": [
+    {
+      "ticker": "GOOGL",
+      "security_title": "Class A Common Stock, $0.001 par value",
+      "identity_status": "VERIFIED_SECURITY_TICKER_POINT"
+    },
+    {
+      "ticker": "GOOGL",
+      "security_title": "Class A Common Stock, $0.001 par value",
+      "identity_status": "VERIFIED_SECURITY_TICKER_POINT"
+    }
+  ],
+  "status": "VERIFIED_CONTEXT_MAPPING"
+}
