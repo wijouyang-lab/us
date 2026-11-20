@@ -1,0 +1,42 @@
+{
+  "samples": 300,
+  "verified": 235,
+  "old_verified": 198,
+  "new_verified": 37,
+  "revoked": 5,
+  "anchor": [
+    {
+      "anchor": "A",
+      "anchor_date": "2020-06-30",
+      "sampled": 100,
+      "cik_candidates": 89,
+      "filings": 77,
+      "verified": 76,
+      "stale": 0,
+      "no_cik": 11
+    },
+    {
+      "anchor": "B",
+      "anchor_date": "2022-06-30",
+      "sampled": 100,
+      "cik_candidates": 93,
+      "filings": 87,
+      "verified": 75,
+      "stale": 0,
+      "no_cik": 7
+    },
+    {
+      "anchor": "C",
+      "anchor_date": "2024-06-28",
+      "sampled": 100,
+      "cik_candidates": 97,
+      "filings": 95,
+      "verified": 84,
+      "stale": 0,
+      "no_cik": 3
+    }
+  ],
+  "network_requests": 0,
+  "p10_rows": 80,
+  "status": "PARTIAL_COVERAGE_ONLY"
+}
