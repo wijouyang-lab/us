@@ -1,0 +1,33 @@
+{
+  "user_agent_status": "MISSING",
+  "download_status": "SEC_DOWNLOAD_BLOCKED_MISSING_USER_AGENT",
+  "metadata": {
+    "accessions": 75,
+    "parsed": 75,
+    "has_form": 2,
+    "has_filed_date": 2,
+    "has_acceptance": 2,
+    "has_registrant_cik": 2,
+    "historical_2020_2024": 8,
+    "metadata_complete": 2
+  },
+  "coverage": {
+    "historical_symbol_facts": 16,
+    "historical_tickers": 9,
+    "p13_overlap_tickers": 5,
+    "p13_overlap_tickers_list": [
+      "AAPL",
+      "GOOG",
+      "GOOGL",
+      "NEE",
+      "NVDA"
+    ],
+    "historical_verified_facts": 0,
+    "historical_point_observations": 0,
+    "historical_verified_intervals": 0,
+    "metadata_verified_filings": 2,
+    "status": "DATA_BLOCKED"
+  },
+  "overall": "DATA_BLOCKED",
+  "reason": "No SEC_USER_AGENT configured; no SEC requests were made. Local metadata exists for only 2/75 accessions."
+}
