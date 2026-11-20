@@ -1,0 +1,52 @@
+{
+  "samples": 300,
+  "unique_tickers": 258,
+  "historical_candidate_rows": 233,
+  "unique_candidate_ciks": 204,
+  "current_cik_tickers": 204,
+  "missing_current_cik_rows": 67,
+  "pr390_recoverable_rows": 0,
+  "p10_recoverable_rows": 0,
+  "verified_points": 199,
+  "exceptions": 19,
+  "stale": 0,
+  "future": 0,
+  "anchor": [
+    {
+      "anchor": "A",
+      "anchor_date": "2020-06-30 00:00:00",
+      "sampled": 100,
+      "cik_candidates": 67,
+      "filings": 59,
+      "verified": 59,
+      "stale": 0,
+      "unresolved": 41
+    },
+    {
+      "anchor": "B",
+      "anchor_date": "2022-06-30 00:00:00",
+      "sampled": 100,
+      "cik_candidates": 76,
+      "filings": 71,
+      "verified": 63,
+      "stale": 0,
+      "unresolved": 37
+    },
+    {
+      "anchor": "C",
+      "anchor_date": "2024-06-28 00:00:00",
+      "sampled": 100,
+      "cik_candidates": 90,
+      "filings": 88,
+      "verified": 77,
+      "stale": 0,
+      "unresolved": 23
+    }
+  ],
+  "network_requests": 0,
+  "cache_documents": 422,
+  "status": "PARTIAL_COVERAGE_ONLY",
+  "no_filing_rows": 82,
+  "exception_trading_symbol_not_found": 0,
+  "exception_no_same_context": 19
+}

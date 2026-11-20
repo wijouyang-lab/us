@@ -1,0 +1,68 @@
+{
+  "outputs": {
+    "p17_2_8_19_filing_exception_reconciliation.csv": {
+      "sha256": "5091646a613b244918ab6fb56a213e5c67d4e1ff08f2fc84335d0be8562de8fd",
+      "bytes": 5199
+    },
+    "p17_2_8_acceptance_cutoff_audit.csv": {
+      "sha256": "dceae2ceadc451c61438bedc5cca0b9546fea14367157b3d6ebf71277e743283",
+      "bytes": 73717
+    },
+    "p17_2_8_anchor_coverage.csv": {
+      "sha256": "66b54ceaad26704d1dab038e04ca58642cc6411abe74a6c424250f29852b2ae4",
+      "bytes": 173
+    },
+    "p17_2_8_anchor_identity_results.csv": {
+      "sha256": "dceae2ceadc451c61438bedc5cca0b9546fea14367157b3d6ebf71277e743283",
+      "bytes": 73717
+    },
+    "p17_2_8_context_registry.csv": {
+      "sha256": "af7473f3eda5051ab4a3f132994d6212a59277b204e3b454242213914f50db1b",
+      "bytes": 17241056
+    },
+    "p17_2_8_future_evidence_audit.csv": {
+      "sha256": "16dfc517810108bcbffa49ee7f1e22b8af0c2ab2ef7e72a30bdfbfa981f216b7",
+      "bytes": 220
+    },
+    "p17_2_8_historical_cik_candidates.csv": {
+      "sha256": "7aa4758aa21a4cd5eb1e85feba215865dbbda8d927b27590c5b85e2526bc9d9a",
+      "bytes": 11741
+    },
+    "p17_2_8_input_manifest.json": {
+      "sha256": "fdb36de14c175e2475ca1ab5b3362f57ac1e66dc1284d9e230f92e46062755f8",
+      "bytes": 309
+    },
+    "p17_2_8_missing_cik_reconciliation.csv": {
+      "sha256": "b29ee9b1cb64794e4aee9d2d97a017f86e8528d933903dd5dd3e7883de6e173e",
+      "bytes": 16722
+    },
+    "p17_2_8_reparsed_xbrl_facts.csv": {
+      "sha256": "67bce664972ff8384025e133dc3894c7beb34bbe1677af591aa2d89e56224559",
+      "bytes": 343126
+    },
+    "p17_2_8_request_audit.csv": {
+      "sha256": "59a756308f67be28db199996da1eab8ecef11eae4aec95ba8f8ab13b01d4b74a",
+      "bytes": 52
+    },
+    "p17_2_8_selected_filings.csv": {
+      "sha256": "260dc2b6dbc8845310638e1867a003a2054104f88f790cfa175bb2c7b282ebcf",
+      "bytes": 62630
+    },
+    "p17_2_8_stale_evidence_audit.csv": {
+      "sha256": "16dfc517810108bcbffa49ee7f1e22b8af0c2ab2ef7e72a30bdfbfa981f216b7",
+      "bytes": 220
+    },
+    "p17_2_8_summary.json": {
+      "sha256": "dede5339301a6ff603bf58dc6a868120ed20a14f6704cbe84000648e447482c4",
+      "bytes": 1207
+    },
+    "p17_2_8_ticker_security_mapping.csv": {
+      "sha256": "11238439a074a4567c0acedd705ba52fcd9a87cade20ce202d663b0dc6d96fe2",
+      "bytes": 26525
+    },
+    "p17_2_8_unresolved_summary.csv": {
+      "sha256": "6b81e109f28ad25b36f61bc2bd77f2a58df88ce88bd15a5393c2ee2ee6559466",
+      "bytes": 15658
+    }
+  }
+}
