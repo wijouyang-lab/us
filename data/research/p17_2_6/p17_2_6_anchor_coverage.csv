@@ -1,0 +1,4 @@
+anchor,date,expected_members,sampled,cik_candidates,verified_points,asof_evidence,stale,no_evidence
+A,2020-06-30,499,100,67,0,0,0,100
+B,2022-06-30,498,100,76,0,0,1,99
+C,2024-06-28,489,100,90,0,0,2,98
