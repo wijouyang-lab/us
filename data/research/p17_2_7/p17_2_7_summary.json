@@ -1,0 +1,56 @@
+{
+  "samples": 300,
+  "unique_tickers": 258,
+  "unique_ciks": 204,
+  "selected_filings": 218,
+  "downloaded_docs": 218,
+  "network_requests": 218,
+  "cache_hits": 204,
+  "verified_points": 199,
+  "recent_prior": 199,
+  "stale": 0,
+  "unresolved": 101,
+  "anchor": [
+    {
+      "anchor": "A",
+      "date": "2020-06-30",
+      "sampled": 100,
+      "cik_candidates": 67,
+      "filings": 59,
+      "verified_points": 59,
+      "recent_prior": 59,
+      "stale": 0,
+      "unresolved": 41,
+      "conflict": 0,
+      "future_excluded": 0
+    },
+    {
+      "anchor": "B",
+      "date": "2022-06-30",
+      "sampled": 100,
+      "cik_candidates": 76,
+      "filings": 71,
+      "verified_points": 63,
+      "recent_prior": 63,
+      "stale": 0,
+      "unresolved": 37,
+      "conflict": 0,
+      "future_excluded": 0
+    },
+    {
+      "anchor": "C",
+      "date": "2024-06-28",
+      "sampled": 100,
+      "cik_candidates": 90,
+      "filings": 88,
+      "verified_points": 77,
+      "recent_prior": 77,
+      "stale": 0,
+      "unresolved": 23,
+      "conflict": 0,
+      "future_excluded": 0
+    }
+  ],
+  "status": "PARTIAL_COVERAGE_ONLY",
+  "reason": "CIK below 90 at 2020 (67); verified below 80 at all anchors (59/63/77)."
+}

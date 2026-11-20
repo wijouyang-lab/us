@@ -1,0 +1,72 @@
+{
+  "outputs": {
+    "p17_2_7_anchor_coverage.csv": {
+      "sha256": "765c015d8b6ed0b62633243208ad40ffd0543987b91f73d58dcd1b48008f3233",
+      "bytes": 232
+    },
+    "p17_2_7_anchor_identity_results.csv": {
+      "sha256": "570830eb27331dbc0968911c24e2cd04865b1c376e9e87515e0bed2debddee52",
+      "bytes": 65306
+    },
+    "p17_2_7_cik_candidate_reconciliation.csv": {
+      "sha256": "2009aadc0b96d5d88f9ee1380543bf805ba032f2ea72962a981d64c05a2668fa",
+      "bytes": 3654
+    },
+    "p17_2_7_context_registry.csv": {
+      "sha256": "684914f1c60ee4aa037729882c68ad2f9075d8410679ff2bef5c81a352087f36",
+      "bytes": 17212114
+    },
+    "p17_2_7_corrected_sample_audit.csv": {
+      "sha256": "45d1cc1a0a64265612fb4f2c3bb05b60316991fe77ff9986dffce5ee71ec9441",
+      "bytes": 80128
+    },
+    "p17_2_7_future_evidence_excluded.csv": {
+      "sha256": "311593f68a81418bfa0b66e898aa696dfec4b7768e65b63b4c7f55689961efa5",
+      "bytes": 188
+    },
+    "p17_2_7_historical_submissions_files.csv": {
+      "sha256": "7270fb1fcb2c48c27a0d4db9437bd46ec9ed340db938d199ac54d52e31955eee",
+      "bytes": 8566
+    },
+    "p17_2_7_identity_conflicts.csv": {
+      "sha256": "76ab86302a4f412e263580ba7a8d7bf9bb5c7990bc5cf2d0d3c43c3ced41bf26",
+      "bytes": 72
+    },
+    "p17_2_7_primary_document_registry.csv": {
+      "sha256": "275fe50b9bae63a683a520f86b94ca02231e44dad22fe9d35fd3d8867aa736ea",
+      "bytes": 11126
+    },
+    "p17_2_7_raw_xbrl_facts.csv": {
+      "sha256": "6ad7cb49ca2c699c1a427fa2242e02349b7bf1f8a179ea73c2c2a52ab17201e7",
+      "bytes": 1162450
+    },
+    "p17_2_7_request_audit.csv": {
+      "sha256": "753b1e9dd56efd2cec4fa0796adc1fdf11545ebac9cd10cbacf281d1f2294b4d",
+      "bytes": 66042
+    },
+    "p17_2_7_selected_filings.csv": {
+      "sha256": "01678da3f2acc3dfed6913280d9132bb238705c83416a7ff6e85678cb3de25b5",
+      "bytes": 32343
+    },
+    "p17_2_7_stale_evidence.csv": {
+      "sha256": "311593f68a81418bfa0b66e898aa696dfec4b7768e65b63b4c7f55689961efa5",
+      "bytes": 188
+    },
+    "p17_2_7_submissions_registry.csv": {
+      "sha256": "6afa7994d9e8ae8872e4fe0f0342d529b1aa68d71e392534243378149fdf223a",
+      "bytes": 20854
+    },
+    "p17_2_7_summary.json": {
+      "sha256": "e68718de359d21f87346fb895099b09cb9e13d91d9e14634573ef90ccb9ef298",
+      "bytes": 1283
+    },
+    "p17_2_7_ticker_security_mapping.csv": {
+      "sha256": "3e96142ddc1a5e96d98273084f8ce778d99a54a020f6260cf84915fe95d06bf5",
+      "bytes": 96704
+    },
+    "p17_2_7_verified_identity_points.csv": {
+      "sha256": "5005f3dc1e23812a7c484de87ebb79f288e977955edbb550d06f805208636857",
+      "bytes": 37015
+    }
+  }
+}
