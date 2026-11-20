@@ -1,0 +1,18 @@
+{
+  "accessions": 8,
+  "index_ok": 8,
+  "submission_header": 8,
+  "filed_date": 8,
+  "acceptance": 8,
+  "master_matched": 8,
+  "symbol_facts": 16,
+  "verified_facts": 16,
+  "requests": 23,
+  "status": "PILOT_PASS",
+  "cik_match": 6,
+  "cik_conflicts": 0,
+  "point_observations": 16,
+  "verified_intervals": 0,
+  "note": "8/8 accessions, 16/16 symbol facts, 8/8 master index; interval remains unverified",
+  "co_registrant": 2
+}
