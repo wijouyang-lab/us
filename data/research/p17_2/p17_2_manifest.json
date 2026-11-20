@@ -1,0 +1,45 @@
+{
+  "outputs": {
+    "p17_2_daily_identity_coverage.csv": {
+      "sha256": "2258469a6acfb39e4e9bbad24c13c34f4b60d14ec18b6be4305bc2ac2ead7481",
+      "bytes": 26138,
+      "rows": 1304
+    },
+    "p17_2_filing_identity_observations.csv": {
+      "sha256": "885e0671cf6e094e90971928be0b2c689a5e0503cec5ebead76283f1d4f3220d",
+      "bytes": 118750,
+      "rows": 355
+    },
+    "p17_2_filing_registry.csv": {
+      "sha256": "2a7c69dad1846613b6ab16331a063baa60ce2826472174d4a95449a314d68110",
+      "bytes": 9072,
+      "rows": 75
+    },
+    "p17_2_parser_quality.json": {
+      "sha256": "740117f0e00ec19a276dcd6e1227b1a65432fdf694df95dff3f84b1cc93b67db",
+      "bytes": 342,
+      "rows": null
+    },
+    "p17_2_sample_universe.csv": {
+      "sha256": "f57b95cd7607ce581204e7a9fcf23107135e5510a5359b7018693d3e1b386ada",
+      "bytes": 374,
+      "rows": 9
+    },
+    "p17_2_summary.json": {
+      "sha256": "a12139e700aad60de6532a33039bff45554a2648c9902b09d8797a31cb43cc97",
+      "bytes": 614,
+      "rows": null
+    },
+    "p17_2_ticker_cik_candidates.csv": {
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+      "bytes": 2,
+      "rows": 0
+    },
+    "p17_2_xbrl_identity_facts.csv": {
+      "sha256": "299364aecb0826f9415999e1dc07dbc97c7d9f8200382a6346f29230aae8da88",
+      "bytes": 1902,
+      "rows": 75
+    }
+  },
+  "note": "P17.2 local 2026 SEC cache only"
+}

@@ -1,0 +1,17 @@
+{
+  "status": "DATA_BLOCKED",
+  "quality": {
+    "local_filings": 75,
+    "parsed": 75,
+    "symbol_facts": 288,
+    "unique_tickers": 109,
+    "verified_at_filing": 288,
+    "filing_years": [],
+    "historical_2020_2024_filings": 0,
+    "historical_identity_observations": 0,
+    "parser_status": "PARSER_FEASIBLE_LOCAL_2026_ONLY",
+    "coverage_status": "DATA_BLOCKED_NO_HISTORICAL_FILINGS"
+  },
+  "reason": "Local SEC cache contains only 2026 filings; no 2020/2022/2024 cover pages. Parser extracts CAT/CAT35 from Inline XBRL but cannot build historical identity timeline.",
+  "no_alpha": true
+}
