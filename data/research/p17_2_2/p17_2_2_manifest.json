@@ -1,0 +1,49 @@
+{
+  "outputs": {
+    "p17_2_2_acceptance_timeline.csv": {
+      "sha256": "21498aa5f49545a1c20f36ea1c9d1ad8d76cf7b80e3a8f0ea6ed49a31d47ccf6",
+      "bytes": 39
+    },
+    "p17_2_2_accession_registry.csv": {
+      "sha256": "4139bfa083116662f4f8eb18a93499da8ef5952f2d20277af2e45ac8ad248f80",
+      "bytes": 12330
+    },
+    "p17_2_2_cik_cross_validation.csv": {
+      "sha256": "63c012d594f0cbdcb24dc644040e74c014a4c73beceac21d0ecbd2cfa6e8cc87",
+      "bytes": 84
+    },
+    "p17_2_2_filing_download_audit.csv": {
+      "sha256": "a1559a702cfee2760d66c075c18d18e7d042a8ed5999c1f6b0357baf4122440f",
+      "bytes": 75
+    },
+    "p17_2_2_filing_identity_observations.csv": {
+      "sha256": "df1006e1f51ae71ef42dfb0e5438bab654bb96d87565d183084d2862b05dfa9b",
+      "bytes": 59995
+    },
+    "p17_2_2_historical_identity_coverage.csv": {
+      "sha256": "f0511121242ce0ad33186fcbba2cbdbb776ea69207310460950a261cb1a180d0",
+      "bytes": 280
+    },
+    "p17_2_2_master_index_metadata.csv": {
+      "sha256": "d1e05abe4ce9ffd97fed7476177fef891399d7a77b607b9080d15e73659b3f23",
+      "bytes": 75
+    },
+    "p17_2_2_metadata_conflicts.csv": {
+      "sha256": "87eb38502f001708dc85ac474ace8c430b8a22e11c75630d367febacacd10d5a",
+      "bytes": 39
+    },
+    "p17_2_2_sec_index_metadata.csv": {
+      "sha256": "857107d69a8c07332c23d74c28d204b747e5095a11d9cf1a13688c144c3897f5",
+      "bytes": 135
+    },
+    "p17_2_2_submission_header_metadata.csv": {
+      "sha256": "70a95639ae1b83813aa20ded9edd5ef3296d387cd2df4a27a9387576ee0b5425",
+      "bytes": 79
+    },
+    "p17_2_2_summary.json": {
+      "sha256": "bef78dbd9ba2eae05c8aa4df2ab2ddfb750db6a2afeaafeed9f26437321562ba",
+      "bytes": 904
+    }
+  },
+  "note": "No SEC requests; UA missing"
+}
