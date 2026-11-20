@@ -1,0 +1,17 @@
+{
+  "anchors": {
+    "A": "2020-06-30",
+    "B": "2022-06-30",
+    "C": "2024-06-28"
+  },
+  "expected_total": 300,
+  "sampled_total": 300,
+  "unique_tickers": 258,
+  "cik_candidates": 233,
+  "asof_evidence": 0,
+  "stale": 3,
+  "no_evidence": 297,
+  "network_requests": 0,
+  "status": "DATA_BLOCKED",
+  "reason": "Only existing 8-filing XBRL evidence was available; 300 historical filings were not retrieved, so security identity coverage is not measured."
+}

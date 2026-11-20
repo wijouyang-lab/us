@@ -1,0 +1,40 @@
+{
+  "outputs": {
+    "p17_2_6_anchor_coverage.csv": {
+      "sha256": "c3b853c83da5f15bf9f83b8b113acfaa71ce7bcfc79313534afd2bc48f3dcdef",
+      "bytes": 204
+    },
+    "p17_2_6_asof_evidence.csv": {
+      "sha256": "7742a75d1b38fbef2fc29bc80aeaa1ada32f01796e482cab4210fbe91b804e42",
+      "bytes": 8824
+    },
+    "p17_2_6_identity_conflicts.csv": {
+      "sha256": "19acbea104dc392d5606aaf0c21b28c509a482c8fb55d45137d9b11feffffd56",
+      "bytes": 60
+    },
+    "p17_2_6_price_member_join.csv": {
+      "sha256": "123b71c5565869ae92f349aa53a10cbd9b5355c4ce64b036ccc1a2ed5c96081a",
+      "bytes": 14246
+    },
+    "p17_2_6_request_audit.csv": {
+      "sha256": "873e28fcf9f2f9f6d66c97f8576741ff5b040edb1eeb1e33827ebfe7332b91e3",
+      "bytes": 107
+    },
+    "p17_2_6_sample_manifest.csv": {
+      "sha256": "732000337ee23fe1ef0dcac28556ef261086d2ac7707944c3b8c001b50dc165e",
+      "bytes": 76594
+    },
+    "p17_2_6_stale_evidence.csv": {
+      "sha256": "9823056b765ebe109625076adce1907de259ca9c551b0038817ffafab1a4bdb9",
+      "bytes": 444
+    },
+    "p17_2_6_summary.json": {
+      "sha256": "ed58493148c3aee41dc0990e0528afe9e3ea8bf7b7d2bc741bde38e65be156d9",
+      "bytes": 473
+    },
+    "p17_2_6_ticker_cik_candidates.csv": {
+      "sha256": "5bc55bd991198c7235336c3cd803594ebbbd809f341c743441323e2271e7207b",
+      "bytes": 14646
+    }
+  }
+}
