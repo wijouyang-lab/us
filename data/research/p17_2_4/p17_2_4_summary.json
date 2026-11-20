@@ -1,0 +1,33 @@
+{
+  "p17_2_3": {
+    "accessions": 8,
+    "facts": 16,
+    "verified_security": 8,
+    "conflicts": 8,
+    "unique_verified_tickers": 4,
+    "unique_conflict_tickers": 5
+  },
+  "request": {
+    "rows": 23,
+    "cache_hits": 23,
+    "status_200": 0,
+    "original_network_count": "ORIGINAL_NETWORK_REQUEST_COUNT_UNVERIFIABLE",
+    "note": "first-run network vs cache was not separately logged; no re-download performed"
+  },
+  "seventy_five": {
+    "accessions": 75,
+    "metadata_complete": 2,
+    "historical_2020_2024": 8
+  },
+  "daily": {
+    "observed_dates": 8,
+    "max_verified": 1,
+    "daily_100_gate": false
+  },
+  "p13": {
+    "expected_member_days": 633971,
+    "verified_price_member_days": 0
+  },
+  "status": "DATA_BLOCKED",
+  "reason": "Only 8 filing points and 4 verified common tickers; 8 facts conflict; no valid intervals; daily cross-section max 1, not 100."
+}
