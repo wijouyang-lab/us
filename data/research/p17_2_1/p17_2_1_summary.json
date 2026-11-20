@@ -1,0 +1,37 @@
+{
+  "filings": 75,
+  "forms": {
+    "": 73,
+    "10-Q": 1,
+    "8-K": 1
+  },
+  "accession_years": {
+    "2014": 2,
+    "2015": 2,
+    "2017": 1,
+    "2018": 1,
+    "2021": 3,
+    "2022": 1,
+    "2023": 3,
+    "2024": 1,
+    "2025": 2,
+    "2026": 59
+  },
+  "historical_filings_2020_2024": 8,
+  "symbol_facts": 288,
+  "historical_symbol_facts": 16,
+  "historical_tickers": [
+    "AAPL",
+    "GOOG",
+    "GOOGL",
+    "NEE",
+    "NEE.PRO",
+    "NEE.PRP",
+    "NEE.PRQ",
+    "NEE.PRR",
+    "NVDA"
+  ],
+  "cik_match_rate": 0.013333333333333334,
+  "verified_facts": 0,
+  "status": "IDENTITY_OBSERVATION_PARTIAL"
+}

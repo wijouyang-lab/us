@@ -1,0 +1,17 @@
+{
+  "outputs": {
+    "p17_2_1_filing_identity_observations.csv": {
+      "sha256": "ee832657ae5cccccdb0273069ab523de48e28164a6b11585b514a9dc4f68fb89",
+      "bytes": 52761
+    },
+    "p17_2_1_filing_registry.csv": {
+      "sha256": "0ee3b1d599d0fb1a9e357d16ae644bca9d71899f550d0c6631cb603a99d35aeb",
+      "bytes": 14796
+    },
+    "p17_2_1_summary.json": {
+      "sha256": "761235cc2d42d8af511ce12330c0ab81ea5715cd4af4aff476a73feb2c4103bf",
+      "bytes": 643
+    }
+  },
+  "note": "P17.2.1 metadata partial"
+}
