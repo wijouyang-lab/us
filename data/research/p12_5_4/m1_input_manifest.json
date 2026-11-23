@@ -1,0 +1,17 @@
+{
+  "bls_macro_events.csv": {
+    "path": "..\\_us_research\\data\\research\\macro_cross_sectional\\bls_macro_events.csv",
+    "bytes": 132719,
+    "sha256": "9c0eef3ca5f1ffd461dfe1fe17e3afb38f81bc6d7761423b8ddeeb2cebc34d78"
+  },
+  "p12_5_3_event_panel.csv": {
+    "path": "..\\_us_research\\data\\research\\macro_cross_sectional\\p12_5_3_event_panel.csv",
+    "bytes": 34155595,
+    "sha256": "f58bce925ad11f102e066a9a1152eeed580f74a3598983e136d505db691f47e9"
+  },
+  "fomc_rate_beta_panel.csv": {
+    "path": "..\\_us_research\\data\\research\\macro_cross_sectional\\fomc_rate_beta_panel.csv",
+    "bytes": 10450706,
+    "sha256": "05ebe57f4ca5dc1d8016dccf79d7dd83eac99e95b71d93514398f869d94544e6"
+  }
+}

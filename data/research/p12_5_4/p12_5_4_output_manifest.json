@@ -1,0 +1,40 @@
+{
+  "outputs": {
+    "m1_event_date_cluster.csv": {
+      "sha256": "9b30c31cb683719408b10d52863a7504dcc149289fc82b867b3976142431df89",
+      "bytes": 6683
+    },
+    "m1_event_inventory.csv": {
+      "sha256": "9c0eef3ca5f1ffd461dfe1fe17e3afb38f81bc6d7761423b8ddeeb2cebc34d78",
+      "bytes": 132719
+    },
+    "m1_input_manifest.json": {
+      "sha256": "26af02b5c1a5d5f5940d29f585cf17dc4cf79d242673ceceeaa6fc9a73dd42c1",
+      "bytes": 720
+    },
+    "m3_block_bootstrap.csv": {
+      "sha256": "a3ac8f4b543f80067cd4e9bbc56f7ecdf1ef0c1ff77feb14e68b22896c0f481f",
+      "bytes": 825
+    },
+    "m3_event_results.csv": {
+      "sha256": "49408ba56223fdf2ca63d270619e91f7429d2c19c244850138af5283d3135b2b",
+      "bytes": 13943
+    },
+    "m3_fomc_results.csv": {
+      "sha256": "b4fe0cce27295413f92ca82d8f293a538ff3e59ca9a9f82c0acdac4a19663107",
+      "bytes": 5944
+    },
+    "m3_hac_sensitivity.csv": {
+      "sha256": "9f34d242c854f8d6bbbc96351431e142bd41234e03b501250d6fc54361ffa4c7",
+      "bytes": 6724
+    },
+    "m3_multiple_testing.csv": {
+      "sha256": "19d360a225bb9cccc90016c436f5d9c9ff9a656703436febd5b7d6e8ed3df8d9",
+      "bytes": 20975
+    },
+    "p12_5_4_final_summary.json": {
+      "sha256": "f05ef67a545ca307ea0fe022a5223108be409a7615dcb5b58c2787010b33e7b2",
+      "bytes": 1912
+    }
+  }
+}

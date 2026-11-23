@@ -1,0 +1,67 @@
+{
+  "cpi_events": 105,
+  "employment_events": 104,
+  "cpi_rows": 44045,
+  "employment_rows": 43661,
+  "fomc_events": 76,
+  "tests": 52,
+  "top": [
+    {
+      "family": "EMPLOYMENT",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 20,
+      "events": 104,
+      "mean_spread": -0.0176739671850343,
+      "p_spread": 0.006989488086060895,
+      "q_bh_all": 0.1768410832826051,
+      "p_holm_all": 0.3634533804751665,
+      "test_spread": -0.0008116946920243061
+    },
+    {
+      "family": "EMPLOYMENT",
+      "feature": "ix_initial_payroll_change_beta_iwm",
+      "horizon": 5,
+      "events": 104,
+      "mean_spread": -0.005927569542776275,
+      "p_spread": 0.013913320195199148,
+      "q_bh_all": 0.1768410832826051,
+      "p_holm_all": 0.7095793299551566,
+      "test_spread": -0.003729265976071175
+    },
+    {
+      "family": "EMPLOYMENT",
+      "feature": "ix_initial_unemployment_rate_beta_iwm",
+      "horizon": 1,
+      "events": 99,
+      "mean_spread": -0.0027343471908192088,
+      "p_spread": 0.014029402369939159,
+      "q_bh_all": 0.1768410832826051,
+      "p_holm_all": 0.7095793299551566,
+      "test_spread": -0.0005146032217725716
+    },
+    {
+      "family": "FOMC",
+      "feature": "vol20_z",
+      "horizon": 20,
+      "events": 76,
+      "mean_spread": 0.010061745105617298,
+      "p_spread": 0.018830052946988914,
+      "q_bh_all": 0.1768410832826051,
+      "p_holm_all": 0.9226725944024567,
+      "test_spread": 0.007943784388114335
+    },
+    {
+      "family": "FOMC",
+      "feature": "beta_tlt_z",
+      "horizon": 1,
+      "events": 76,
+      "mean_spread": 0.0034372289173995427,
+      "p_spread": 0.022875737341831615,
+      "q_bh_all": 0.1768410832826051,
+      "p_holm_all": 1.0,
+      "test_spread": 0.0013428347072999593
+    }
+  ],
+  "min_q": 0.1768410832826051,
+  "status": "NO_GO"
+}
