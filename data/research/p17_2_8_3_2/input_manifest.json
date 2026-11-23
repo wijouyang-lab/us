@@ -1,0 +1,17 @@
+{
+  "p283_results": {
+    "path": "..\\_us_p17283\\data\\research\\p17_2_8_3_1\\p17_2_8_3_1_anchor_identity_results.csv",
+    "exists": true,
+    "sha256": "11fca29a946bf98ef974646588f4873d30c03f7c29398027ebc1b095a6c0e924"
+  },
+  "p27_cache": {
+    "path": "..\\_us_p1727\\data\\research\\p17_2_7\\cache",
+    "exists": true,
+    "sha256": null
+  },
+  "p281_cache": {
+    "path": "..\\_us_p17281\\data\\research\\p17_2_8_1\\cache",
+    "exists": true,
+    "sha256": null
+  }
+}
