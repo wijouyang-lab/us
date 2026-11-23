@@ -108,3 +108,62 @@ No quarterly PIT panel.
 - `p17_2_8_3_request_audit.csv`
 - `p17_2_8_3_reconciliation.csv`
 - `p17_2_8_3_summary.json`
+
+## P17.2.8.3.1 Raw Filing Forensic Replay
+
+This section supersedes the prior "cache hits = verified rows" claim.
+
+### Raw documents
+
+```text
+raw documents found/read: 259
+parse successes: 259
+parse exceptions: 0
+missing raw documents: 41
+network requests: 0
+```
+
+The 259 documents were read directly from the P17.2.7/P17.2.8.1 Inline XBRL
+cache. The 41 samples without a filing remain NO_HISTORICAL_FILING.
+
+### Full 300 revalidation
+
+```text
+VERIFIED_RECONFIRMED: 235
+NO_HISTORICAL_FILING: 41
+FILING_FOUND_IDENTITY_UNVERIFIED: 19
+REVOKED_TITLE_MISSING: 3
+AMBIGUOUS_SECURITY_CONTEXT: 2
+```
+
+Raw replay confirms the prior 235; no new point was promoted. PHM and MMM
+remain ambiguous; WHR/RVTY/EQR remain title-missing.
+
+### Anchors
+
+| anchor | candidate CIK | verified |
+|---|---:|---:|
+| A | 89 | 76 |
+| B | 93 | 75 |
+| C | 97 | 84 |
+
+Gate still fails.
+
+### Clean replay
+
+Two fresh runs produced:
+
+```text
+11fca29a946bf98ef974646588f4873d30c03f7c29398027ebc1b095a6c0e924
+```
+
+Both matched, and the result was produced directly from raw cached documents.
+
+### Route decision
+
+```text
+P17_2_8_3_1_SEC_IDENTITY_ROUTE = DATA_LIMITATION / NO-GO
+```
+
+A is 1 CIK and 4 verified short; B is 5 verified short. No further P17.2.8.4
+sampling loop is authorized. Retain 235 points as limited evidence only.
