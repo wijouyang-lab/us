@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-23T14:47:07Z",
+  "generated_at": "2026-11-23T15:02:48Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -62,7 +62,7 @@
     {
       "key": "ism",
       "indicator": "ISM制造业PMI",
-      "period": "2026年10月",
+      "period": "2026年11月",
       "forecast": 54.0,
       "actual": 54.5,
       "previous": null,
