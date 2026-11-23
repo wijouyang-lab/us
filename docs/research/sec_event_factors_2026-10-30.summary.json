@@ -1,0 +1,21 @@
+{
+  "rows": 150,
+  "tickers": 5,
+  "earnings_events": 92,
+  "eight_k_events": 107,
+  "management_events": 23,
+  "unavailable_fundamental": {
+    "Revenue_Growth": 150,
+    "EPS_Growth": 150,
+    "Gross_Margin_Change": 150,
+    "Operating_Margin_Change": 150,
+    "FCF_Change": 150
+  },
+  "unavailable_macro": {
+    "Macro_Rate_Change": 150,
+    "CPI_Surprise": 150,
+    "Payroll_Surprise": 150,
+    "VIX_Regime": 150
+  },
+  "pit_eligible": 0
+}

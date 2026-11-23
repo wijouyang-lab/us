@@ -1,0 +1,36 @@
+{
+  "label": "EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED",
+  "events": 150,
+  "horizons": {
+    "1": {
+      "matured": 146,
+      "mean_return": -0.0022210374302702217,
+      "median_return": -0.004895051643093951,
+      "positive_fraction": 0.3835616438356164
+    },
+    "5": {
+      "matured": 144,
+      "mean_return": 0.0022718462471915824,
+      "median_return": -0.005399090044419075,
+      "positive_fraction": 0.4305555555555556
+    },
+    "10": {
+      "matured": 144,
+      "mean_return": 0.004693992203466032,
+      "median_return": -0.005916744039206945,
+      "positive_fraction": 0.4791666666666667
+    },
+    "20": {
+      "matured": 142,
+      "mean_return": 0.016797376257372622,
+      "median_return": 0.014983402059092765,
+      "positive_fraction": 0.5985915492957746
+    },
+    "60": {
+      "matured": 135,
+      "mean_return": 0.06341590915437667,
+      "median_return": 0.029408529314485454,
+      "positive_fraction": 0.6296296296296297
+    }
+  }
+}
