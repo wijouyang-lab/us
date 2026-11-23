@@ -1,0 +1,27 @@
+{
+  "sample": {
+    "path": "../_us_p1726/data/research/p17_2_6/p17_2_6_sample_manifest.csv",
+    "exists": true,
+    "sha256": "732000337ee23fe1ef0dcac28556ef261086d2ac7707944c3b8c001b50dc165e"
+  },
+  "p27_cache": {
+    "path": "../_us_p1727/data/research/p17_2_7/cache",
+    "exists": true,
+    "sha256": null
+  },
+  "p281_cache": {
+    "path": "../_us_p17281/data/research/p17_2_8_1/cache",
+    "exists": true,
+    "sha256": null
+  },
+  "p390": {
+    "path": "../_us_p171/data/research/p17_1/p17_1_p390_identity_reconciliation.csv",
+    "exists": true,
+    "sha256": "c41f851a936710b6508fe4cd7c40119d92bd4a9e8584fe9f4271cf6bfdafa92b"
+  },
+  "p10": {
+    "path": "../_us_audit/p10/data/research/p10_5_2_verified_identity_crosswalk.csv",
+    "exists": true,
+    "sha256": "2b0ad5ce74c3bcb8be7a5fc4946fed1328c97883831993cc0a6e09b79362c969"
+  }
+}
