@@ -1,10 +1,10 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-24T09:17:14Z",
+  "generated_at": "2026-11-24T09:19:44Z",
   "fear_greed": {
-    "score": 17.19,
+    "score": 16.83,
     "rating": "extreme fear",
-    "timestamp": "2026-11-24T08:57:01+00:00",
+    "timestamp": "2026-11-24T09:02:01+00:00",
     "subindicators": {
       "market_momentum_sp500": {
         "score": 3.2,
@@ -23,7 +23,7 @@
         "rating": "extreme fear"
       },
       "market_volatility_vix": {
-        "score": 39.74,
+        "score": 37.18,
         "rating": "fear"
       },
       "junk_bond_demand": {
@@ -38,7 +38,7 @@
     "history_30d": [
       {
         "date": "2026-11-24",
-        "score": 17.19,
+        "score": 16.83,
         "rating": "extreme fear"
       },
       {
