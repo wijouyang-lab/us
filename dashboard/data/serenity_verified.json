@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-24T10:47:16Z",
+  "generated_at": "2026-11-24T11:02:18Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
@@ -33,7 +33,7 @@
     },
     {
       "ticker": "APP",
-      "earnings_date": "2026-11-04",
+      "earnings_date": "2027-02-10",
       "filings": [
         {
           "form": "10-Q",
@@ -59,7 +59,7 @@
     },
     {
       "ticker": "CME",
-      "earnings_date": "2026-10-21",
+      "earnings_date": "2027-02-03",
       "filings": [
         {
           "form": "10-Q",
@@ -85,7 +85,7 @@
     },
     {
       "ticker": "XYL",
-      "earnings_date": "2026-10-27",
+      "earnings_date": "2027-02-09",
       "filings": [
         {
           "form": "8-K",
@@ -111,7 +111,7 @@
     },
     {
       "ticker": "JCI",
-      "earnings_date": "2026-10-27",
+      "earnings_date": "2027-02-03",
       "filings": [
         {
           "form": "10-K",
@@ -175,7 +175,7 @@
     },
     {
       "ticker": "EOG",
-      "earnings_date": "2026-11-05",
+      "earnings_date": "2027-02-23",
       "filings": [
         {
           "form": "10-Q",
@@ -227,7 +227,7 @@
     },
     {
       "ticker": "CNP",
-      "earnings_date": "2026-10-27",
+      "earnings_date": "2027-02-18",
       "filings": [
         {
           "form": "8-K",
