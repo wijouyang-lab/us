@@ -93,3 +93,19 @@ is outside the current free-data route (P17 free SEC identity = NO-GO).
 - `docs/research/MULTI_FACTOR_FEATURE_CATALOG_V1.csv`
 - `docs/research/MULTI_FACTOR_EXIT_COMPARISON_V1.csv`
 - `docs/research/MULTI_FACTOR_TRADE_LEDGER_V1.csv`
+
+## V2 daily execution attempt ¡ª NOT COMPLETED
+
+A V2 daily close-to-close engine was written (`tools/research/mf_strategy_v2.py`) with
+next-session close execution, 5/10/20 bps costs, A/B/C scores, ATR/MA/rank/time exits,
+and 5Y/3Y/1Y windows. The full run did not complete within the execution budget:
+repeated 1,257-day x 500-name loops for three strategies, five exits and three cost
+scenarios exceeded the available runtime.
+
+No V2 result is reported here. The V1 monthly results remain the only completed
+comparison, and they do not support a PAPER-50000 candidate:
+
+- A: 3.08% CAGR, -42.25% max drawdown, -42% far outside 15% target.
+- B/C: current fundamentals applied to history, look-ahead, invalid for a decision.
+
+Final status remains **DATA_LIMITED / NO_GO**. No new strategy PR will be opened.
