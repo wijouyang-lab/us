@@ -1,43 +1,37 @@
-# Full-Universe Price Provider Audit
+# Full-Universe Price Provider Audit V1.1
 
 Date: 2026-11-25
-Source tested: yfinance (unofficial Yahoo Finance access)
 
-## Sample
+## Test executed
 
-36 tickers, stratified 12 each:
+yfinance, 6 months, daily, 500-ticker batches, threads enabled, per-batch
+isolation and resume.
 
-- COMMON
-- ADR
-- UNCLASSIFIED
+```text
+valid download universe: 5,501 COMMON+ADR
+successful tickers:      5,044
+NO_DATA:                   457
+20-valid-day coverage:   5,021 / 5,501 = 91.28%
+60-valid-day coverage:   4,975 / 5,501 = 90.44%
+```
 
-Result: 36/36 returned at least 20 rows.
+By type:
 
-This is not evidence for 5,453 names. The sample does not cover large/mid/small/
-micro market-cap strata, all exchanges, share classes, recent corporate actions
-or delisted names. Those strata remain **NOT_TESTED**.
+- COMMON: 4,750 / 5,186 = 91.59%
+- ADR: 271 / 315 = 86.03%
 
-## What worked
+## Failures
 
-- Daily OHLC, Close, Adj Close, Volume.
-- `period=6mo` and `period=1y`.
-- Writable yfinance timezone cache required; default location failed with
-  `OperationalError: unable to open database file`.
+- 457 names returned no usable rows (delisted, symbol mismatch, empty response).
+- 470 names flagged `CORPORATE_ACTION_REVIEW` by >50% raw-close move.
+- No company-action feed; flags are NOT confirmed splits.
 
-## What failed
+## License
 
-- Full-universe batch: `TypeError: expected string or bytes-like object, got
-  'float'` from a non-string ticker.
-- `$` preferred-share tickers can 404.
-- Occasional DNS/curl timeout (`GM` during top100 fetch), but batch continued.
+yfinance is unofficial Yahoo access. Research prototype only; not an
+exchange-grade or production data license. No paid source used.
 
-## License / limits
+## Decision
 
-yfinance is unofficial and not a licensed real-time market data source. It is
-acceptable for research prototyping, not for production execution, and not a
-guarantee of exchange-grade prices. No paid vendor or API key used.
-
-## Conclusion
-
-Provider audit: **PARTIAL**. Free source works for sampled and top100 names;
-full-market reliability is unproven.
+`FREE_PROVIDER_PARTIALLY_SUFFICIENT`: enough for COMMON research above 90%,
+not for ADR or a clean full-market production panel.

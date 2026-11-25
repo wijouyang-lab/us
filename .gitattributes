@@ -1,1 +1,3 @@
 data/universe/price_liquidity/*.csv -text
+data/universe/price_liquidity/*.csv -text
+data/universe/price_liquidity/*.csv.gz binary
