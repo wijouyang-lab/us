@@ -60,22 +60,29 @@ def main():
             p = pxv[i]; d = dates[i]; prev = i - 1
             # exits using previous close trigger, execute current close
             for ti in list(holdings):
-                h = holdings[ti]; price = p[ti]
-                if not np.isfinite(price): continue
+                h = holdings[ti]; price = p[ti]; prevp = pxv[prev, ti]
+                if not np.isfinite(price) or not np.isfinite(prevp): continue
                 trig = False; reason = ""
-                stopd = 0.06 if exit_mode == "fixed6" else 0.08 if exit_mode == "fixed8" else 0.025 * (atrv[prev, ti] if np.isfinite(atrv[prev, ti]) else 30)
-                if exit_mode in ("fixed6", "fixed8") and price <= h["entry"] * (1 - stopd): trig, reason = True, "STOP"
-                if exit_mode.startswith("atr"):
-                    mult = float(exit_mode[3:]) / 10
-                    trail = h["high"] * (1 - mult * (atrv[prev, ti] if np.isfinite(atrv[prev, ti]) else 30) / 100)
-                    if price <= max(h["stop"], trail): trig, reason = True, "ATR_TRAIL"
-                if exit_mode == "ma50" and np.isfinite(ma50v[prev, ti]) and price < ma50v[prev, ti]: trig, reason = True, "MA50"
-                if exit_mode == "rank" and rv[prev, ti] > 20: trig, reason = True, "RANK"
-                if h["days"] >= 20: trig, reason = True, "TIME"
+                # trigger on PRIOR close, execute at CURRENT close
+                if exit_mode in ("fixed6", "fixed8"):
+                    if prevp <= h["stop"]: trig, reason = True, "STOP"
+                elif exit_mode.startswith("atr"):
+                    if prevp <= h["trail"]: trig, reason = True, "ATR_TRAIL"
+                elif exit_mode == "ma50":
+                    if np.isfinite(ma50v[prev, ti]) and prevp < ma50v[prev, ti]: trig, reason = True, "MA50"
+                elif exit_mode == "rank20":
+                    if rv[prev, ti] > 20: trig, reason = True, "RANK20"
+                elif exit_mode == "time20":
+                    if h["days"] >= 20: trig, reason = True, "TIME20"
                 if trig:
-                    proceeds = h["sh"] * price * (1 - bps / 1e4); cash += proceeds; total_cost += bps / 1e4 * h["sh"] * price
-                    trades.append({"ticker": tickers[ti], "entry_date": h["date"], "exit_date": str(d.date()), "entry_price": h["entry"],
-                                   "exit_price": price, "shares": h["sh"], "exit_reason": reason, "pnl": (price - h["entry"]) * h["sh"] - 2 * bps / 1e4 * h["entry"] * h["sh"]})
+                    gross = (price - h["entry"]) * h["sh"]
+                    sell_fee = price * h["sh"] * bps / 1e4
+                    net = gross - h["buy_fee"] - sell_fee
+                    cash += price * h["sh"] - sell_fee; total_cost += sell_fee
+                    trades.append({"ticker": tickers[ti], "signal_date": h["signal_date"], "entry_date": h["date"], "execution_date": str(d.date()),
+                                   "exit_signal_date": str(dates[prev].date()), "exit_execution_date": str(d.date()),
+                                   "entry_price": h["entry"], "exit_price": price, "shares": h["sh"], "buy_fee": h["buy_fee"],
+                                   "sell_fee": sell_fee, "gross_pnl": gross, "pnl": net, "exit_reason": reason})
                     del holdings[ti]
             eq = cash + sum(h["sh"] * p[t] for t, h in holdings.items() if np.isfinite(p[t]))
             dd = eq / max(nav) - 1 if nav else 0
@@ -87,13 +94,28 @@ def main():
                     budget = min(eq * 0.005 / mult, eq * 0.10, cash * 0.95)
                     if budget < 500: continue
                     sh = budget / p[ti]; cost = budget * bps / 1e4; cash -= budget + cost; total_cost += cost
-                    holdings[ti] = {"sh": sh, "entry": p[ti], "date": str(d.date()), "stop": p[ti] * (1 - mult), "high": p[ti], "days": 0}
+                    holdings[ti] = {"sh": sh, "entry": p[ti], "date": str(d.date()), "signal_date": str(dates[prev].date()),
+                                    "stop": p[ti] * (1 - mult), "trail": p[ti] * (1 - mult), "high": p[ti],
+                                    "buy_fee": cost, "days": 0}
                     if len(holdings) >= maxpos: break
             for ti, h in holdings.items():
                 if np.isfinite(p[ti]): h["high"] = max(h["high"], p[ti])
+                if exit_mode.startswith("atr"):
+                    mult = float(exit_mode[3:]) / 10
+                    av = atrv[i, ti] if np.isfinite(atrv[i, ti]) else 30
+                    h["trail"] = max(h["trail"], h["high"] * (1 - mult * av / 100))
                 h["days"] += 1
             eq = cash + sum(h["sh"] * p[t] for t, h in holdings.items() if np.isfinite(p[t]))
             nav.append(eq); rets.append(eq / nav[-2] - 1 if len(nav) > 1 else 0)
+        # open positions are not silently dropped
+        lastp = pxv[idx[-1]]
+        for ti, h in holdings.items():
+            mark = lastp[ti] if np.isfinite(lastp[ti]) else h["entry"]
+            trades.append({"ticker": tickers[ti], "signal_date": h["signal_date"], "entry_date": h["date"],
+                           "execution_date": h["date"], "exit_signal_date": "", "exit_execution_date": "",
+                           "entry_price": h["entry"], "exit_price": mark, "shares": h["sh"], "buy_fee": h["buy_fee"],
+                           "sell_fee": 0.0, "gross_pnl": (mark - h["entry"]) * h["sh"],
+                           "pnl": (mark - h["entry"]) * h["sh"] - h["buy_fee"], "exit_reason": "OPEN_AT_END"})
         return pd.Series(nav, index=[dates[i] for i in idx]), pd.DataFrame(trades), total_cost
 
     windows = {"5Y": "2021-10-14", "3Y": "2023-10-13", "1Y": "2025-10-13"}
@@ -104,7 +126,7 @@ def main():
             m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"strategy": k, "window": w, "cost": cost, "trades": len(tr)})
             comp.append(m); nav.to_csv(a.out / f"nav_{w}_{k}.csv", header=["nav"])
             if w == "5Y": tr.to_csv(a.out / f"trades_{w}_{k}.csv", index=False)
-    for ex in ["fixed6", "fixed8", "atr20", "atr25", "atr30", "ma50", "rank"]:
+    for ex in ["fixed6", "fixed8", "atr20", "atr25", "atr30", "ma50", "rank20", "time20"]:
         nav, tr, cost = run("A", "2021-10-14", "2026-10-13", ex, 10)
         m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"exit": ex, "trades": len(tr), "cost": cost})
         exits.append(m)
@@ -127,3 +149,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

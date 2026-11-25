@@ -11,7 +11,7 @@ def test_fast_results_exist():
 
 def test_a_5y():
     d = pd.read_csv("docs/research/MULTI_FACTOR_V2_STRATEGY_COMPARISON.csv"); d = d[(d.strategy=="A") & (d.window=="5Y")]; d = d.iloc[[0]].set_index("strategy")
-    assert abs(d.loc["A", "CAGR"] - 0.092963899) < 1e-3
+    assert abs(d.loc["A", "CAGR"] - 0.0983167) < 1e-3
 
 
 def test_a_drawdown_under_15():
@@ -21,7 +21,7 @@ def test_a_drawdown_under_15():
 
 def test_exit_variants():
     e = pd.read_csv("docs/research/MULTI_FACTOR_V2_EXIT_COMPARISON.csv")
-    assert set(e.exit) == {"fixed6", "fixed8", "atr20", "atr25", "atr30", "ma50", "rank"}
+    assert set(e.exit) == {"fixed6", "fixed8", "atr20", "atr25", "atr30", "ma50", "rank20", "time20"}
 
 
 def test_fixed6_vs_fixed8_differ():
@@ -36,7 +36,7 @@ def test_cost_rows():
 
 def test_ledger_nonempty():
     l = pd.read_csv("docs/research/MULTI_FACTOR_V2_TRADE_LEDGER.csv")
-    assert len(l) > 1000
+    assert len(l) > 500
     assert "exit_reason" in l.columns
 
 
@@ -53,4 +53,5 @@ def test_annual_returns():
 def test_no_paper_authorization():
     s = Path("docs/research/MULTI_FACTOR_STRATEGY_V2_FINAL.md").read_text()
     assert "PAPER_50000 = NOT_AUTHORIZED" in s
+
 

@@ -1,72 +1,97 @@
-# Multi-Factor Price Strategy V2 — Final
+# Multi-Factor Price Strategy V2 — Execution & Exit Audit
 
 Date: 2026-11-25
 Branch: `research/multi-factor-strategy-competition-v1`
 PR: #626
-Status: **PROMISING_BUT_UNPROVEN** (A risk profile); no PAPER authorization
+Final HEAD: `1a9999ccb82b11e75d9e09b7c5c305f39ede02cc` (before this audit commit)
+Status: **PROMISING_BUT_UNPROVEN**, no PAPER authorization
 
-## 1. What was run
+## 1. P0 fixes
 
-- Daily close-to-close engine, signal at prior close, execution at next close.
-- 502-ticker snapshot, 2016-12-12..2026-10-13.
-- Top 10, max 10 positions, 0.50% risk per trade, 10% single-name cap.
-- Double-side cost: 10 bps per side (buy and sell each 10 bps).
-- Windows: 5Y 2021-10-14..2026-10-13; 3Y 2023-10-13..; 1Y 2025-10-13..
-- Exits: fixed 6%, fixed 8%, ATR20, ATR25, ATR30, MA50, rank, time 20d.
-- Benchmarks: SPY, QQQ, BIL, price-return only (no total-return claim).
+- Exits are confirmed on **prior close** and executed at **current close**.
+- Entries already used prior-close signal and current-close execution.
+- Ledger records `signal_date`, `entry_date`, `execution_date`,
+  `exit_signal_date`, `exit_execution_date`, entry/exit prices, shares, both fees,
+  gross and net PnL.
+- Final open positions are emitted as `OPEN_AT_END`, not silently dropped.
+- NAV is computed as `cash + market value` every day.
 
-The prior V2 script was replaced by a vectorized engine. The slow nested
-DataFrame loop was not used for results.
+No OHLC Low/High is available, so no intraday stop assumption is claimed.
 
-## 2. Strategy results
+## 2. P1 exit independence
+
+Independent modes: fixed6, fixed8, ATR20, ATR25, ATR30, MA50, rank20, time20.
+No implicit time exit is added to other modes.
+
+## 3. Corrected results
 
 | Window | Strategy | CAGR | Vol | Sharpe | MaxDD | Trades |
 |---|---|---:|---:|---:|---:|---:|
-| 5Y | A | 9.30% | 12.7% | 0.763 | -11.46% | 637 |
-| 5Y | B | 6.81% | 12.0% | 0.607 | -12.33% | 635 |
-| 5Y | C | 7.93% | 12.7% | 0.664 | -12.88% | 635 |
-| 3Y | A | 16.96% | 14.0% | 1.193 | -10.77% | 438 |
-| 3Y | B | 14.23% | 12.9% | 1.092 | -12.33% | 435 |
-| 3Y | C | 17.60% | 13.9% | 1.237 | -11.05% | 433 |
-| 1Y | A | 35.91% | 14.8% | 2.146 | -8.14% | 139 |
-| 1Y | B | 22.01% | 14.8% | 1.420 | -12.27% | 147 |
-| 1Y | C | 30.41% | 14.4% | 1.911 | -8.47% | 141 |
+| 5Y | A | 9.83% | 13.2% | 0.777 | -14.15% | 400 |
+| 5Y | B | 5.94% | 11.5% | 0.560 | -14.33% | 407 |
+| 5Y | C | 8.18% | 12.8% | 0.679 | -12.03% | 413 |
+| 3Y | A | 11.17% | 13.9% | 0.832 | -14.13% | 288 |
+| 3Y | B | 6.87% | 12.5% | 0.594 | -14.10% | 287 |
+| 3Y | C | 11.48% | 13.6% | 0.865 | -12.03% | 294 |
+| 1Y | A | 19.01% | 15.0% | 1.232 | -7.75% | 107 |
+| 1Y | B | 12.52% | 13.5% | 0.942 | -10.86% | 112 |
+| 1Y | C | 15.14% | 15.2% | 1.003 | -11.00% | 115 |
 
-5Y benchmarks:
+Benchmarks:
 
-| Benchmark | CAGR | Vol | Sharpe | MaxDD |
+| Window | SPY CAGR | SPY DD | QQQ CAGR | QQQ DD |
 |---|---:|---:|---:|---:|
-| SPY | 11.85% | 17.2% | 0.747 | -25.36% |
-| QQQ | 15.14% | 22.9% | 0.734 | -35.62% |
-| BIL | 3.58% | 0.28% | 12.52 | -0.05% |
+| 5Y | 11.85% | -25.36% | 15.14% | -35.62% |
+| 3Y | 21.87% | -19.00% | 26.94% | -22.88% |
+| 1Y | 17.41% | -9.13% | 23.62% | -12.19% |
 
-A underperforms SPY CAGR by ~2.5pp but has less than half the SPY drawdown and a
-slightly higher Sharpe. It meets the 15% drawdown target on 5Y/3Y/1Y.
+## 4. Old vs corrected
 
-## 3. Exit comparison (A, 5Y, 10 bps/side)
+| Metric | Preliminary | Corrected |
+|---|---:|---:|
+| A 5Y CAGR | 9.30% | **9.83%** |
+| A 5Y MaxDD | -11.46% | **-14.15%** |
+| A 3Y CAGR | 16.96% | **11.17%** |
+| A 1Y CAGR | 35.91% | **19.01%** |
+
+The old 3Y/1Y figures were inflated by same-close exits and implicit time exits.
+The corrected 5Y return is slightly higher but drawdown is worse and still under
+15%.
+
+## 5. Exit comparison (A, 5Y)
 
 | Exit | CAGR | MaxDD | Sharpe | Trades |
 |---|---:|---:|---:|---:|
-| fixed6 | 14.13% | -18.57% | 0.807 | 643 |
-| fixed8 | 10.16% | -16.33% | 0.748 | 608 |
-| ATR20 | 12.01% | -14.12% | 0.805 | 734 |
-| ATR25 | 9.30% | **-11.46%** | 0.763 | 637 |
-| ATR30 | 8.70% | -12.31% | 0.845 | 585 |
-| MA50 | 8.77% | -15.57% | 0.710 | 590 |
-| rank | -2.46% | -17.36% | -0.481 | 244 |
+| fixed6 | 4.59% | -24.00% | 0.349 | 75 |
+| fixed8 | 11.37% | -21.24% | 0.697 | 50 |
+| ATR20 | 10.94% | -13.85% | 0.760 | 550 |
+| ATR25 | 9.83% | **-14.15%** | 0.777 | 400 |
+| ATR30 | 8.93% | -11.52% | **0.818** | 318 |
+| MA50 | 8.89% | -14.13% | 0.632 | 277 |
+| rank20 | -2.42% | -17.30% | -0.469 | 236 |
+| time20 | 8.80% | -12.99% | 0.705 | 530 |
 
-ATR25 gives the best drawdown; ATR30 best Sharpe. Fixed6 has higher return but
-breaches 15% DD. Rank exit is destructive.
+ATR25 remains the best balance for a 15% target. ATR30 has the best Sharpe and
+lower DD. fixed6 is clearly bad; fixed8 has high CAGR but breaches 15%.
 
-## 4. Cost sensitivity (A, 5Y)
+## 6. Cost sensitivity (A, 5Y)
 
 | bps/side | CAGR | MaxDD | Sharpe |
 |---|---:|---:|---:|
-| 5 | 10.26% | -11.08% | 0.833 |
-| 10 | 9.30% | -11.46% | 0.763 |
-| 20 | 7.40% | -12.31% | 0.622 |
+| 5 | 10.41% | -13.86% | 0.818 |
+| 10 | 9.83% | -14.15% | 0.777 |
+| 20 | 8.68% | -14.77% | 0.696 |
 
-## 5. Conclusion
+## 7. Ledger / NAV
+
+- 400 A trades over 5Y, 407 B, 413 C.
+- Ledger: 1,220 rows including 30 `OPEN_AT_END`.
+- Buy and sell fees are both recorded from actual notional.
+- PnL = gross − buy fee − sell fee.
+- NAV = cash + mark-to-market holdings each day.
+- Final open positions are explicitly marked, not discarded.
+
+## 8. Conclusion
 
 ```text
 A = PROMISING_BUT_UNPROVEN
@@ -76,28 +101,11 @@ OVERALL = PROMISING_BUT_UNPROVEN
 PAPER_50000 = NOT_AUTHORIZED
 ```
 
-Why not PAPER:
+A meets 15% DD on 5Y/3Y/1Y but underperforms SPY CAGR on 5Y/3Y, has no strict
+walk-forward OOS, uses a partial 502-name universe, and unadjusted close prices.
+It is observation-only.
 
-1. No strict chronological OOS/walk-forward was run.
-2. A underperforms SPY CAGR on 5Y and 3Y.
-3. The 1Y result is exceptional and likely regime-specific.
-4. The universe is a 502-name partial PIT snapshot, not full market.
-5. Prices are unadjusted close, not total return.
-
-Why not pure NO_GO: A has a genuine risk profile (5Y DD -11.5% vs SPY -25.4%,
-Sharpe 0.763 vs 0.747) and survives 20 bps costs with positive CAGR. It is worth
-observing, not funding.
-
-## 6. Data limitations
-
-- Price only; no dividend adjustment.
-- No delisting return.
-- Historical universe incomplete.
-- No strict OOS; all results are in-sample-ish.
-- Financial strategies are not part of V2; current fundamentals remain
-  current-selection only.
-
-## 7. Files
+## 9. Files
 
 - `tools/research/mf_strategy_v2_fast.py`
 - `tests/test_mf_strategy_v2_fast.py`
