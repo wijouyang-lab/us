@@ -117,3 +117,12 @@ It is observation-only.
 - `docs/research/MULTI_FACTOR_V2_DAILY_NAV.csv`
 - `docs/research/MULTI_FACTOR_V2_ANNUAL_RETURNS.csv`
 - `docs/research/MULTI_FACTOR_V2_RUNTIME_PROFILE.md`
+## V2.1 Independent audit addendum
+
+- Raw close and mark close are separated; trades use raw close only.
+- Pending exits are retried on the next real close; no same-close fill.
+- Open positions are `OPEN_AT_END`.
+- Independent ledger reconstruction: max NAV difference 2.91e-11 USD.
+- A 5Y unchanged: 9.83% CAGR, -14.15% MaxDD, 0.777 Sharpe, 400 trades.
+- `MULTI_FACTOR_V2_INDEPENDENT_LEDGER_AUDIT.md` has the audit details.
+- Status remains `PROMISING_BUT_UNPROVEN`; no PAPER authorization.

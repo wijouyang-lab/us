@@ -34,8 +34,9 @@ def main():
     a = ap.parse_args(); a.out.mkdir(parents=True, exist_ok=True)
     snap = pd.read_csv(a.snapshot, usecols=COLS); snap["Technical_Date"] = pd.to_datetime(snap.Technical_Date)
     snap = snap.sort_values(["Technical_Date", "Ticker"]).drop_duplicates(["Technical_Date", "Ticker"])
-    px = snap.pivot(index="Technical_Date", columns="Ticker", values="Price").sort_index().ffill(limit=5)
-    dates = px.index; tickers = px.columns; n = len(tickers)
+    raw = snap.pivot(index="Technical_Date", columns="Ticker", values="Price").sort_index()
+    mark = raw.ffill(limit=5)
+    dates = raw.index; tickers = raw.columns; n = len(tickers)
     scores = {k: pd.DataFrame(np.nan, index=dates, columns=tickers) for k in "ABC"}
     atr = pd.DataFrame(np.nan, index=dates, columns=tickers); ma50 = atr.copy()
     for d, g in snap.groupby("Technical_Date"):
@@ -46,35 +47,40 @@ def main():
         atr.loc[d, g.index] = g.ATR_Pct.values; ma50.loc[d, g.index] = g.MA50.values
     # ranks per score
     ranks = {k: scores[k].rank(axis=1, ascending=False) for k in "ABC"}
-    pxv = px.values; atrv = atr.values; ma50v = ma50.values
+    rawv = raw.values; markv = mark.values; atrv = atr.values; ma50v = ma50.values
     spy = pd.read_csv(a.spy); spy["Date"] = pd.to_datetime(spy.Date); spy = spy.set_index("Date").Close.sort_index()
     regime = (spy > spy.rolling(200).mean()).reindex(dates).ffill().values
     tix = {t: i for i, t in enumerate(tickers)}
 
     def run(score_key, start, end, exit_mode, bps):
         idx = [i for i, d in enumerate(dates) if pd.Timestamp(start) <= d <= pd.Timestamp(end)]
-        cash = 50000.0; holdings = {}; nav = []; rets = []; trades = []; maxpos = 10; total_cost = 0.0
+        cash = 50000.0; holdings = {}; nav = []; rets = []; trades = []; maxpos = 10; total_cost = 0.0; delayed = 0; skip_buy = 0; stale_days = 0; max_age = 0
         sv = scores[score_key].values; rv = ranks[score_key].values
         for j, i in enumerate(idx):
             if j == 0: nav.append(cash); continue
-            p = pxv[i]; d = dates[i]; prev = i - 1
+            p = markv[i]; d = dates[i]; prev = i - 1
             # exits using previous close trigger, execute current close
             for ti in list(holdings):
-                h = holdings[ti]; price = p[ti]; prevp = pxv[prev, ti]
-                if not np.isfinite(price) or not np.isfinite(prevp): continue
-                trig = False; reason = ""
-                # trigger on PRIOR close, execute at CURRENT close
-                if exit_mode in ("fixed6", "fixed8"):
-                    if prevp <= h["stop"]: trig, reason = True, "STOP"
-                elif exit_mode.startswith("atr"):
-                    if prevp <= h["trail"]: trig, reason = True, "ATR_TRAIL"
-                elif exit_mode == "ma50":
-                    if np.isfinite(ma50v[prev, ti]) and prevp < ma50v[prev, ti]: trig, reason = True, "MA50"
-                elif exit_mode == "rank20":
-                    if rv[prev, ti] > 20: trig, reason = True, "RANK20"
-                elif exit_mode == "time20":
-                    if h["days"] >= 20: trig, reason = True, "TIME20"
-                if trig:
+                h = holdings[ti]; price = rawv[i, ti]; prevp = h["last_raw"]
+                reason = h.get("pending_reason", "")
+                trig = bool(h.get("pending"))
+                if not trig and np.isfinite(prevp):
+                    if exit_mode in ("fixed6", "fixed8"):
+                        if prevp <= h["stop"]: trig, reason = True, "STOP"
+                    elif exit_mode.startswith("atr"):
+                        if prevp <= h["trail"]: trig, reason = True, "ATR_TRAIL"
+                    elif exit_mode == "ma50":
+                        if np.isfinite(ma50v[prev, ti]) and prevp < ma50v[prev, ti]: trig, reason = True, "MA50"
+                    elif exit_mode == "rank20":
+                        if rv[prev, ti] > 20: trig, reason = True, "RANK20"
+                    elif exit_mode == "time20":
+                        if h["days"] >= 20: trig, reason = True, "TIME20"
+                if trig and not np.isfinite(price):
+                    if not h.get("pending"):
+                        delayed += 1
+                    h["pending"] = True; h["pending_reason"] = reason
+                    continue
+                if trig and np.isfinite(price):
                     gross = (price - h["entry"]) * h["sh"]
                     sell_fee = price * h["sh"] * bps / 1e4
                     net = gross - h["buy_fee"] - sell_fee
@@ -89,17 +95,17 @@ def main():
             if j > 0 and regime[prev] and dd > -0.15 and len(holdings) < maxpos:
                 row = sv[prev]; order = np.argsort(-np.nan_to_num(row, nan=-1e9))[:30]
                 for ti in order:
-                    if ti in holdings or not np.isfinite(p[ti]) or not np.isfinite(atrv[prev, ti]): continue
+                    if ti in holdings or not np.isfinite(rawv[i, ti]) or not np.isfinite(atrv[prev, ti]): skip_buy += 1; continue
                     mult = 0.06 if exit_mode == "fixed6" else 0.08 if exit_mode == "fixed8" else max(0.04, (float(exit_mode[3:]) / 10 if exit_mode.startswith("atr") else 2.5) * atrv[prev, ti] / 100)
                     budget = min(eq * 0.005 / mult, eq * 0.10, cash * 0.95)
                     if budget < 500: continue
-                    sh = budget / p[ti]; cost = budget * bps / 1e4; cash -= budget + cost; total_cost += cost
-                    holdings[ti] = {"sh": sh, "entry": p[ti], "date": str(d.date()), "signal_date": str(dates[prev].date()),
-                                    "stop": p[ti] * (1 - mult), "trail": p[ti] * (1 - mult), "high": p[ti],
+                    sh = budget / rawv[i, ti]; cost = budget * bps / 1e4; cash -= budget + cost; total_cost += cost
+                    holdings[ti] = {"sh": sh, "entry": rawv[i, ti], "last_raw": rawv[i, ti], "date": str(d.date()), "signal_date": str(dates[prev].date()),
+                                    "stop": rawv[i, ti] * (1 - mult), "trail": rawv[i, ti] * (1 - mult), "high": rawv[i, ti],
                                     "buy_fee": cost, "days": 0}
                     if len(holdings) >= maxpos: break
             for ti, h in holdings.items():
-                if np.isfinite(p[ti]): h["high"] = max(h["high"], p[ti])
+                if np.isfinite(rawv[i, ti]): h["high"] = max(h["high"], rawv[i, ti]); h["last_raw"] = rawv[i, ti]
                 if exit_mode.startswith("atr"):
                     mult = float(exit_mode[3:]) / 10
                     av = atrv[i, ti] if np.isfinite(atrv[i, ti]) else 30
@@ -108,7 +114,7 @@ def main():
             eq = cash + sum(h["sh"] * p[t] for t, h in holdings.items() if np.isfinite(p[t]))
             nav.append(eq); rets.append(eq / nav[-2] - 1 if len(nav) > 1 else 0)
         # open positions are not silently dropped
-        lastp = pxv[idx[-1]]
+        lastp = markv[idx[-1]]
         for ti, h in holdings.items():
             mark = lastp[ti] if np.isfinite(lastp[ti]) else h["entry"]
             trades.append({"ticker": tickers[ti], "signal_date": h["signal_date"], "entry_date": h["date"],
@@ -116,22 +122,22 @@ def main():
                            "entry_price": h["entry"], "exit_price": mark, "shares": h["sh"], "buy_fee": h["buy_fee"],
                            "sell_fee": 0.0, "gross_pnl": (mark - h["entry"]) * h["sh"],
                            "pnl": (mark - h["entry"]) * h["sh"] - h["buy_fee"], "exit_reason": "OPEN_AT_END"})
-        return pd.Series(nav, index=[dates[i] for i in idx]), pd.DataFrame(trades), total_cost
+        return pd.Series(nav, index=[dates[i] for i in idx]), pd.DataFrame(trades), total_cost, {"delayed_exits": delayed, "skipped_buys": skip_buy, "stale_days": stale_days, "max_age": max_age}
 
     windows = {"5Y": "2021-10-14", "3Y": "2023-10-13", "1Y": "2025-10-13"}
     comp = []; exits = []; ledgers = []
     for w, start in windows.items():
         for k in "ABC":
-            nav, tr, cost = run(k, start, "2026-10-13", "atr25", 10)
+            nav, tr, cost, stats = run(k, start, "2026-10-13", "atr25", 10)
             m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"strategy": k, "window": w, "cost": cost, "trades": len(tr)})
             comp.append(m); nav.to_csv(a.out / f"nav_{w}_{k}.csv", header=["nav"])
             if w == "5Y": tr.to_csv(a.out / f"trades_{w}_{k}.csv", index=False)
     for ex in ["fixed6", "fixed8", "atr20", "atr25", "atr30", "ma50", "rank20", "time20"]:
-        nav, tr, cost = run("A", "2021-10-14", "2026-10-13", ex, 10)
+        nav, tr, cost, stats = run("A", "2021-10-14", "2026-10-13", ex, 10)
         m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"exit": ex, "trades": len(tr), "cost": cost})
         exits.append(m)
     for bps in [5, 10, 20]:
-        nav, tr, cost = run("A", "2021-10-14", "2026-10-13", "atr25", bps)
+        nav, tr, cost, stats = run("A", "2021-10-14", "2026-10-13", "atr25", bps)
         m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"strategy": "A", "bps_per_side": bps, "trades": len(tr), "cost": cost})
         comp.append(m)
     # benchmarks
@@ -149,4 +155,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
 

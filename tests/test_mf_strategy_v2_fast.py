@@ -55,3 +55,12 @@ def test_no_paper_authorization():
     assert "PAPER_50000 = NOT_AUTHORIZED" in s
 
 
+import json
+from pathlib import Path
+def test_independent_nav_diff():
+    r=json.loads(Path("docs/research/MULTI_FACTOR_V2_RECONCILIATION.json").read_text())
+    assert r["max_abs_diff"] < 1e-6
+def test_independent_nav_file():
+    import pandas as pd
+    d=pd.read_csv("docs/research/MULTI_FACTOR_V2_INDEPENDENT_NAV.csv")
+    assert len(d)>1000 and d["diff"].abs().max()<1e-6
