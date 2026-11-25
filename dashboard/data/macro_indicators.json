@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-25T13:32:07Z",
+  "generated_at": "2026-11-25T13:47:06Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -128,7 +128,7 @@
     {
       "key": "claims",
       "name": "每周初请失业金人数",
-      "value": 203.0,
+      "value": 189.0,
       "unit": "K",
       "date": null,
       "prev": null,
