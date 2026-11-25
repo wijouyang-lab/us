@@ -54,7 +54,7 @@ def main():
 
     def run(score_key, start, end, exit_mode, bps):
         idx = [i for i, d in enumerate(dates) if pd.Timestamp(start) <= d <= pd.Timestamp(end)]
-        cash = 50000.0; holdings = {}; nav = []; rets = []; trades = []; maxpos = 10; total_cost = 0.0; delayed = 0; skip_buy = 0; stale_days = 0; max_age = 0
+        cash = 50000.0; holdings = {}; nav = []; rets = []; trades = []; maxpos = 10; total_cost = 0.0; delayed = 0; skip_buy = 0; stale_days = 0; max_age = 0; max_pending = 0; val_exceptions = 0; unvalued_end = 0
         sv = scores[score_key].values; rv = ranks[score_key].values
         for j, i in enumerate(idx):
             if j == 0: nav.append(cash); continue
@@ -122,7 +122,7 @@ def main():
                            "entry_price": h["entry"], "exit_price": mark, "shares": h["sh"], "buy_fee": h["buy_fee"],
                            "sell_fee": 0.0, "gross_pnl": (mark - h["entry"]) * h["sh"],
                            "pnl": (mark - h["entry"]) * h["sh"] - h["buy_fee"], "exit_reason": "OPEN_AT_END"})
-        return pd.Series(nav, index=[dates[i] for i in idx]), pd.DataFrame(trades), total_cost, {"delayed_exits": delayed, "skipped_buys": skip_buy, "stale_days": stale_days, "max_age": max_age}
+        return pd.Series(nav, index=[dates[i] for i in idx]), pd.DataFrame(trades), total_cost, {"delayed_exits": delayed, "skipped_buys": skip_buy, "stale_mark_position_days": stale_days, "max_age": max_age, "max_pending_days": max_pending, "valuation_exceptions": val_exceptions, "unvalued_end_positions": unvalued_end}
 
     windows = {"5Y": "2021-10-14", "3Y": "2023-10-13", "1Y": "2025-10-13"}
     comp = []; exits = []; ledgers = []
@@ -155,6 +155,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
