@@ -1,10 +1,10 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-25T22:04:50Z",
+  "generated_at": "2026-11-25T22:17:36Z",
   "fear_greed": {
     "score": 15.23,
     "rating": "extreme fear",
-    "timestamp": "2026-11-25T21:44:40+00:00",
+    "timestamp": "2026-11-25T21:59:35+00:00",
     "subindicators": {
       "market_momentum_sp500": {
         "score": 2.8,
