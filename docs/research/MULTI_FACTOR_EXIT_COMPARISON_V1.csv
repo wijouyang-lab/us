@@ -1,0 +1,5 @@
+method,status,reason
+A_TREND_MONTHLY,RUN,price-only
+STOP_LOSS,NOT_RUN,no daily execution
+ATR_TRAIL,NOT_RUN,no daily execution
+FUNDAMENTAL_EXIT,NOT_RUN,no PIT fundamentals
