@@ -1,0 +1,78 @@
+{
+  "status": "DATA_LIMITED",
+  "reason": "B/C use current fundamentals without PIT; price-only A valid but sample-limited; no full PIT universe",
+  "strategies": [
+    {
+      "CAGR": 0.03075764647660595,
+      "Vol": 0.2090012322453431,
+      "Sharpe": 0.14716490494419696,
+      "MaxDD": -0.4224975444425868,
+      "Calmar": 0.0727995863672661,
+      "Days": 58,
+      "FinalNAV": 57884.20454847716,
+      "strategy": "A",
+      "turnover": 0.9224137931034483,
+      "avg_holdings": 10.0
+    },
+    {
+      "CAGR": 0.14504345415143716,
+      "Vol": 0.2011186433702017,
+      "Sharpe": 0.7211835348573518,
+      "MaxDD": -0.19606742644005026,
+      "Calmar": 0.7397631354935225,
+      "Days": 58,
+      "FinalNAV": 96222.39996090998,
+      "strategy": "B",
+      "turnover": 0.020689655172413796,
+      "avg_holdings": 10.0
+    },
+    {
+      "CAGR": 0.12207437257045739,
+      "Vol": 0.23962566812220723,
+      "Sharpe": 0.5094377974074147,
+      "MaxDD": -0.3598793149094559,
+      "Calmar": 0.3392091946189538,
+      "Days": 58,
+      "FinalNAV": 87245.14749309451,
+      "strategy": "C",
+      "turnover": 0.8241379310344829,
+      "avg_holdings": 10.0
+    },
+    {
+      "CAGR": 0.12825391986574397,
+      "Vol": 0.211873756662517,
+      "Sharpe": 0.6053317875985611,
+      "MaxDD": -0.3410474689324392,
+      "Calmar": 0.376058852649485,
+      "Days": 1237,
+      "FinalNAV": 91082.58432172616,
+      "strategy": "SPY",
+      "turnover": 0.0,
+      "avg_holdings": 0.0
+    },
+    {
+      "CAGR": 0.18480941977280807,
+      "Vol": 0.2579204341355389,
+      "Sharpe": 0.7165365566796832,
+      "MaxDD": -0.35617215180846795,
+      "Calmar": 0.5188766691456259,
+      "Days": 1237,
+      "FinalNAV": 116681.88110974895,
+      "strategy": "QQQ",
+      "turnover": 0.0,
+      "avg_holdings": 0.0
+    },
+    {
+      "CAGR": 0.023609168682154902,
+      "Vol": 0.0026720274589025045,
+      "Sharpe": 8.835675922227242,
+      "MaxDD": -0.0020851864971535017,
+      "Calmar": 11.322329544327998,
+      "Days": 1237,
+      "FinalNAV": 56073.00198248286,
+      "strategy": "BIL",
+      "turnover": 0.0,
+      "avg_holdings": 0.0
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+feature,category,source,pit,used
+Momentum_20D_Pct,trend,snapshot,yes,A
+Momentum_60D_Pct,trend,snapshot,yes,A
+Stock_RS_20D_vs_SPY,relative_strength,snapshot,yes,A
+Volume_Ratio_20D,volume,snapshot,yes,A
+MA20_Slope_Pct_5D,trend,snapshot,yes,A
+Realized_Volatility_20D_Pct,risk,snapshot,yes,A
+roe,quality,current fundamentals,no,B
+fcf_margin,quality,current fundamentals,no,B
+net_margin,quality,current fundamentals,no,B
+revenue_growth,growth,not available,no,not_used
+valuation,value,not available,no,not_used
