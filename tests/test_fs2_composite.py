@@ -42,3 +42,15 @@ def test_tier_block(): assert decide_tier("BLOCKED",4)=="BLOCKED"
 def test_tier_insuff(): assert decide_tier("INSUFFICIENT_DATA",4)=="WATCH"
 def test_tier1(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",2)=="TIER_1"
 def test_tier2(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",1)=="TIER_2"
+from tools.investment_research.fs2.composite import decide_tradability, decide_tier
+from tools.investment_research.fs2.publish_snapshot import validate
+import json
+def test_etf_priority_over_ca(): assert decide_tradability("ETF","1","CORPORATE_ACTION_REVIEW",True,True,True,True)[1]=="IDENTITY_NOT_COMMON_OR_ADR"
+def test_adr_low_adv_watch(): assert decide_tradability("ADR","1","OK",True,False,True,True)[0]=="WATCH"
+def test_ca_priority_over_price(): assert decide_tradability("COMMON","1","CORPORATE_ACTION_REVIEW",False,True,True,True)[1]=="CORPORATE_ACTION_REVIEW"
+def test_stale_and_60_watch(): assert decide_tradability("COMMON","1","OK",True,True,False,False)[0]=="WATCH"
+def test_style_zero_watch(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",0)=="WATCH"
+def test_tier1_requires_two(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",2)=="TIER_1"
+def test_tier2_requires_one(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",1)=="TIER_2"
+def test_valid_snapshot_validate():
+ d=json.load(open("dashboard/data/fs2_candidates_v1.json")); assert validate(d)==5600
