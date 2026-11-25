@@ -10,12 +10,12 @@ def test_fast_results_exist():
 
 
 def test_a_5y():
-    d = pd.read_csv("docs/research/MULTI_FACTOR_V2_STRATEGY_COMPARISON.csv").set_index("strategy")
+    d = pd.read_csv("docs/research/MULTI_FACTOR_V2_STRATEGY_COMPARISON.csv"); d = d[(d.strategy=="A") & (d.window=="5Y")]; d = d.iloc[[0]].set_index("strategy")
     assert abs(d.loc["A", "CAGR"] - 0.092963899) < 1e-3
 
 
 def test_a_drawdown_under_15():
-    d = pd.read_csv("docs/research/MULTI_FACTOR_V2_STRATEGY_COMPARISON.csv").set_index("strategy")
+    d = pd.read_csv("docs/research/MULTI_FACTOR_V2_STRATEGY_COMPARISON.csv"); d = d[(d.strategy=="A") & (d.window=="5Y")]; d = d.iloc[[0]].set_index("strategy")
     assert d.loc["A", "MaxDD"] > -0.15
 
 
@@ -53,3 +53,4 @@ def test_annual_returns():
 def test_no_paper_authorization():
     s = Path("docs/research/MULTI_FACTOR_STRATEGY_V2_FINAL.md").read_text()
     assert "PAPER_50000 = NOT_AUTHORIZED" in s
+
