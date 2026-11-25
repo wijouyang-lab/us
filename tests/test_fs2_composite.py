@@ -16,3 +16,15 @@ def test_ca_blocked():
  d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); c=d[d.tradability_reason=="CORPORATE_ACTION_REVIEW"]; assert len(c)>0 and (c.composite_tier=="BLOCKED").all()
 def test_shortlist_subset():
  d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); s=pd.read_csv("data/research/fs2/composite_shortlist_v1.csv"); assert set(s.ticker).issubset(set(d.ticker))
+import pandas as pd
+from pathlib import Path
+def test_matrix_no_blocked_tier():
+ d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); assert len(d[(d.tradability_status=="BLOCKED")&(d.composite_tier.isin(["TIER_1","TIER_2"]))])==0
+def test_insufficient_not_tier():
+ d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); assert len(d[(d.tradability_status=="INSUFFICIENT_DATA")&(d.composite_tier.isin(["TIER_1","TIER_2"]))])==0
+def test_unique_ticker():
+ d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); assert d.ticker.duplicated().sum()==0
+def test_page_and_data():
+ assert Path("terminal/candidates.html").exists(); assert Path("dashboard/data/fs2_candidates_v1.json").exists()
+def test_ca_count_469():
+ d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); assert len(d[d.tradability_reason=="CORPORATE_ACTION_REVIEW"])==469

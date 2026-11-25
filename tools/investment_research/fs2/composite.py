@@ -50,6 +50,8 @@ def main():
         "garp": (pd.read_csv(sel / "garp_rankings.csv"), "garp_rank"),
     }
     base = uni[["ticker", "cik", "issuer_name", "security_type", "exchange"]].copy()
+    vmeta = pd.read_csv(sel / "value_rankings.csv", usecols=["ticker", "model_family"]).drop_duplicates("ticker").rename(columns={"model_family": "industry"})
+    base = base.merge(vmeta, on="ticker", how="left")
     for name, (d, col) in ranks.items():
         d = d[["ticker", col]].drop_duplicates("ticker")
         d.columns = ["ticker", f"{name}_rank"]
@@ -70,14 +72,14 @@ def main():
     base["has_price"] = base.valid_days.fillna(0) >= MIN_DAYS
     base["has_60"] = base.valid_days.fillna(0) >= 60
     base["adv_ok"] = base.adv20_usd.fillna(0) >= MIN_ADV
-    base["ca_ok"] = base.corporate_action_status.eq("OK").fillna(False)
+    base["ca_ok"] = ~base.corporate_action_status.eq("CORPORATE_ACTION_REVIEW")
     base["fresh"] = base.data_age_days.fillna(999) <= MAX_AGE
     base["identity_ok"] = base.sec_type.isin(["COMMON", "ADR"]) & base.cik.notna()
     def status(r):
         if not r.identity_ok: return "BLOCKED", "IDENTITY_NOT_COMMON_OR_ADR"
-        if r.sec_type != "COMMON": return "WATCH", "ADR_SEPARATE_CATEGORY"
         if not r.ca_ok: return "BLOCKED", "CORPORATE_ACTION_REVIEW"
         if not r.has_price: return "INSUFFICIENT_DATA", "PRICE_20D_MISSING"
+        if r.sec_type != "COMMON": return "WATCH", "ADR_SEPARATE_CATEGORY"
         if not r.adv_ok: return "BLOCKED", "LIQUIDITY_BELOW_RESEARCH_FLOOR"
         if not r.fresh: return "WATCH", "PRICE_STALE"
         if not r.has_60: return "WATCH", "PRICE_60D_MISSING"
@@ -132,3 +134,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Investment Candidates — Research Only</title>
+<style>
+:root{--bg:#0b1020;--card:#151d33;--line:#2a3555;--text:#e8edf8;--muted:#91a0c0;--accent:#4ea1ff;--warn:#ffb547;--bad:#ff6b6b;--ok:#4cd58b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,Arial}
+header{padding:18px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:20px;margin:0}.sub{color:var(--muted);font-size:12px;margin-top:4px}
+.pill{display:inline-block;padding:3px 9px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:var(--muted)}
+.warn{color:var(--warn);border-color:#6b5220}.bad{color:var(--bad);border-color:#6b2b2b}.ok{color:var(--ok);border-color:#225c3d}
+main{padding:18px 24px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+label{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}
+select,input{width:100%;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:7px}
+.toolbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-bottom:12px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:8px;max-height:62vh}
+table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:#10172b;color:var(--muted);cursor:pointer}tr:hover{background:#1a2440;cursor:pointer}
+.tag{font-size:10px;padding:2px 5px;border:1px solid var(--line);border-radius:4px;margin-right:3px;color:#b8c7e6}
+.t1{color:var(--ok)}.t2{color:var(--accent)}.tw{color:var(--warn)}.tb{color:var(--bad)}
+#detail{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;display:none}
+#detail h3{margin:0 0 8px}.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px 14px;font-size:12px}
+.muted{color:var(--muted)}.pager{display:flex;gap:8px;align-items:center;margin-top:10px}.pager button{background:var(--card);color:var(--text);border:1px solid var(--line);padding:5px 10px;border-radius:5px}
+.note{color:var(--muted);font-size:11px;margin:12px 0}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Investment Candidates</h1><div class="sub" id="meta">loading…</div></div>
+  <div><span class="pill warn">RESEARCH ONLY — NOT A BUY SIGNAL</span>
+  <span class="pill">Trend: raw price</span><span class="pill">Prices unadjusted</span></div>
+</header>
+<main>
+  <div class="note" id="status">Loading candidate snapshot…</div>
+  <div class="toolbar">
+    <div><label>Style</label><select id="style"><option value="">All styles</option><option value="VALUE_CANDIDATE">Value</option><option value="QUALITY_CANDIDATE">Quality</option><option value="GARP_CANDIDATE">GARP</option><option value="TREND_CANDIDATE">Trend</option></select></div>
+    <div><label>Tier</label><select id="tier"><option value="">All tiers</option><option>TIER_1</option><option>TIER_2</option><option>WATCH</option><option>BLOCKED</option></select></div>
+    <div><label>Tradability</label><select id="trad"><option value="">All</option><option>ELIGIBLE_FOR_RESEARCH</option><option>WATCH</option><option>BLOCKED</option><option>INSUFFICIENT_DATA</option></select></div>
+    <div><label>Security type</label><select id="type"><option value="">All</option><option>COMMON</option><option>ADR</option><option>UNCLASSIFIED</option></select></div>
+    <div><label>Industry</label><select id="industry"><option value="">All</option></select></div>
+    <div><label>Liquidity</label><select id="liq"><option value="">All</option><option value="high">ADV20 ≥ $20M</option><option value="mid">$2M–$20M</option><option value="low">&lt; $2M / missing</option></select></div>
+    <div><label>Search ticker / company</label><input id="search" placeholder="AAPL or Apple"></div>
+  </div>
+  <div class="table-wrap"><table><thead><tr>
+    <th data-sort="ticker">Ticker</th><th data-sort="issuer_name">Company</th><th data-sort="industry">Industry</th><th data-sort="security_type">Type</th>
+    <th data-sort="composite_tier">Tier</th><th data-sort="value_rank">Value</th><th data-sort="quality_rank">Quality</th><th data-sort="garp_rank">GARP</th><th data-sort="trend_score">Trend</th>
+    <th>Styles</th><th data-sort="tradability_status">Tradability</th><th data-sort="adv20_usd">ADV20</th><th>Reason</th>
+  </tr></thead><tbody id="rows"></tbody></table></div>
+  <div class="pager"><button id="prev">Prev</button><span id="page" class="muted"></span><button id="next">Next</button></div>
+  <div id="detail"></div>
+  <p class="note">Research-only cross-sectional ranking. Fundamentals as-of 2026-11-05, prices as-of 2026-11-25. GARP is historical growth only; no forward EPS/PEG. Trend uses raw (unadjusted) prices. Corporate-action review names are blocked. Missing data is shown as “—”, never 0.</p>
+</main>
+<script>
+const state={all:[],filtered:[],page:0,size:50,sort:'composite_tier',dir:1};
+const $=id=>document.getElementById(id);
+const fmt=v=>v===''||v===null||v===undefined?'—':v;
+const money=v=>v===''||v===null||v===undefined?'—':'$'+(Number(v)/1e6).toFixed(1)+'M';
+function liq(v){v=Number(v);if(!v)return 'low';return v>=20e6?'high':v>=2e6?'mid':'low'}
+function render(){
+  const f=state.filtered; const start=state.page*state.size; const rows=f.slice(start,start+state.size);
+  $('rows').innerHTML=rows.map(r=>`<tr data-t="${r.ticker}">
+    <td><strong>${r.ticker}</strong></td><td>${r.issuer_name||'—'}</td><td>${r.industry||'—'}</td><td>${r.security_type}</td>
+    <td class="${r.composite_tier==='TIER_1'?'t1':r.composite_tier==='TIER_2'?'t2':r.composite_tier==='WATCH'?'tw':'tb'}">${r.composite_tier}</td>
+    <td>${fmt(r.value_rank)}</td><td>${fmt(r.quality_rank)}</td><td>${fmt(r.garp_rank)}</td><td>${fmt(r.trend_score)}</td>
+    <td>${(r.style_tags||'').split(';').filter(Boolean).map(x=>`<span class="tag">${x.replace('_CANDIDATE','')}</span>`).join('')||'—'}</td>
+    <td>${r.tradability_status}</td><td>${money(r.adv20_usd)}</td><td>${r.tradability_reason||r.primary_reason||'—'}</td></tr>`).join('');
+  $('page').textContent=`${f.length?start+1:0}–${Math.min(start+state.size,f.length)} of ${f.length} · page ${state.page+1}/${Math.max(1,Math.ceil(f.length/state.size))}`;
+  document.querySelectorAll('#rows tr').forEach(tr=>tr.onclick=()=>show(tr.dataset.t));
+}
+function apply(){
+  const q=$('search').value.toLowerCase(); const st=$('style').value,tr=$('tier').value,td=$('trad').value,ty=$('type').value,ind=$('industry').value,lq=$('liq').value;
+  state.filtered=state.all.filter(r=>{
+    if(st&&!(r.style_tags||'').includes(st))return false;
+    if(tr&&r.composite_tier!==tr)return false;
+    if(td&&r.tradability_status!==td)return false;
+    if(ty&&r.security_type!==ty)return false;
+    if(ind&&r.industry!==ind)return false;
+    if(lq&&liq(r.adv20_usd)!==lq)return false;
+    if(q&&!(`${r.ticker} ${r.issuer_name}`.toLowerCase().includes(q)))return false;
+    return true;
+  });
+  state.page=0;render();
+}
+function show(t){
+  const r=state.all.find(x=>x.ticker===t);if(!r)return;
+  $('detail').style.display='block';
+  $('detail').innerHTML=`<h3>${r.ticker} — ${r.issuer_name||''}</h3>
+  <div class="kv">
+   <div>Industry: <b>${r.industry||'—'}</b></div><div>Type: <b>${r.security_type}</b></div>
+   <div>Tier: <b>${r.composite_tier}</b></div><div>Tradability: <b>${r.tradability_status}</b></div>
+   <div>Value rank: <b>${fmt(r.value_rank)}</b></div><div>Quality rank: <b>${fmt(r.quality_rank)}</b></div>
+   <div>GARP rank: <b>${fmt(r.garp_rank)}</b></div><div>Trend score: <b>${fmt(r.trend_score)}</b></div>
+   <div>ADV20: <b>${money(r.adv20_usd)}</b></div><div>Valid days: <b>${fmt(r.valid_days)}</b></div>
+   <div>Corporate action: <b>${fmt(r.corporate_action_status)}</b></div><div>Data as-of: <b>prices 2026-11-25 / fundamentals 2026-11-05</b></div>
+   <div>Styles: <b>${r.style_tags||'—'}</b></div><div>Risk / reason: <b>${r.tradability_reason||r.primary_reason||'—'}</b></div>
+   <div>Missing: <b>${[!r.value_rank&&'Value',!r.quality_rank&&'Quality',!r.garp_rank&&'GARP',!r.trend_score&&'Trend'].filter(Boolean).join(', ')||'none'}</b></div>
+  </div>`;
+}
+async function load(){
+  try{
+    const res=await fetch('../dashboard/data/fs2_candidates_v1.json',{cache:'no-store'}); if(!res.ok)throw new Error('HTTP '+res.status);
+    const d=await res.json(); state.all=d.rows||[];
+    $('meta').textContent=`Generated ${d.generated_at} · prices ${d.prices_as_of} · fundamentals ${d.fundamentals_as_of} · ${d.version} · ${state.all.length} rows`;
+    $('status').className='note ok'; $('status').textContent='Snapshot loaded · research only';
+    const inds=[...new Set(state.all.map(r=>r.industry).filter(Boolean))].sort();
+    $('industry').innerHTML='<option value="">All</option>'+inds.map(x=>`<option>${x}</option>`).join('');
+    apply();
+  }catch(e){$('status').className='note bad';$('status').textContent='CANDIDATE SNAPSHOT UNAVAILABLE — '+e.message+'. No stale data is shown as current.';}
+}
+document.querySelectorAll('.toolbar select,.toolbar input').forEach(x=>x.addEventListener('input',apply));
+document.querySelectorAll('th[data-sort]').forEach(th=>th.onclick=()=>{const k=th.dataset.sort;state.dir=state.sort===k?-state.dir:1;state.sort=k;state.filtered.sort((a,b)=>{let x=a[k],y=b[k];if(x===''||x===null)x=state.dir>0?1e18:-1e18;if(y===''||y===null)y=state.dir>0?1e18:-1e18;return (x>y?1:x<y?-1:0)*state.dir});state.page=0;render();});
+$('prev').onclick=()=>{if(state.page>0){state.page--;render();}};
+$('next').onclick=()=>{if((state.page+1)*state.size<state.filtered.length){state.page++;render();}};
+load();
+</script>
+</body></html>
