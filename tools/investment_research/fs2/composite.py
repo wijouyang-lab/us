@@ -34,6 +34,24 @@ def trend_features(px: pd.DataFrame):
     return {"r20": r20, "r60": r60, "ma20": ma20, "ma60": ma60, "dd60": dd, "trend_score": score}
 
 
+def decide_tradability(sec_type, cik, ca_status, has_price, adv_ok, fresh, has_60):
+    if not (sec_type in ("COMMON","ADR") and pd.notna(cik)): return "BLOCKED", "IDENTITY_NOT_COMMON_OR_ADR"
+    if ca_status == "CORPORATE_ACTION_REVIEW": return "BLOCKED", "CORPORATE_ACTION_REVIEW"
+    if not has_price: return "INSUFFICIENT_DATA", "PRICE_20D_MISSING"
+    if sec_type != "COMMON": return "WATCH", "ADR_SEPARATE_CATEGORY"
+    if not adv_ok: return "BLOCKED", "LIQUIDITY_BELOW_RESEARCH_FLOOR"
+    if not fresh: return "WATCH", "PRICE_STALE"
+    if not has_60: return "WATCH", "PRICE_60D_MISSING"
+    return "ELIGIBLE_FOR_RESEARCH", ""
+
+def decide_tier(tradability, style_count):
+    if tradability == "BLOCKED": return "BLOCKED"
+    if tradability == "INSUFFICIENT_DATA": return "WATCH"
+    if style_count >= 2 and tradability == "ELIGIBLE_FOR_RESEARCH": return "TIER_1"
+    if style_count >= 1 and tradability == "ELIGIBLE_FOR_RESEARCH": return "TIER_2"
+    if style_count >= 1: return "WATCH"
+    return "WATCH"
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", type=Path, required=True)
@@ -76,14 +94,7 @@ def main():
     base["fresh"] = base.data_age_days.fillna(999) <= MAX_AGE
     base["identity_ok"] = base.sec_type.isin(["COMMON", "ADR"]) & base.cik.notna()
     def status(r):
-        if not r.identity_ok: return "BLOCKED", "IDENTITY_NOT_COMMON_OR_ADR"
-        if not r.ca_ok: return "BLOCKED", "CORPORATE_ACTION_REVIEW"
-        if not r.has_price: return "INSUFFICIENT_DATA", "PRICE_20D_MISSING"
-        if r.sec_type != "COMMON": return "WATCH", "ADR_SEPARATE_CATEGORY"
-        if not r.adv_ok: return "BLOCKED", "LIQUIDITY_BELOW_RESEARCH_FLOOR"
-        if not r.fresh: return "WATCH", "PRICE_STALE"
-        if not r.has_60: return "WATCH", "PRICE_60D_MISSING"
-        return "ELIGIBLE_FOR_RESEARCH", ""
+        return decide_tradability(r.sec_type, r.cik, r.corporate_action_status, r.has_price, r.adv_ok, r.fresh, r.has_60)
     st = base.apply(status, axis=1, result_type="expand"); base["tradability_status"] = st[0]; base["tradability_reason"] = st[1]
     # style percentile and flags
     style_cols = []
@@ -98,12 +109,7 @@ def main():
         p = base[f"{name}_pct"].fillna(0)
         base[f"{name}_tag"] = np.where(base[f"{name}_top20"], name.upper() + "_CANDIDATE", "")
     def tier(r):
-        if r.tradability_status == "BLOCKED": return "BLOCKED"
-        if r.tradability_status == "INSUFFICIENT_DATA": return "WATCH"
-        if r.style_count >= 2 and r.tradability_status == "ELIGIBLE_FOR_RESEARCH": return "TIER_1"
-        if r.style_count >= 1 and r.tradability_status == "ELIGIBLE_FOR_RESEARCH": return "TIER_2"
-        if r.style_count >= 1: return "WATCH"
-        return "WATCH"
+        return decide_tier(r.tradability_status, r.style_count)
     base["composite_tier"] = base.apply(tier, axis=1)
     base["multi_style"] = base.style_count >= 2
     base["style_tags"] = base[["value_tag", "quality_tag", "garp_tag", "trend_tag"]].apply(lambda r: ";".join([x for x in r if x]), axis=1)
@@ -134,4 +140,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

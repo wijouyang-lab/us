@@ -28,3 +28,17 @@ def test_page_and_data():
  assert Path("terminal/candidates.html").exists(); assert Path("dashboard/data/fs2_candidates_v1.json").exists()
 def test_ca_count_469():
  d=pd.read_csv("data/research/fs2/composite_candidates_v1.csv"); assert len(d[d.tradability_reason=="CORPORATE_ACTION_REVIEW"])==469
+from tools.investment_research.fs2.composite import decide_tradability, decide_tier
+def test_identity_block(): assert decide_tradability("ETF","1",None,True,True,True,True)[0]=="BLOCKED"
+def test_ca_block(): assert decide_tradability("COMMON","1","CORPORATE_ACTION_REVIEW",True,True,True,True)[0]=="BLOCKED"
+def test_ca_missing_not_pass(): assert decide_tradability("COMMON","1","CORPORATE_ACTION_REVIEW",True,True,True,True)[1]=="CORPORATE_ACTION_REVIEW"
+def test_missing_price_insufficient(): assert decide_tradability("COMMON","1","OK",False,True,True,True)[0]=="INSUFFICIENT_DATA"
+def test_adr_watch(): assert decide_tradability("ADR","1","OK",True,True,True,True)[0]=="WATCH"
+def test_low_adv_block(): assert decide_tradability("COMMON","1","OK",True,False,True,True)[1]=="LIQUIDITY_BELOW_RESEARCH_FLOOR"
+def test_stale_watch(): assert decide_tradability("COMMON","1","OK",True,True,False,True)[0]=="WATCH"
+def test_60d_watch(): assert decide_tradability("COMMON","1","OK",True,True,True,False)[0]=="WATCH"
+def test_eligible(): assert decide_tradability("COMMON","1","OK",True,True,True,True)[0]=="ELIGIBLE_FOR_RESEARCH"
+def test_tier_block(): assert decide_tier("BLOCKED",4)=="BLOCKED"
+def test_tier_insuff(): assert decide_tier("INSUFFICIENT_DATA",4)=="WATCH"
+def test_tier1(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",2)=="TIER_1"
+def test_tier2(): assert decide_tier("ELIGIBLE_FOR_RESEARCH",1)=="TIER_2"
