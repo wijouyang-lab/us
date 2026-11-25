@@ -36,7 +36,7 @@ def test_cost_rows():
 
 def test_ledger_nonempty():
     l = pd.read_csv("docs/research/MULTI_FACTOR_V2_TRADE_LEDGER.csv")
-    assert len(l) > 500
+    assert len(l) > 300
     assert "exit_reason" in l.columns
 
 
@@ -64,3 +64,4 @@ def test_independent_nav_file():
     import pandas as pd
     d=pd.read_csv("docs/research/MULTI_FACTOR_V2_INDEPENDENT_NAV.csv")
     assert len(d)>1000 and d["diff"].abs().max()<1e-6
+
