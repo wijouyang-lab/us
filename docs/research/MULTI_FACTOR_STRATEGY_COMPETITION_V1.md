@@ -19,24 +19,24 @@ full execution backtest.
 
 ## 2. Strategy definitions
 
-### A — trend / momentum / volume
+### A â€” trend / momentum / volume
 
 Score = z(Momentum_20D) + z(Momentum_60D) + z(Stock_RS_vs_SPY) +
-z(Volume_Ratio_20D) + z(MA20_Slope_5D) − z(Realized_Vol_20D).
+z(Volume_Ratio_20D) + z(MA20_Slope_5D) âˆ’ z(Realized_Vol_20D).
 
 Top 10, monthly rebalance. Exit = next monthly rank replacement.
 No daily stop; this is a limitation.
 
-### B — quality / growth / value
+### B â€” quality / growth / value
 
 Current fundamentals only: ROE, FCF margin, net margin. Growth and valuation
 were not available with PIT timestamps in a usable panel. Score is constant
 per ticker across the backtest, so B **contains look-ahead** and is not a valid
 historical strategy.
 
-### C — multi-dimensional
+### C â€” multi-dimensional
 
-0.6 × A + 0.4 × B. Same look-ahead contamination from B.
+0.6 Ã— A + 0.4 Ã— B. Same look-ahead contamination from B.
 
 ## 3. Results (monthly, 2020-01..2024-12)
 
@@ -94,7 +94,7 @@ is outside the current free-data route (P17 free SEC identity = NO-GO).
 - `docs/research/MULTI_FACTOR_EXIT_COMPARISON_V1.csv`
 - `docs/research/MULTI_FACTOR_TRADE_LEDGER_V1.csv`
 
-## V2 daily execution attempt �� NOT COMPLETED
+## V2 daily execution attempt ¡ª NOT COMPLETED
 
 A V2 daily close-to-close engine was written (`tools/research/mf_strategy_v2.py`) with
 next-session close execution, 5/10/20 bps costs, A/B/C scores, ATR/MA/rank/time exits,
