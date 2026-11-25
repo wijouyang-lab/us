@@ -65,3 +65,15 @@ def test_independent_nav_file():
     d=pd.read_csv("docs/research/MULTI_FACTOR_V2_INDEPENDENT_NAV.csv")
     assert len(d)>1000 and d["diff"].abs().max()<1e-6
 
+import pandas as pd, json
+from pathlib import Path
+def test_cross_window_all_within_tolerance():
+    d=pd.read_csv("docs/research/MULTI_FACTOR_V2_CROSS_WINDOW_RECONCILIATION.csv")
+    assert len(d)==9 and d.max_abs_diff.max()<1e-6
+def test_trade_timing_next_session():
+    l=pd.read_csv("docs/research/MULTI_FACTOR_V2_TRADE_LEDGER.csv")
+    assert (pd.to_datetime(l.entry_date)>=pd.to_datetime(l.signal_date)).all()
+def test_open_positions_not_closed():
+    l=pd.read_csv("docs/research/MULTI_FACTOR_V2_TRADE_LEDGER.csv")
+    o=l[l.exit_reason=="OPEN_AT_END"]
+    assert len(o)==10 and o.sell_fee.eq(0).all()

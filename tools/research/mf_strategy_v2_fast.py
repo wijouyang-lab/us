@@ -129,9 +129,9 @@ def main():
     for w, start in windows.items():
         for k in "ABC":
             nav, tr, cost, stats = run(k, start, "2026-10-13", "atr25", 10)
-            m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"strategy": k, "window": w, "cost": cost, "trades": len(tr)})
+            m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"strategy": k, "window": w, "cost": cost, "trades": len(tr), **stats})
             comp.append(m); nav.to_csv(a.out / f"nav_{w}_{k}.csv", header=["nav"])
-            if w == "5Y": tr.to_csv(a.out / f"trades_{w}_{k}.csv", index=False)
+            tr.to_csv(a.out / f"trades_{w}_{k}.csv", index=False)
     for ex in ["fixed6", "fixed8", "atr20", "atr25", "atr30", "ma50", "rank20", "time20"]:
         nav, tr, cost, stats = run("A", "2021-10-14", "2026-10-13", ex, 10)
         m = metrics(nav.values, nav.pct_change().fillna(0).values[1:]); m.update({"exit": ex, "trades": len(tr), "cost": cost})
@@ -155,6 +155,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
