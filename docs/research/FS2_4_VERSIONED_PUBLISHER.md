@@ -67,3 +67,24 @@ unchanged. Formal manifest verified.
 ## Production boundary
 
 No Scan/Review/Evolve/score/ATR/stop/PAPER/IBKR changes. Draft, not merged.
+## Automated fault suite (FS2.4.1)
+
+`tests/test_fs2_publish.py` has 15 tests:
+
+1. 31 versions + retention/disk consistency
+2. pinned retained
+3. rollback `../` rejected
+4. rollback backslash rejected
+5. missing rollback rejected
+6. corrupted rollback data rejected
+7. current corrupt -> verify fails
+8. previous corrupt -> verify fails
+9. manifest write failure -> old manifest unchanged
+10. manifest os.replace failure -> old unchanged
+11. version write failure -> old unchanged
+12. cleanup failure -> current/previous still verify
+13. rollback success
+14. retained == disk after cleanup
+15. verify full entry validation (Tier corruption)
+
+Local run: 15 passed. CI run is authoritative.
