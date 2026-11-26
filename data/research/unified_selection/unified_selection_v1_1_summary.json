@@ -1,0 +1,34 @@
+{
+  "version": "unified.v1.1",
+  "rows": 5600,
+  "groups": {
+    "TIER_C": 2876,
+    "BLOCKED": 2578,
+    "TIER_B": 106,
+    "TIER_A": 40
+  },
+  "composite_status": {
+    "NOT_COMPARABLE": 5083,
+    "GROUP_COMPARABLE_DISPLAY_ONLY": 517
+  },
+  "comparable_groups": 30,
+  "groups_with_20plus": 23,
+  "special_industry_rows": 959,
+  "raw_coverage": {
+    "pb": 3280,
+    "ps": 2963,
+    "earnings_yield": 3466,
+    "fcf_yield": 2808,
+    "roe": 2404,
+    "roa": 2404,
+    "cfo_to_avg_assets": 2404,
+    "liabilities_to_assets": 2404,
+    "revenue_growth_1y": 3904,
+    "eps_growth_1y": 2382,
+    "fcf_growth_1y": 1844
+  },
+  "input_sha": {
+    "unified_v1": "fa4cbb7cc29e9300da1543a70d5498f9757e779025f80e5decfa69d87a4c5bb8"
+  },
+  "research_only": true
+}
