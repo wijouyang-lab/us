@@ -2,17 +2,25 @@
   "version": "unified.v1.1",
   "rows": 5600,
   "groups": {
-    "TIER_C": 2876,
+    "TIER_C": 2902,
     "BLOCKED": 2578,
-    "TIER_B": 106,
-    "TIER_A": 40
+    "TIER_B": 90,
+    "TIER_A": 30
   },
   "composite_status": {
-    "NOT_COMPARABLE": 5083,
-    "GROUP_COMPARABLE_DISPLAY_ONLY": 517
+    "NOT_COMPARABLE": 5109,
+    "GROUP_COMPARABLE_DISPLAY_ONLY": 491
   },
   "comparable_groups": 30,
-  "groups_with_20plus": 23,
+  "groups_total": 30,
+  "groups_eligible_20plus": 6,
+  "ranked_rows": 491,
+  "unknown_counts": {
+    "fundamental_source": 303,
+    "fiscal_period": 246,
+    "filing_date": 246,
+    "accession": 246
+  },
   "special_industry_rows": 959,
   "raw_coverage": {
     "pb": 3280,

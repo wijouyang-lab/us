@@ -36,14 +36,15 @@ def main():
     d = d.merge(pd.DataFrame(rows), on="ticker", how="left")
     d["special_industry"] = d.industry.isin(SPECIAL)
     d["comparable_group"] = d.security_type.fillna("UNKNOWN") + "|" + d.industry.fillna("UNCLASSIFIED") + "|" + np.where(d.special_industry, "SPECIAL_FINANCIAL", "STANDARD")
-    group_n = d.groupby("comparable_group").comparable_group.transform("size"); d["group_n"] = group_n
+    d["group_total_n"] = d.groupby("comparable_group").comparable_group.transform("size")
+    d["group_eligible_n"] = d.groupby("comparable_group").composite_ready.transform("sum").astype(int)
     d["group_rank"] = np.nan
-    eligible = d[d.composite_ready & (d.group_n >= 20)].copy()
+    eligible = d[d.composite_ready & (d.group_eligible_n >= 20)].copy()
     eligible["group_rank"] = eligible.groupby("comparable_group").composite_score.rank(ascending=False, method="first")
     d.loc[eligible.index, "group_rank"] = eligible["group_rank"]
     # New research rank is group rank only; old cross-sectional rank is retained explicitly as legacy.
     d["legacy_research_rank"] = d["research_rank"]; d["research_rank"] = d["group_rank"]
-    d["composite_status"] = np.where(d.composite_ready & d.group_n.ge(20), "GROUP_COMPARABLE_DISPLAY_ONLY", "NOT_COMPARABLE")
+    d["composite_status"] = np.where(d.composite_ready & (d.group_eligible_n >= 20), "GROUP_COMPARABLE_DISPLAY_ONLY", "NOT_COMPARABLE")
     d["composite_legacy_not_comparable"] = True
     def grp(r):
         if r.tradability_status in ("BLOCKED", "INSUFFICIENT_DATA"): return "BLOCKED"
@@ -53,15 +54,21 @@ def main():
         return "TIER_C"
     d["research_group"] = d.apply(grp, axis=1)
     d["research_status"] = np.where(d.research_group == "BLOCKED", "BLOCKED", "ELIGIBLE_FOR_RESEARCH")
+    d["selection_explanation"] = d.apply(lambda r: f"{r.research_group}; group_eligible={r.group_eligible_n}; composite={r.composite_status}; score={r.composite_score:.3f}" if pd.notna(r.composite_score) else f"{r.research_group}; NOT_COMPARABLE; missing={r.missing_reason or 'none'}", axis=1)
+    d["fundamentals_as_of"] = "2026-11-05"; d["prices_as_of"] = "2026-11-25"
     # raw / traceability fields
     for c in ["pb", "ps", "earnings_yield", "fcf_yield", "roe", "roa", "cfo_to_avg_assets", "liabilities_to_assets",
               "revenue_growth_1y", "eps_growth_1y", "fcf_growth_1y", "ret20", "ret60", "ma20", "ma60"]:
         if c not in d: d[c] = np.nan
     d["pe"] = np.nan; d["pe_reason"] = "UNAVAILABLE_NOT_IN_SOURCE_RANKING"
-    d["fundamental_source"] = d.source_url.fillna("UNKNOWN")
-    d["fiscal_period"] = d.financial_period.fillna(d.q_financial_period).fillna(d.g_latest_period)
-    d["filing_date"] = d.filed.fillna(d.q_filed).fillna(d.g_filed)
-    d["accession"] = d.accn.fillna(d.q_accn).fillna(d.g_accn)
+    def clean(v):
+        if pd.isna(v): return "UNKNOWN"
+        s = str(v).strip()
+        return s if s and s.lower() != "nan" else "UNKNOWN"
+    d["fundamental_source"] = d.source_url.map(clean)
+    d["fiscal_period"] = d.financial_period.combine_first(d.q_financial_period).combine_first(d.g_latest_period).map(clean)
+    d["filing_date"] = d.filed.combine_first(d.q_filed).combine_first(d.g_filed).map(clean)
+    d["accession"] = d.accn.combine_first(d.q_accn).combine_first(d.g_accn).map(clean)
     d["revision_status"] = "UNKNOWN"
     d["price_source"] = "YFINANCE_RAW_CLOSE"; d["adjustment_status"] = "UNADJUSTED"; d["price_as_of"] = "2026-11-25"
     d["forward_eps"] = "UNAVAILABLE"; d["peg"] = "UNAVAILABLE"
@@ -73,7 +80,10 @@ def main():
     d[d.research_group.isin(["TIER_A", "TIER_B"])].sort_values(["research_group", "group_rank"]).head(100).to_csv(a.out / "unified_top100_v1_1.csv", index=False)
     summary = {"version": "unified.v1.1", "rows": len(d), "groups": d.research_group.value_counts().to_dict(),
                "composite_status": d.composite_status.value_counts().to_dict(), "comparable_groups": int(d.comparable_group.nunique()),
-               "groups_with_20plus": int((d.groupby("comparable_group").size() >= 20).sum()),
+               "groups_total": int(d.comparable_group.nunique()),
+               "groups_eligible_20plus": int((d.groupby("comparable_group").group_eligible_n.first() >= 20).sum()),
+               "ranked_rows": int(d.research_rank.notna().sum()),
+               "unknown_counts": {c: int((d[c] == "UNKNOWN").sum()) for c in ["fundamental_source", "fiscal_period", "filing_date", "accession"]},
                "special_industry_rows": int(d.special_industry.sum()),
                "raw_coverage": {c: int(d[c].notna().sum()) for c in ["pb", "ps", "earnings_yield", "fcf_yield", "roe", "roa", "cfo_to_avg_assets", "liabilities_to_assets", "revenue_growth_1y", "eps_growth_1y", "fcf_growth_1y"]},
                "input_sha": {"unified_v1": sha(root / "data/research/unified_selection/unified_selection_v1.csv")},
