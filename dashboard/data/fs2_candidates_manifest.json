@@ -1,0 +1,33 @@
+{
+    "schema_version":  2,
+    "published_at":  "2026-11-26T05:10:00Z",
+    "current":  {
+                    "path":  "fs2/versions/fs2_v1.4.json",
+                    "version":  "fs2.v1.4",
+                    "sha256":  "d6d843146b8ce89723a97de2647f43a2d8578a002ff57adb1e5619bf198cbf78",
+                    "row_count":  5600,
+                    "generated_at":  "2026-11-25",
+                    "prices_as_of":  "2026-11-25",
+                    "fundamentals_as_of":  "2026-11-05"
+                },
+    "previous":  {
+                     "path":  "fs2/versions/fs2_v1.3.json",
+                     "version":  "fs2.v1.3",
+                     "sha256":  "69b5d9800154b4c07d169dc74d6738e22be7aae9727a421c61d22887d970c036",
+                     "row_count":  5600,
+                     "generated_at":  "2026-11-25",
+                     "prices_as_of":  "2026-11-25",
+                     "fundamentals_as_of":  "2026-11-05"
+                 },
+    "retained":  [
+                     "fs2_v1.3.json",
+                     "fs2_v1.4.json"
+                 ],
+    "pinned":  [
+
+               ],
+    "durability":  {
+                       "file_fsync":  true,
+                       "dir_fsync":  false
+                   }
+}

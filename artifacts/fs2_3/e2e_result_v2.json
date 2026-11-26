@@ -1,0 +1,25 @@
+{
+  "loaded": true,
+  "meta": "CURRENT \u00b7 fs2.v1.4 \u00b7 generated 2026-11-25 \u00b7 prices 2026-11-25 \u00b7 fundamentals 2026-11-05 \u00b7 5600 rows",
+  "initial": "1\u201350 of 5600 \u00b7 page 1/112",
+  "warning": true,
+  "company_search_count": 4,
+  "company_search_text": "1\u20134 of 4 \u00b7 page 1/1",
+  "empty_search": "",
+  "zero_logic": {
+    "missing": false,
+    "shown": 0,
+    "nullv": "\u2014",
+    "undefinedv": "\u2014"
+  },
+  "refresh_defaults": true,
+  "pages_visited": 112,
+  "records_seen": 5600,
+  "unique_seen": 5600,
+  "duplicates": 0,
+  "detail": true,
+  "stale_banner": "STALE ARCHIVED SNAPSHOT \u2014 current snapshot failed (Failed to fetch). Showing previous fs2.v1.3 (2026-11-25).",
+  "stale_status": "STALE ARCHIVED SNAPSHOT \u2014 not current data",
+  "stale_ok": true,
+  "fail_closed": true
+}

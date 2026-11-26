@@ -1,0 +1,24 @@
+{
+  "universe": 5600,
+  "value_candidates": 170,
+  "quality_candidates": 463,
+  "garp_candidates": 621,
+  "trend_candidates": 1107,
+  "multi_style": 404,
+  "tiers": {
+    "WATCH": 2271,
+    "BLOCKED": 2098,
+    "TIER_2": 888,
+    "TIER_1": 343
+  },
+  "tradability": {
+    "ELIGIBLE_FOR_RESEARCH": 2774,
+    "BLOCKED": 2098,
+    "INSUFFICIENT_DATA": 480,
+    "WATCH": 248
+  },
+  "blocked_ca": 469,
+  "missing_price": 579,
+  "eligible": 2774,
+  "research_only": true
+}

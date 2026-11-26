@@ -1,0 +1,5 @@
+data/universe/price_liquidity/*.csv -text
+data/universe/price_liquidity/*.csv -text
+data/universe/price_liquidity/*.csv.gz binary
+data/research/fs2/*.csv -text
+data/research/fs2/*.json -text
