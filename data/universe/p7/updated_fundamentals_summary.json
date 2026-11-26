@@ -1,0 +1,11 @@
+{
+  "generated_at": "2026-11-06T08:58:18.432371+00:00",
+  "as_of": "2026-11-05",
+  "superseded_rows": 94,
+  "status_counts": {
+    "UPDATED_FROM_SEC_COMPANYFACTS": 93,
+    "SIX_K_QUARANTINED": 1
+  },
+  "fetch": true,
+  "note": "Old values are not carried forward; unavailable facts stay missing. 6-K names quarantined."
+}

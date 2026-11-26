@@ -1,0 +1,131 @@
+{
+  "generated_at": "2026-11-09T00:00:00+00:00",
+  "status": "P9_1_NO_GO",
+  "research_only": true,
+  "as_of": "2024-12-31",
+  "events": 611790,
+  "event_rows": 24,
+  "bh_family": 24,
+  "portfolios": {
+    "A_LEVEL_TOUCH": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.019834738688833786,
+        "vol": 0.05259214368893501,
+        "sharpe": 0.3996667468053979,
+        "max_drawdown": -0.13591474348112942
+      },
+      "gate": "NO-GO",
+      "trades": 782,
+      "costs": 751.41,
+      "avg_exposure": 0.11986693736000599
+    },
+    "B_PATTERN_ONLY": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.019559071317664767,
+        "vol": 0.04946004484883763,
+        "sharpe": 0.4162757447859695,
+        "max_drawdown": -0.11086843128787083
+      },
+      "gate": "NO-GO",
+      "trades": 731,
+      "costs": 683.2,
+      "avg_exposure": 0.11118948802436188
+    },
+    "C_SUPPORT_PATTERN": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.010399736912448443,
+        "vol": 0.03432904868827794,
+        "sharpe": 0.31881924388218813,
+        "max_drawdown": -0.09864747040832589
+      },
+      "gate": "NO-GO",
+      "trades": 553,
+      "costs": 562.11,
+      "avg_exposure": 0.09200920584234092
+    },
+    "D_C_MACD": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.008270957242544785,
+        "vol": 0.031834631426060266,
+        "sharpe": 0.2747000868168593,
+        "max_drawdown": -0.14595070133679067
+      },
+      "gate": "NO-GO",
+      "trades": 441,
+      "costs": 468.56,
+      "avg_exposure": 0.07335774762159412
+    },
+    "E_C_KDJ": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.01801098667354717,
+        "vol": 0.029334542365368595,
+        "sharpe": 0.6232096121777302,
+        "max_drawdown": -0.08172292733836106
+      },
+      "gate": "NO-GO",
+      "trades": 620,
+      "costs": 619.34,
+      "avg_exposure": 0.09627818519042503
+    },
+    "F_C_BOTH": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.012464772455595963,
+        "vol": 0.023072604091787415,
+        "sharpe": 0.5484726201354035,
+        "max_drawdown": -0.10102230717322613
+      },
+      "gate": "NO-GO",
+      "trades": 350,
+      "costs": 376.93,
+      "avg_exposure": 0.05794954818957157
+    },
+    "G_LEVEL_ALL_PATTERNS": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.010399736912448443,
+        "vol": 0.03432904868827794,
+        "sharpe": 0.31881924388218813,
+        "max_drawdown": -0.09864747040832589
+      },
+      "gate": "NO-GO",
+      "trades": 553,
+      "costs": 562.11,
+      "avg_exposure": 0.09200920584234092
+    },
+    "H_G_BOTH": {
+      "stats": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.012464772455595963,
+        "vol": 0.023072604091787415,
+        "sharpe": 0.5484726201354035,
+        "max_drawdown": -0.10102230717322613
+      },
+      "gate": "NO-GO",
+      "trades": 350,
+      "costs": 376.93,
+      "avg_exposure": 0.05794954818957157
+    }
+  },
+  "no_shadow": true,
+  "limits": [
+    "BIL begins 2007-05-30",
+    "No dividends total-return; adjusted OHLC",
+    "Support level uses last confirmed pivot and 0.5 ATR band; full centroid clustering not separately implemented",
+    "Event overlap reported alongside non-overlap diagnostic",
+    "All portfolios below 20QQQ_80BIL; D maxDD -14.6"
+  ]
+}

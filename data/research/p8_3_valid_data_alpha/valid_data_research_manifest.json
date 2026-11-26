@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-11-09T04:50:35.894549+00:00",
+  "as_of": "2024-12-31",
+  "panel": "valid_research_panel.parquet",
+  "panel_rows": 352036,
+  "factor_count": 33,
+  "horizons": [
+    5,
+    10,
+    20
+  ],
+  "valid_member_day_coverage": 0.892147394016521,
+  "forward_label_coverage": 0.9112704382506335,
+  "raw_input": "data/research/pit_data/finsaber_prices_raw.csv",
+  "membership": "data/research/historical_universe/sp500_daily.csv",
+  "note": "Historical signals use formation-time base validity and prior 60-session shock rule; post-hoc P8.2.2 classes are not used."
+}

@@ -1,0 +1,5115 @@
+{
+  "generated_at": "2026-11-06T07:52:50.269966Z",
+  "data_as_of": "2026-11-05",
+  "status": "CURRENT_CROSS_SECTIONAL_RESEARCH",
+  "pit_status": "PIT_BACKTEST_BLOCKED",
+  "data_quality_status": "PARTIAL",
+  "research_label": "RESEARCH_ONLY_NOT_A_BUY_SELL_SIGNAL",
+  "inputs": {
+    "value_metric_rankings_p69.csv": {
+      "path": "data\\universe\\selection_inputs\\value_metric_rankings_p69.csv",
+      "sha256": "646c83996698d9f03111569a4974b7093c39b0423ba69c45cd8c8c8caadc5cc5",
+      "rows": 5453
+    },
+    "quality_v1_scores_p66.csv": {
+      "path": "data\\universe\\selection_inputs\\quality_v1_scores_p66.csv",
+      "sha256": "569359e7b7dd6b810a9716b1ad543ea4e3da48081befcc4d939821e4d50e147a",
+      "rows": 5549
+    },
+    "us_equities_current.csv": {
+      "path": "data\\universe\\selection_inputs\\us_equities_current.csv",
+      "sha256": "a36768832c0885a26048738948c268ee1e0b7884f47a43c10a63f1d24eef9795",
+      "rows": 5615
+    },
+    "garp_growth_metrics_p614.csv": {
+      "path": "data\\universe\\selection_inputs\\garp_growth_metrics_p614.csv",
+      "sha256": "d630aeef9df647e2c8bab2e6ea830b61cfe02e9ac6df7534ef00297307ded91c",
+      "rows": 5453
+    }
+  },
+  "value": {
+    "candidate_issuers": 2529,
+    "all_four_ranked": 850,
+    "all_five_p69_intersection": 992,
+    "top50": [
+      {
+        "ticker": "CRMT",
+        "cik": "0000799850",
+        "company_name": "America's Car-Mart, Inc. - Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-09-09",
+        "filed": "2026-09-09",
+        "accn": "0001628280-26-061105",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/799850/000162828026061105/",
+        "score": 99.142392,
+        "metrics": {
+          "pb": 0.027907145133871655,
+          "ps": 0.00819856855471158,
+          "earnings_yield": 4.886792743755712,
+          "fcf_yield": 6.010480006533109
+        },
+        "percentiles": {
+          "pb": 99.004975,
+          "ps": 99.118943,
+          "earnings_yield": 98.695652,
+          "fcf_yield": 99.75
+        },
+        "missing_fields": [],
+        "market_cap": "10506482.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "LIVE",
+        "cik": "0001045742",
+        "company_name": "Live Ventures Incorporated - Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-13",
+        "filed": "2026-08-13",
+        "accn": "0001437749-26-027726",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1045742/000143774926027726/",
+        "score": 98.075272,
+        "metrics": {
+          "pb": 0.24905138000087065,
+          "ps": 0.05143082500269697,
+          "earnings_yield": 0.9938455688178517,
+          "fcf_yield": 0.9167168949857492
+        },
+        "percentiles": {
+          "pb": 99.004975,
+          "ps": 96.035242,
+          "earnings_yield": 98.26087,
+          "fcf_yield": 99.0
+        },
+        "missing_fields": [],
+        "market_cap": "22883837.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "WETH",
+        "cik": "0001826660",
+        "company_name": "Wetouch Technology Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-14",
+        "filed": "2026-08-14",
+        "accn": "0001213900-26-090159",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1826660/000121390026090159/",
+        "score": 97.886072,
+        "metrics": {
+          "pb": 0.0776923082817899,
+          "ps": 0.25605772653269443,
+          "earnings_yield": 0.6195482447916878,
+          "fcf_yield": 0.6116535473402811
+        },
+        "percentiles": {
+          "pb": 99.343545,
+          "ps": 94.308943,
+          "earnings_yield": 98.997996,
+          "fcf_yield": 98.893805
+        },
+        "missing_fields": [],
+        "market_cap": "11557631.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "SSTK",
+        "cik": "0001549346",
+        "company_name": "Shutterstock, Inc. Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-31",
+        "filed": "2026-08-07",
+        "accn": "0001549346-26-000029",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1549346/000154934626000029/",
+        "score": 97.627688,
+        "metrics": {
+          "pb": 0.4429739371940824,
+          "ps": 0.16273142106725258,
+          "earnings_yield": 0.28242263847626553,
+          "fcf_yield": 0.7686916503102682
+        },
+        "percentiles": {
+          "pb": 95.404814,
+          "ps": 96.95122,
+          "earnings_yield": 98.597194,
+          "fcf_yield": 99.557522
+        },
+        "missing_fields": [],
+        "market_cap": "161091902.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "CAAS",
+        "cik": "0002037400",
+        "company_name": "China Automotive Systems, Inc. - Ordinary Share",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-22",
+        "accn": "0001104659-26-046434",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/2037400/000110465926046434/",
+        "score": 97.41012,
+        "metrics": {
+          "pb": 0.287179360198091,
+          "ps": 0.16902994243446828,
+          "earnings_yield": 0.3309683597400315,
+          "fcf_yield": 0.575150044449488
+        },
+        "percentiles": {
+          "pb": 96.73913,
+          "ps": 95.478723,
+          "earnings_yield": 97.911227,
+          "fcf_yield": 99.511401
+        },
+        "missing_fields": [],
+        "market_cap": "129432312.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "CTRM",
+        "cik": "0001720161",
+        "company_name": "Castor Maritime Inc. - Common Shares",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-06-30",
+        "filed": "2026-09-14",
+        "accn": "0001140361-26-036427",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1720161/000114036126036427/",
+        "score": 96.551591,
+        "metrics": {
+          "pb": 0.01909987109436589,
+          "ps": 0.37211464046297593,
+          "earnings_yield": 1.4556322698712174,
+          "fcf_yield": 3.89664810187782
+        },
+        "percentiles": {
+          "pb": 99.320652,
+          "ps": 87.765957,
+          "earnings_yield": 99.608355,
+          "fcf_yield": 99.511401
+        },
+        "missing_fields": [],
+        "market_cap": "13237425.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "VISN",
+        "cik": "0001517228",
+        "company_name": "Vistance Networks, Inc.  - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-22",
+        "filed": "2026-08-06",
+        "accn": "0001193125-26-336708",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1517228/000119312526336708/",
+        "score": 92.926599,
+        "metrics": {
+          "pb": 0.592718530209913,
+          "ps": 0.7689139019465728,
+          "earnings_yield": 1.5376027326353596,
+          "fcf_yield": 0.17007419987900857
+        },
+        "percentiles": {
+          "pb": 93.21663,
+          "ps": 83.536585,
+          "earnings_yield": 99.599198,
+          "fcf_yield": 95.353982
+        },
+        "missing_fields": [],
+        "market_cap": "1485234093.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "EBS",
+        "cik": "0001367644",
+        "company_name": "Emergent BioSolutions Inc. Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-26",
+        "filed": "2026-11-03",
+        "accn": "0001367644-26-000112",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1367644/000136764426000112/",
+        "score": 92.748649,
+        "metrics": {
+          "pb": 0.9685490868454661,
+          "ps": 0.4083316381747207,
+          "earnings_yield": 0.1733973096003095,
+          "fcf_yield": 0.5168954020024435
+        },
+        "percentiles": {
+          "pb": 80.173913,
+          "ps": 95.127119,
+          "earnings_yield": 96.118012,
+          "fcf_yield": 99.575552
+        },
+        "missing_fields": [],
+        "market_cap": "303349574.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "KROS",
+        "cik": "0001664710",
+        "company_name": "Keros Therapeutics, Inc. - common stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-27",
+        "filed": "2026-08-03",
+        "accn": "0001664710-26-000049",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1664710/000166471026000049/",
+        "score": 92.592382,
+        "metrics": {
+          "pb": 0.8185744358035987,
+          "ps": 0.8805253994029459,
+          "earnings_yield": 0.40522809912199526,
+          "fcf_yield": 0.49343252826409406
+        },
+        "percentiles": {
+          "pb": 84.521739,
+          "ps": 88.135593,
+          "earnings_yield": 98.136646,
+          "fcf_yield": 99.575552
+        },
+        "missing_fields": [],
+        "market_cap": "214728446.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "NUS",
+        "cik": "0001021561",
+        "company_name": "Nu Skin Enterprises, Inc. Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-31",
+        "filed": "2026-08-10",
+        "accn": "0001140361-26-032055",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1021561/000114036126032055/",
+        "score": 92.522801,
+        "metrics": {
+          "pb": 0.4475381426431489,
+          "ps": 0.16354909070341964,
+          "earnings_yield": 0.6595569031149593,
+          "fcf_yield": 0.18941820151442013
+        },
+        "percentiles": {
+          "pb": 87.5,
+          "ps": 88.764045,
+          "earnings_yield": 100.0,
+          "fcf_yield": 93.82716
+        },
+        "missing_fields": [],
+        "market_cap": "242896404.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "MNDO",
+        "cik": "0001119083",
+        "company_name": "MIND C.T.I. Ltd. - Ordinary Shares",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-18",
+        "accn": "0001178913-26-001091",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1119083/000117891326001091/",
+        "score": 91.013151,
+        "metrics": {
+          "pb": 0.7884378931840861,
+          "ps": 0.9339931644138356,
+          "earnings_yield": 0.14329182144320288,
+          "fcf_yield": 0.2178541939683718
+        },
+        "percentiles": {
+          "pb": 89.715536,
+          "ps": 80.081301,
+          "earnings_yield": 97.795591,
+          "fcf_yield": 96.460177
+        },
+        "missing_fields": [],
+        "market_cap": "18172705.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "PSFE",
+        "cik": "0001833835",
+        "company_name": "Paysafe Limited Common Shares",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-06-30",
+        "filed": "2026-08-13",
+        "accn": "0001193125-26-349177",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1833835/000119312526349177/",
+        "score": 90.962244,
+        "metrics": {
+          "pb": 0.6016166499772896,
+          "ps": 0.20163281450204187,
+          "earnings_yield": 0.06459593344521236,
+          "fcf_yield": 0.6517193328495848
+        },
+        "percentiles": {
+          "pb": 90.784983,
+          "ps": 91.772152,
+          "earnings_yield": 81.656805,
+          "fcf_yield": 99.635036
+        },
+        "missing_fields": [],
+        "market_cap": "343055651.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "BOSC",
+        "cik": "0001005516",
+        "company_name": "B.O.S. Better Online Solutions - Ordinary Shares",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-31",
+        "accn": "0001213900-26-037333",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1005516/000121390026037333/",
+        "score": 90.619681,
+        "metrics": {
+          "pb": 1.0492809364548494,
+          "ps": 0.5955933477031383,
+          "earnings_yield": 0.11989285012298065,
+          "fcf_yield": 0.1525305326682285
+        },
+        "percentiles": {
+          "pb": 84.245077,
+          "ps": 86.99187,
+          "earnings_yield": 96.993988,
+          "fcf_yield": 94.247788
+        },
+        "missing_fields": [],
+        "market_cap": "30118560.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "RGS",
+        "cik": "0000716643",
+        "company_name": "Regis Corporation - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-25",
+        "filed": "2026-09-01",
+        "accn": "0000716643-26-000031",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/716643/000071664326000031/",
+        "score": 90.243845,
+        "metrics": {
+          "pb": 0.4098300827606134,
+          "ps": 0.35383205113927435,
+          "earnings_yield": 0.0874103115815654,
+          "fcf_yield": 0.1401234002452575
+        },
+        "percentiles": {
+          "pb": 95.56314,
+          "ps": 85.759494,
+          "earnings_yield": 90.236686,
+          "fcf_yield": 89.416058
+        },
+        "missing_fields": [],
+        "market_cap": "79429988.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "ABG",
+        "cik": "0001144980",
+        "company_name": "Asbury Automotive Group Inc Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-28",
+        "filed": "2026-10-30",
+        "accn": "0001144980-26-000112",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1144980/000114498026000112/",
+        "score": 90.224125,
+        "metrics": {
+          "pb": 0.9302620406796478,
+          "ps": 0.20836443230179455,
+          "earnings_yield": 0.13118770624262274,
+          "fcf_yield": 0.1913420691050937
+        },
+        "percentiles": {
+          "pb": 85.074627,
+          "ps": 86.343612,
+          "earnings_yield": 93.478261,
+          "fcf_yield": 96.0
+        },
+        "missing_fields": [],
+        "market_cap": "3750351417.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "CRMD",
+        "cik": "0001410098",
+        "company_name": "CorMedix Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-10",
+        "filed": "2026-08-13",
+        "accn": "0001410098-26-000056",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1410098/000141009826000056/",
+        "score": 89.526518,
+        "metrics": {
+          "pb": 0.9573204913710607,
+          "ps": 1.4153100295467889,
+          "earnings_yield": 0.3696010485186543,
+          "fcf_yield": 0.3916585616469547
+        },
+        "percentiles": {
+          "pb": 80.521739,
+          "ps": 80.932203,
+          "earnings_yield": 97.670807,
+          "fcf_yield": 98.981324
+        },
+        "missing_fields": [],
+        "market_cap": "441164874.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "USNA",
+        "cik": "0000896264",
+        "company_name": "USANA Health Sciences, Inc. Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-11",
+        "filed": "2026-08-13",
+        "accn": "0000896264-26-000056",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/896264/000089626426000056/",
+        "score": 89.408724,
+        "metrics": {
+          "pb": 0.503069947901031,
+          "ps": 0.2861569617954795,
+          "earnings_yield": 0.040639239832896884,
+          "fcf_yield": 0.03220168762223781
+        },
+        "percentiles": {
+          "pb": 91.304348,
+          "ps": 97.457627,
+          "earnings_yield": 87.888199,
+          "fcf_yield": 80.98472
+        },
+        "missing_fields": [],
+        "market_cap": "264768732.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "NATR",
+        "cik": "0000275053",
+        "company_name": "Nature's Sunshine Products, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-11-04",
+        "accn": "0001628280-26-070270",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/275053/000162828026070270/",
+        "score": 89.118187,
+        "metrics": {
+          "pb": 1.2960093894525926,
+          "ps": 0.46340573661234963,
+          "earnings_yield": 0.08773424630282466,
+          "fcf_yield": 0.12962160737768383
+        },
+        "percentiles": {
+          "pb": 73.043478,
+          "ps": 93.855932,
+          "earnings_yield": 93.478261,
+          "fcf_yield": 96.095076
+        },
+        "missing_fields": [],
+        "market_cap": "222501484.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "IMMR",
+        "cik": "0001058811",
+        "company_name": "Immersion Corporation - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-09-08",
+        "filed": "2026-09-14",
+        "accn": "0001193125-26-389919",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1058811/000119312526389919/",
+        "score": 88.68345,
+        "metrics": {
+          "pb": 0.4251429700519995,
+          "ps": 0.13737567357372246,
+          "earnings_yield": 0.019027970671049818,
+          "fcf_yield": 0.18031147273826387
+        },
+        "percentiles": {
+          "pb": 95.842451,
+          "ps": 97.764228,
+          "earnings_yield": 65.330661,
+          "fcf_yield": 95.79646
+        },
+        "missing_fields": [],
+        "market_cap": "237755254.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "JL",
+        "cik": "0001948436",
+        "company_name": "J-Long Group Limited - Class A Ordinary Shares",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-03-31",
+        "filed": "2025-07-28",
+        "accn": "0001213900-25-068049",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1948436/000121390025068049/",
+        "score": 88.14035,
+        "metrics": {
+          "pb": 0.9668727234053868,
+          "ps": 0.3722581317151157,
+          "earnings_yield": 0.17827886940895174,
+          "fcf_yield": 0.4265440306008104
+        },
+        "percentiles": {
+          "pb": 83.084577,
+          "ps": 74.889868,
+          "earnings_yield": 96.086957,
+          "fcf_yield": 98.5
+        },
+        "missing_fields": [],
+        "market_cap": "14546020.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "GPI",
+        "cik": "0001031203",
+        "company_name": "Group 1 Automotive, Inc. Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-10-29",
+        "accn": "0001031203-26-000147",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1031203/000103120326000147/",
+        "score": 87.963966,
+        "metrics": {
+          "pb": 1.0632690986494422,
+          "ps": 0.14440154775512373,
+          "earnings_yield": 0.09977464506562168,
+          "fcf_yield": 0.13024088816222756
+        },
+        "percentiles": {
+          "pb": 78.606965,
+          "ps": 90.748899,
+          "earnings_yield": 90.0,
+          "fcf_yield": 92.5
+        },
+        "missing_fields": [],
+        "market_cap": "3259345095.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "CRWS",
+        "cik": "0000025895",
+        "company_name": "Crown Crafts, Inc. - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-05",
+        "filed": "2026-08-12",
+        "accn": "0001437749-26-027350",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/25895/000143774926027350/",
+        "score": 87.619325,
+        "metrics": {
+          "pb": 0.6796252393385552,
+          "ps": 0.38894448555571365,
+          "earnings_yield": 0.06743226743395782,
+          "fcf_yield": 0.27104624913226233
+        },
+        "percentiles": {
+          "pb": 88.395904,
+          "ps": 82.594937,
+          "earnings_yield": 83.136095,
+          "fcf_yield": 96.350365
+        },
+        "missing_fields": [],
+        "market_cap": "27331129.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "DOX",
+        "cik": "0001062579",
+        "company_name": "Amdocs Limited - Ordinary Shares",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2024-09-30",
+        "filed": "2024-12-17",
+        "accn": "0000950170-24-137381",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1062579/000095017024137381/",
+        "score": 87.51383,
+        "metrics": {
+          "pb": 1.3028088890616278,
+          "ps": 0.9108429409135564,
+          "earnings_yield": 0.10818668212526002,
+          "fcf_yield": 0.135767873137577
+        },
+        "percentiles": {
+          "pb": 79.868709,
+          "ps": 80.894309,
+          "earnings_yield": 96.593186,
+          "fcf_yield": 92.699115
+        },
+        "missing_fields": [],
+        "market_cap": "4558758900.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "CCS",
+        "cik": "0001576940",
+        "company_name": "Century Communities, Inc. Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-10-29",
+        "accn": "0001576940-26-000071",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1576940/000157694026000071/",
+        "score": 87.364794,
+        "metrics": {
+          "pb": 0.6305340855400903,
+          "ps": 0.3921487827527991,
+          "earnings_yield": 0.09140284678292832,
+          "fcf_yield": 0.07698431197770246
+        },
+        "percentiles": {
+          "pb": 91.576087,
+          "ps": 86.43617,
+          "earnings_yield": 90.339426,
+          "fcf_yield": 81.107492
+        },
+        "missing_fields": [],
+        "market_cap": "1614796532.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "EDUC",
+        "cik": "0000031667",
+        "company_name": "Educational Development Corporation - Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-05",
+        "filed": "2026-10-14",
+        "accn": "0001185185-26-004752",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/31667/000118518526004752/",
+        "score": 87.015567,
+        "metrics": {
+          "pb": 0.2246970640212065,
+          "ps": 0.3906506179736052,
+          "earnings_yield": 0.2597637057417476,
+          "fcf_yield": 0.16338569570243672
+        },
+        "percentiles": {
+          "pb": 92.5,
+          "ps": 64.044944,
+          "earnings_yield": 98.924731,
+          "fcf_yield": 92.592593
+        },
+        "missing_fields": [],
+        "market_cap": "8951212.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "XTNT",
+        "cik": "0001453593",
+        "company_name": "Xtant Medical Holdings, Inc. Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-07",
+        "filed": "2026-08-11",
+        "accn": "0001493152-26-036981",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1453593/000149315226036981/",
+        "score": 86.986721,
+        "metrics": {
+          "pb": 1.0377417468449333,
+          "ps": 0.3100587334891396,
+          "earnings_yield": 0.00011975850058985818,
+          "fcf_yield": 0.2447668208315541
+        },
+        "percentiles": {
+          "pb": 78.26087,
+          "ps": 96.398305,
+          "earnings_yield": 75.15528,
+          "fcf_yield": 98.132428
+        },
+        "missing_fields": [],
+        "market_cap": "41525236.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "ARKO",
+        "cik": "0001823794",
+        "company_name": "ARKO Corp. - Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-03",
+        "filed": "2026-08-07",
+        "accn": "0001193125-26-339096",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1823794/000119312526339096/",
+        "score": 86.75903,
+        "metrics": {
+          "pb": 0.962697567078455,
+          "ps": 0.049572380733733726,
+          "earnings_yield": 0.05018199212990416,
+          "fcf_yield": 0.1440746528355
+        },
+        "percentiles": {
+          "pb": 83.58209,
+          "ps": 96.475771,
+          "earnings_yield": 73.478261,
+          "fcf_yield": 93.5
+        },
+        "missing_fields": [],
+        "market_cap": "453230313.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "EFOR",
+        "cik": "0000890564",
+        "company_name": "Everforth, Inc. Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-10-30",
+        "accn": "0000890564-26-000056",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/890564/000089056426000056/",
+        "score": 86.614978,
+        "metrics": {
+          "pb": 0.8242288503253796,
+          "ps": 0.38184051854085016,
+          "earnings_yield": 0.07467704644714905,
+          "fcf_yield": 0.18955468794205851
+        },
+        "percentiles": {
+          "pb": 85.324232,
+          "ps": 83.227848,
+          "earnings_yield": 85.207101,
+          "fcf_yield": 92.70073
+        },
+        "missing_fields": [],
+        "market_cap": "1519878000.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "STRT",
+        "cik": "0000933034",
+        "company_name": "STRATTEC SECURITY CORPORATION - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-10-30",
+        "accn": "0001193125-26-441692",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/933034/000119312526441692/",
+        "score": 86.232513,
+        "metrics": {
+          "pb": 0.9750936134732775,
+          "ps": 0.4460820359963548,
+          "earnings_yield": 0.07969623870316553,
+          "fcf_yield": 0.15080301969582385
+        },
+        "percentiles": {
+          "pb": 81.25,
+          "ps": 83.510638,
+          "earnings_yield": 86.684073,
+          "fcf_yield": 93.485342
+        },
+        "missing_fields": [],
+        "market_cap": "258456363.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "KBH",
+        "cik": "0000795266",
+        "company_name": "KB Home Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-31",
+        "filed": "2026-10-08",
+        "accn": "0000795266-26-000071",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/795266/000079526626000071/",
+        "score": 86.192464,
+        "metrics": {
+          "pb": 0.8490619214632926,
+          "ps": 0.5175762948481242,
+          "earnings_yield": 0.13284592845051496,
+          "fcf_yield": 0.08900471797812173
+        },
+        "percentiles": {
+          "pb": 84.23913,
+          "ps": 81.648936,
+          "earnings_yield": 94.516971,
+          "fcf_yield": 84.364821
+        },
+        "missing_fields": [],
+        "market_cap": "3227716536.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "ACCO",
+        "cik": "0000712034",
+        "company_name": "Acco Brands Corporation Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-10-30",
+        "accn": "0001193125-26-440726",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/712034/000119312526440726/",
+        "score": 86.012015,
+        "metrics": {
+          "pb": 0.7370733550630161,
+          "ps": 0.3337061303863055,
+          "earnings_yield": 0.08117110653653291,
+          "fcf_yield": 0.1002355068610939
+        },
+        "percentiles": {
+          "pb": 88.054608,
+          "ps": 86.075949,
+          "earnings_yield": 88.16568,
+          "fcf_yield": 81.751825
+        },
+        "missing_fields": [],
+        "market_cap": "508801737.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "ZUMZ",
+        "cik": "0001318008",
+        "company_name": "Zumiez Inc. - Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-29",
+        "filed": "2026-09-10",
+        "accn": "0001193125-26-387835",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1318008/000119312526387835/",
+        "score": 85.424471,
+        "metrics": {
+          "pb": 0.8653975083598255,
+          "ps": 0.2598948772787891,
+          "earnings_yield": 0.05549638816874157,
+          "fcf_yield": 0.17565435159707735
+        },
+        "percentiles": {
+          "pb": 86.069652,
+          "ps": 81.497797,
+          "earnings_yield": 79.130435,
+          "fcf_yield": 95.0
+        },
+        "missing_fields": [],
+        "market_cap": "241457155.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "DXC",
+        "cik": "0001688568",
+        "company_name": "DXC Technology Company Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-19",
+        "filed": "2026-10-30",
+        "accn": "0001688568-26-000090",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1688568/000168856826000090/",
+        "score": 85.244754,
+        "metrics": {
+          "pb": 0.6970182494727327,
+          "ps": 0.18296453416640304,
+          "earnings_yield": 0.007780743590708646,
+          "fcf_yield": 0.4478250199985643
+        },
+        "percentiles": {
+          "pb": 92.122538,
+          "ps": 96.138211,
+          "earnings_yield": 54.709419,
+          "fcf_yield": 98.00885
+        },
+        "missing_fields": [],
+        "market_cap": "2313403570.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "MPAA",
+        "cik": "0000918251",
+        "company_name": "Motorcar Parts of America, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-03",
+        "filed": "2026-08-10",
+        "accn": "0001140361-26-032013",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/918251/000114036126032013/",
+        "score": 85.155188,
+        "metrics": {
+          "pb": 0.7917867179995968,
+          "ps": 0.25362345943180986,
+          "earnings_yield": 0.05990614803318381,
+          "fcf_yield": 0.07718907174075734
+        },
+        "percentiles": {
+          "pb": 86.413043,
+          "ps": 92.553191,
+          "earnings_yield": 79.895561,
+          "fcf_yield": 81.758958
+        },
+        "missing_fields": [],
+        "market_cap": "200313330.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "FVRR",
+        "cik": "0001762301",
+        "company_name": "Fiverr International Ltd. Ordinary Shares, no par value",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-12",
+        "accn": "0001178913-26-000858",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1762301/000117891326000858/",
+        "score": 84.970688,
+        "metrics": {
+          "pb": 0.760055829838052,
+          "ps": 0.7266751007753377,
+          "earnings_yield": 0.06701032684289313,
+          "fcf_yield": 0.3319443069486726
+        },
+        "percentiles": {
+          "pb": 87.713311,
+          "ps": 71.518987,
+          "earnings_yield": 82.840237,
+          "fcf_yield": 97.810219
+        },
+        "missing_fields": [],
+        "market_cap": "313130841.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "VTOL",
+        "cik": "0001525221",
+        "company_name": "Bristow Group, Inc. Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-30",
+        "filed": "2026-11-04",
+        "accn": "0001525221-26-000106",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1525221/000152522126000106/",
+        "score": 84.852393,
+        "metrics": {
+          "pb": 1.0347545329078522,
+          "ps": 0.7605568556308168,
+          "earnings_yield": 0.11386011202775055,
+          "fcf_yield": 0.16923497197189122
+        },
+        "percentiles": {
+          "pb": 78.532609,
+          "ps": 73.138298,
+          "earnings_yield": 92.950392,
+          "fcf_yield": 94.788274
+        },
+        "missing_fields": [],
+        "market_cap": "1133619120.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "LEA",
+        "cik": "0000842162",
+        "company_name": "Lear Corporation Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-27",
+        "filed": "2026-10-30",
+        "accn": "0000842162-26-000092",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/842162/000084216226000092/",
+        "score": 84.825246,
+        "metrics": {
+          "pb": 1.1125277196701544,
+          "ps": 0.24594223460924972,
+          "earnings_yield": 0.07635836297766281,
+          "fcf_yield": 0.09216146740344285
+        },
+        "percentiles": {
+          "pb": 76.086957,
+          "ps": 92.819149,
+          "earnings_yield": 85.37859,
+          "fcf_yield": 85.016287
+        },
+        "missing_fields": [],
+        "market_cap": "5720395029.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "CTVA",
+        "cik": "0001755672",
+        "company_name": "Corteva, Inc. Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-24",
+        "filed": "2026-07-31",
+        "accn": "0001755672-26-000025",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1755672/000175567226000025/",
+        "score": 84.607737,
+        "metrics": {
+          "pb": 0.3220022422548518,
+          "ps": 0.4700777518533418,
+          "earnings_yield": 0.13374372591555453,
+          "fcf_yield": 0.27421131373728413
+        },
+        "percentiles": {
+          "pb": 90.0,
+          "ps": 58.426966,
+          "earnings_yield": 92.473118,
+          "fcf_yield": 97.530864
+        },
+        "missing_fields": [],
+        "market_cap": "8179822960.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "LFVN",
+        "cik": "0000849146",
+        "company_name": "Lifevantage Corporation - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-26",
+        "filed": "2026-08-27",
+        "accn": "0001193125-26-371257",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/849146/000119312526371257/",
+        "score": 83.972534,
+        "metrics": {
+          "pb": 2.2376069844294264,
+          "ps": 0.41163605643368056,
+          "earnings_yield": 0.0674836184913151,
+          "fcf_yield": 0.08874521595762455
+        },
+        "percentiles": {
+          "pb": 55.826087,
+          "ps": 94.915254,
+          "earnings_yield": 91.770186,
+          "fcf_yield": 93.378608
+        },
+        "missing_fields": [],
+        "market_cap": "75158981.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "INMD",
+        "cik": "0001742692",
+        "company_name": "InMode Ltd.  - Ordinary Shares",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-10",
+        "accn": "0001178913-26-000377",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1742692/000117891326000377/",
+        "score": 83.917518,
+        "metrics": {
+          "pb": 1.1960328367471802,
+          "ps": 2.205501402178167,
+          "earnings_yield": 0.24221319499221886,
+          "fcf_yield": 0.10314795012060068
+        },
+        "percentiles": {
+          "pb": 74.956522,
+          "ps": 69.067797,
+          "earnings_yield": 96.73913,
+          "fcf_yield": 94.906621
+        },
+        "missing_fields": [],
+        "market_cap": "817127242.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "SLVM",
+        "cik": "0001856485",
+        "company_name": "Sylvamo Corporation Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-31",
+        "filed": "2026-08-07",
+        "accn": "0001856485-26-000034",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1856485/000185648526000034/",
+        "score": 83.816314,
+        "metrics": {
+          "pb": 1.3988944136125654,
+          "ps": 0.39867029692629063,
+          "earnings_yield": 0.09880652459753062,
+          "fcf_yield": 0.08907557899322836
+        },
+        "percentiles": {
+          "pb": 62.264151,
+          "ps": 84.666667,
+          "earnings_yield": 96.363636,
+          "fcf_yield": 91.970803
+        },
+        "missing_fields": [],
+        "market_cap": "1335944165.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "SPB",
+        "cik": "0000109177",
+        "company_name": "Spectrum Brands Holdings, Inc. Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-31",
+        "filed": "2026-08-07",
+        "accn": "0000109177-26-000040",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/109177/000010917726000040/",
+        "score": 83.528414,
+        "metrics": {
+          "pb": 1.1390202444961324,
+          "ps": 0.7496285959416162,
+          "earnings_yield": 0.04744250410871319,
+          "fcf_yield": 0.07850096025195485
+        },
+        "percentiles": {
+          "pb": 81.838074,
+          "ps": 83.739837,
+          "earnings_yield": 85.571142,
+          "fcf_yield": 82.964602
+        },
+        "missing_fields": [],
+        "market_cap": "2105706726.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "ASIX",
+        "cik": "0001673985",
+        "company_name": "AdvanSix Inc. Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-11-04",
+        "accn": "0001673985-26-000061",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1673985/000167398526000061/",
+        "score": 83.290304,
+        "metrics": {
+          "pb": 0.5336969576593266,
+          "ps": 0.2488230888179862,
+          "earnings_yield": 0.11761236984020339,
+          "fcf_yield": 0.015311078897250007
+        },
+        "percentiles": {
+          "pb": 91.823899,
+          "ps": 92.666667,
+          "earnings_yield": 97.575758,
+          "fcf_yield": 51.094891
+        },
+        "missing_fields": [],
+        "market_cap": "419173596.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "MDXG",
+        "cik": "0001376339",
+        "company_name": "MiMedx Group, Inc - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-22",
+        "filed": "2026-10-28",
+        "accn": "0001376339-26-000093",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1376339/000137633926000093/",
+        "score": 83.119805,
+        "metrics": {
+          "pb": 2.2122298016884434,
+          "ps": 1.1154525260970307,
+          "earnings_yield": 0.10402990251724846,
+          "fcf_yield": 0.15422243525221632
+        },
+        "percentiles": {
+          "pb": 56.521739,
+          "ps": 84.957627,
+          "earnings_yield": 94.565217,
+          "fcf_yield": 96.434635
+        },
+        "missing_fields": [],
+        "market_cap": "466961891.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "GASS",
+        "cik": "0001328919",
+        "company_name": "StealthGas, Inc. - common stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-28",
+        "accn": "0001193125-26-183385",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1328919/000119312526183385/",
+        "score": 82.950138,
+        "metrics": {
+          "pb": 0.4518756809910602,
+          "ps": 1.8014503606858796,
+          "earnings_yield": 0.19442285272137314,
+          "fcf_yield": 0.2717502082046989
+        },
+        "percentiles": {
+          "pb": 94.293478,
+          "ps": 44.680851,
+          "earnings_yield": 96.083551,
+          "fcf_yield": 96.742671
+        },
+        "missing_fields": [],
+        "market_cap": "311941807.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "INGM",
+        "cik": "0001897762",
+        "company_name": "Ingram Micro Holding Corporation Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-22",
+        "filed": "2026-10-29",
+        "accn": "0001628280-26-068236",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1897762/000162828026068236/",
+        "score": 82.919663,
+        "metrics": {
+          "pb": 1.3739954238396164,
+          "ps": 0.11433304428437006,
+          "earnings_yield": 0.054565901020364224,
+          "fcf_yield": 0.1307012442954066
+        },
+        "percentiles": {
+          "pb": 66.032609,
+          "ps": 97.87234,
+          "earnings_yield": 77.545692,
+          "fcf_yield": 90.228013
+        },
+        "missing_fields": [],
+        "market_cap": "6008917545.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "AMPH",
+        "cik": "0001297184",
+        "company_name": "Amphastar Pharmaceuticals, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-31",
+        "filed": "2026-08-06",
+        "accn": "0001297184-26-000047",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1297184/000129718426000047/",
+        "score": 82.904175,
+        "metrics": {
+          "pb": 1.5516531008634953,
+          "ps": 1.6556948396067717,
+          "earnings_yield": 0.08229961774120512,
+          "fcf_yield": 0.10171294429444737
+        },
+        "percentiles": {
+          "pb": 67.130435,
+          "ps": 76.90678,
+          "earnings_yield": 93.012422,
+          "fcf_yield": 94.567063
+        },
+        "missing_fields": [],
+        "market_cap": "1191913191.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "WHR",
+        "cik": "0000106640",
+        "company_name": "Whirlpool Corporation Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-10-23",
+        "filed": "2026-10-27",
+        "accn": "0000106640-26-000077",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/106640/000010664026000077/",
+        "score": 82.882319,
+        "metrics": {
+          "pb": 0.577739869179004,
+          "ps": 0.13825712535429013,
+          "earnings_yield": 0.14816170364981737,
+          "fcf_yield": 0.037739301873066684
+        },
+        "percentiles": {
+          "pb": 91.808874,
+          "ps": 95.253165,
+          "earnings_yield": 95.56213,
+          "fcf_yield": 48.905109
+        },
+        "missing_fields": [],
+        "market_cap": "2146303614.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "HLLY",
+        "cik": "0001822928",
+        "company_name": "Holley Inc. Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-08-03",
+        "filed": "2026-08-05",
+        "accn": "0001822928-26-000068",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1822928/000182292826000068/",
+        "score": 82.831192,
+        "metrics": {
+          "pb": 0.7817418474756413,
+          "ps": 0.5730578519805579,
+          "earnings_yield": 0.05453966016714621,
+          "fcf_yield": 0.09641929282952226
+        },
+        "percentiles": {
+          "pb": 86.956522,
+          "ps": 79.787234,
+          "earnings_yield": 77.284595,
+          "fcf_yield": 87.296417
+        },
+        "missing_fields": [],
+        "market_cap": "351579015.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      },
+      {
+        "ticker": "COLL",
+        "cik": "0001267565",
+        "company_name": "Collegium Pharmaceutical, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "VALUE_EXPERIMENTAL_ALL_FOUR",
+        "reason": "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL",
+        "financial_period": "2026-07-31",
+        "filed": "2026-08-06",
+        "accn": "0001628280-26-053851",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1267565/000162828026053851/",
+        "score": 82.665377,
+        "metrics": {
+          "pb": 2.470564683930249,
+          "ps": 0.9872200080198112,
+          "earnings_yield": 0.08175539367583877,
+          "fcf_yield": 0.42510598613511574
+        },
+        "percentiles": {
+          "pb": 52.0,
+          "ps": 86.228814,
+          "earnings_yield": 92.857143,
+          "fcf_yield": 99.575552
+        },
+        "missing_fields": [],
+        "market_cap": "770591360.0",
+        "valuation_support": "P6.8_VALIDATED_MARKET_CAP"
+      }
+    ],
+    "formula": "equal-weight experimental average of winsorized within-peer percentiles: PB (inverse), PS (inverse), Earnings Yield (higher), FCF Yield (higher)"
+  },
+  "quality": {
+    "scored_issuers": 2313,
+    "score_mismatches": 0,
+    "peer_percentile_mismatches": 0,
+    "peer_percentile_max_abs_diff": 0.0,
+    "top50": [
+      {
+        "ticker": "TPL",
+        "cik": "0001811074",
+        "company_name": "Texas Pacific Land Corporation Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-09-25",
+        "accn": "0001104659-26-110963",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1811074/000110465926110963/",
+        "score": 96.507246,
+        "metrics": {
+          "roe": "0.3715221126106171",
+          "roa": "0.33530201323582576",
+          "cfo": "0.3802531120071828",
+          "leverage": "0.1012586876677932"
+        },
+        "percentiles": {
+          "roe": "92.7536231884058",
+          "roa": "99.56521739130434",
+          "cfo": "99.56521739130434",
+          "leverage": "94.4927536231884"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "BUDA",
+        "cik": "0002079720",
+        "company_name": "Buda Juice, Inc. Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-26",
+        "accn": "0001493152-26-012988",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/2079720/000149315226012988/",
+        "score": 96.477273,
+        "metrics": {
+          "roe": "1.0249492312155497",
+          "roa": "0.8120905643029537",
+          "cfo": "0.7240547063555913",
+          "leverage": "0.24788732394366197"
+        },
+        "percentiles": {
+          "roe": "98.86363636363636",
+          "roa": "100.0",
+          "cfo": "100.0",
+          "leverage": "84.0909090909091"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "USLM",
+        "cik": "0000082020",
+        "company_name": "United States Lime & Minerals, Inc. - Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-26",
+        "accn": "0001104659-26-020480",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/82020/000110465926020480/",
+        "score": 95.629921,
+        "metrics": {
+          "roe": "0.23797054676956422",
+          "roa": "0.21936649602559044",
+          "cfo": "0.2695132440837211",
+          "leverage": "0.0738337023745896"
+        },
+        "percentiles": {
+          "roe": "91.33858267716536",
+          "roa": "99.60629921259843",
+          "cfo": "99.60629921259843",
+          "leverage": "92.1259842519685"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "IDR",
+        "cik": "0001030192",
+        "company_name": "Idaho Strategic Resources, Inc. Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-23",
+        "accn": "0001654954-26-002560",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1030192/000165495426002560/",
+        "score": 95.11811,
+        "metrics": {
+          "roe": "0.22102601627175125",
+          "roa": "0.2086064701214948",
+          "cfo": "0.23838322839159978",
+          "leverage": "0.046428432244571154"
+        },
+        "percentiles": {
+          "roe": "88.9763779527559",
+          "roa": "98.4251968503937",
+          "cfo": "98.4251968503937",
+          "leverage": "96.06299212598425"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "INMD",
+        "cik": "0001742692",
+        "company_name": "InMode Ltd.  - Ordinary Shares",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2023-12-31",
+        "filed": "2024-02-13",
+        "accn": "0001178913-24-000490",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1742692/000117891324000490/",
+        "score": 94.805195,
+        "metrics": {
+          "roe": "0.2949634498021595",
+          "roa": "0.2625451434142847",
+          "cfo": "0.23456468317531065",
+          "leverage": "0.08793609533804556"
+        },
+        "percentiles": {
+          "roe": "93.13543599257885",
+          "roa": "96.28942486085343",
+          "cfo": "98.14471243042672",
+          "leverage": "91.28014842300557"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "CRDO",
+        "cik": "0001807794",
+        "company_name": "Credo Technology Group Holding Ltd - Ordinary Shares",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-05-02",
+        "filed": "2026-08-25",
+        "accn": "0001628280-26-058936",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026058936/",
+        "score": 94.216758,
+        "metrics": {
+          "roe": "0.3440769577669192",
+          "roa": "0.3042176241498855",
+          "cfo": "0.29907281321379664",
+          "leverage": "0.10106511577051767"
+        },
+        "percentiles": {
+          "roe": "91.2568306010929",
+          "roa": "96.90346083788707",
+          "cfo": "95.99271402550092",
+          "leverage": "93.0783242258652"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "FIZZ",
+        "cik": "0000069891",
+        "company_name": "National Beverage Corp. - Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-05-02",
+        "filed": "2026-08-28",
+        "accn": "0001437749-26-029176",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/69891/000143774926029176/",
+        "score": 94.147727,
+        "metrics": {
+          "roe": "0.34017928838496897",
+          "roa": "0.24092772286385042",
+          "cfo": "0.23778703541538346",
+          "leverage": "0.25354753788835044"
+        },
+        "percentiles": {
+          "roe": "95.45454545454545",
+          "roa": "98.86363636363636",
+          "cfo": "97.72727272727273",
+          "leverage": "81.81818181818181"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "MLI",
+        "cik": "0000089439",
+        "company_name": "Mueller Industries, Inc. Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-27",
+        "filed": "2026-02-25",
+        "accn": "0000089439-26-000008",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/89439/000008943926000008/",
+        "score": 94.074803,
+        "metrics": {
+          "roe": "0.25336133187777987",
+          "roa": "0.21788100260039422",
+          "cfo": "0.2151056352315333",
+          "leverage": "0.13316880206395396"
+        },
+        "percentiles": {
+          "roe": "92.1259842519685",
+          "roa": "99.60629921259843",
+          "cfo": "96.8503937007874",
+          "leverage": "86.61417322834646"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "NVDA",
+        "cik": "0001045810",
+        "company_name": "NVIDIA Corporation - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-01-25",
+        "filed": "2026-05-12",
+        "accn": "0001045810-26-000036",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000036/",
+        "score": 93.998179,
+        "metrics": {
+          "roe": "1.014850815653791",
+          "roa": "0.7541802238665344",
+          "cfo": "0.6452054622429366",
+          "leverage": "0.23940658501085574"
+        },
+        "percentiles": {
+          "roe": "97.632058287796",
+          "roa": "99.54462659380692",
+          "cfo": "99.54462659380692",
+          "leverage": "74.68123861566485"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "BDTX",
+        "cik": "0001701541",
+        "company_name": "Black Diamond Therapeutics, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-29",
+        "accn": "0001104659-26-051474",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1701541/000110465926051474/",
+        "score": 93.362709,
+        "metrics": {
+          "roe": "228.8230961247289",
+          "roa": "168.39450404667795",
+          "cfo": "0.22295501599849427",
+          "leverage": "0.2153625620585973"
+        },
+        "percentiles": {
+          "roe": "99.53617810760667",
+          "roa": "99.53617810760667",
+          "cfo": "97.03153988868274",
+          "leverage": "71.7996289424861"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "NVEC",
+        "cik": "0000724910",
+        "company_name": "NVE Corporation - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-03-31",
+        "filed": "2026-06-22",
+        "accn": "0001376474-26-000455",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/724910/000137647426000455/",
+        "score": 93.132969,
+        "metrics": {
+          "roe": "0.252230553923484",
+          "roa": "0.24385940330829164",
+          "cfo": "0.26726476031995855",
+          "leverage": "0.03527740162013843"
+        },
+        "percentiles": {
+          "roe": "86.88524590163934",
+          "roa": "95.81056466302368",
+          "cfo": "93.6247723132969",
+          "leverage": "98.54280510018215"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "RAVE",
+        "cik": "0000718332",
+        "company_name": "Rave Restaurant Group, Inc. - Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-06-28",
+        "filed": "2026-10-23",
+        "accn": "0001140361-26-040557",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/718332/000114036126040557/",
+        "score": 92.727273,
+        "metrics": {
+          "roe": "0.18282302121712615",
+          "roa": "0.15947690687945032",
+          "cfo": "0.19682486908818886",
+          "leverage": "0.11291973791973792"
+        },
+        "percentiles": {
+          "roe": "86.36363636363636",
+          "roa": "95.45454545454545",
+          "cfo": "95.45454545454545",
+          "leverage": "95.45454545454545"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "IRMD",
+        "cik": "0001325618",
+        "company_name": "iRadimed Corporation - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-30",
+        "accn": "0001628280-26-028903",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1325618/000162828026028903/",
+        "score": 92.717996,
+        "metrics": {
+          "roe": "0.24780159504400975",
+          "roa": "0.21709292039671274",
+          "cfo": "0.24091510463443133",
+          "leverage": "0.13015738765904245"
+        },
+        "percentiles": {
+          "roe": "91.83673469387756",
+          "roa": "95.36178107606679",
+          "cfo": "98.51576994434137",
+          "leverage": "83.48794063079777"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "KROS",
+        "cik": "0001664710",
+        "company_name": "Keros Therapeutics, Inc. - common stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-22",
+        "accn": "0001104659-26-046791",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1664710/000110465926046791/",
+        "score": 92.467532,
+        "metrics": {
+          "roe": "0.19896076873388704",
+          "roa": "0.1824370719577485",
+          "cfo": "0.2253993313813611",
+          "leverage": "0.1032154806949864"
+        },
+        "percentiles": {
+          "roe": "89.42486085343229",
+          "roa": "94.43413729128015",
+          "cfo": "97.77365491651206",
+          "leverage": "87.94063079777365"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "RIGL",
+        "cik": "0001034842",
+        "company_name": "Rigel Pharmaceuticals, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-03",
+        "accn": "0001034842-26-000015",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1034842/000103484226000015/",
+        "score": 92.119666,
+        "metrics": {
+          "roe": "1.8594414947513476",
+          "roa": "1.0833537494281034",
+          "cfo": "0.22331272045692696",
+          "leverage": "0.23776368103988754"
+        },
+        "percentiles": {
+          "roe": "98.7012987012987",
+          "roa": "99.53617810760667",
+          "cfo": "97.21706864564007",
+          "leverage": "66.60482374768088"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "MU",
+        "cik": "0000723125",
+        "company_name": "Micron Technology, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-09-03",
+        "filed": "2026-10-09",
+        "accn": "0000723125-26-000023",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000023/",
+        "score": 92.062842,
+        "metrics": {
+          "roe": "0.8825976535111637",
+          "roa": "0.6097830533288361",
+          "cfo": "0.643555829858694",
+          "leverage": "0.2935861308502818"
+        },
+        "percentiles": {
+          "roe": "96.72131147540983",
+          "roa": "98.72495446265937",
+          "cfo": "99.54462659380692",
+          "leverage": "67.39526411657559"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "SNDK",
+        "cik": "0002023554",
+        "company_name": "Sandisk Corporation - Common Stock When-Issued",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-07-03",
+        "filed": "2026-10-06",
+        "accn": "0001308179-26-000423",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/2023554/000130817926000423/",
+        "score": 91.944444,
+        "metrics": {
+          "roe": "0.9163994870150689",
+          "roa": "0.6442578609264059",
+          "cfo": "0.6576693339344077",
+          "leverage": "0.30083973874794506"
+        },
+        "percentiles": {
+          "roe": "97.26775956284153",
+          "roa": "98.90710382513662",
+          "cfo": "99.54462659380692",
+          "leverage": "65.7559198542805"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "UTHR",
+        "cik": "0001082554",
+        "company_name": "United Therapeutics Corporation - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-29",
+        "accn": "0001082554-26-000009",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1082554/000108255426000009/",
+        "score": 91.90167,
+        "metrics": {
+          "roe": "0.19714627553507333",
+          "roa": "0.17511151928627658",
+          "cfo": "0.20482812909997375",
+          "leverage": "0.09946700507614213"
+        },
+        "percentiles": {
+          "roe": "89.05380333951763",
+          "roa": "93.87755102040816",
+          "cfo": "95.91836734693877",
+          "leverage": "88.68274582560296"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "KRYS",
+        "cik": "0001711279",
+        "company_name": "Krystal Biotech, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-17",
+        "accn": "0001711279-26-000016",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1711279/000171127926000016/",
+        "score": 91.864564,
+        "metrics": {
+          "roe": "0.18913820327432893",
+          "roa": "0.1714330909529166",
+          "cfo": "0.16811375140607424",
+          "leverage": "0.08564590933832361"
+        },
+        "percentiles": {
+          "roe": "88.68274582560296",
+          "roa": "93.69202226345084",
+          "cfo": "93.87755102040816",
+          "leverage": "91.83673469387755"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "EVER",
+        "cik": "0001640428",
+        "company_name": "EverQuote, Inc. - Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-23",
+        "accn": "0001193125-26-173669",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1640428/000119312526173669/",
+        "score": 91.183971,
+        "metrics": {
+          "roe": "0.5319168309195303",
+          "roa": "0.36956849377515383",
+          "cfo": "0.35494368705146406",
+          "leverage": "0.2718552030662592"
+        },
+        "percentiles": {
+          "roe": "94.89981785063752",
+          "roa": "97.632058287796",
+          "cfo": "97.26775956284153",
+          "leverage": "69.94535519125682"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "MSGM",
+        "cik": "0001821175",
+        "company_name": "Motorsport Games Inc. - Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-10",
+        "accn": "0001493152-26-009532",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1821175/000149315226009532/",
+        "score": 90.806011,
+        "metrics": {
+          "roe": "1.5732675631495159",
+          "roa": "0.7598111391863925",
+          "cfo": "0.44669827799924405",
+          "leverage": "0.36654502072431755"
+        },
+        "percentiles": {
+          "roe": "99.54462659380692",
+          "roa": "99.54462659380692",
+          "cfo": "98.90710382513662",
+          "leverage": "56.64845173041894"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "UI",
+        "cik": "0001511737",
+        "company_name": "Ubiquiti Inc. Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-06-30",
+        "filed": "2026-10-23",
+        "accn": "0001511737-26-000063",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1511737/000151173726000063/",
+        "score": 90.660291,
+        "metrics": {
+          "roe": "0.9108847686466152",
+          "roa": "0.5240911729143455",
+          "cfo": "0.5068338208299258",
+          "leverage": "0.3448036793907715"
+        },
+        "percentiles": {
+          "roe": "97.0856102003643",
+          "roa": "98.36065573770492",
+          "cfo": "99.54462659380692",
+          "leverage": "60.291438979963566"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "PLTR",
+        "cik": "0001321655",
+        "company_name": "Palantir Technologies Inc. - Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-24",
+        "accn": "0001321655-26-000019",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1321655/000132165526000019/",
+        "score": 90.591985,
+        "metrics": {
+          "roe": "0.2583021800738141",
+          "roa": "0.21324106984218383",
+          "cfo": "0.28009111573073014",
+          "leverage": "0.1586875049997798"
+        },
+        "percentiles": {
+          "roe": "87.24954462659382",
+          "roa": "94.35336976320583",
+          "cfo": "94.53551912568307",
+          "leverage": "85.97449908925319"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "EXEL",
+        "cik": "0000939767",
+        "company_name": "Exelixis, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-01-02",
+        "filed": "2026-04-15",
+        "accn": "0000939767-26-000046",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/939767/000093976726000046/",
+        "score": 90.533395,
+        "metrics": {
+          "roe": "0.35528139457707847",
+          "roa": "0.2702295345411942",
+          "cfo": "0.3053348579352647",
+          "leverage": "0.2401555605477807"
+        },
+        "percentiles": {
+          "roe": "94.24860853432281",
+          "roa": "96.66048237476808",
+          "cfo": "99.53617810760667",
+          "leverage": "66.04823747680891"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "KGC",
+        "cik": "0000701818",
+        "company_name": "Kinross Gold Corporation Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "IFRS",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-26",
+        "accn": "0001104659-26-035268",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/701818/000110465926035268/",
+        "score": 90.425532,
+        "metrics": {
+          "roe": "0.31475593671749064",
+          "roa": "0.212229396778753",
+          "cfo": "0.32311281238319867",
+          "leverage": "0.299489972685741"
+        },
+        "percentiles": {
+          "roe": "95.74468085106383",
+          "roa": "97.87234042553192",
+          "cfo": "97.87234042553192",
+          "leverage": "63.82978723404255"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "INCY",
+        "cik": "0000879169",
+        "company_name": "Incyte Corporation - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-28",
+        "accn": "0000879169-26-000031",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/879169/000087916926000031/",
+        "score": 90.391304,
+        "metrics": {
+          "roe": "0.2987078742850059",
+          "roa": "0.20749385496797165",
+          "cfo": "0.22794136085297118",
+          "leverage": "0.25732997239282185"
+        },
+        "percentiles": {
+          "roe": "88.98550724637681",
+          "roa": "96.81159420289856",
+          "cfo": "94.20289855072464",
+          "leverage": "79.71014492753623"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "LULU",
+        "cik": "0001397187",
+        "company_name": "lululemon athletica inc. - Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-02-01",
+        "filed": "2026-05-18",
+        "accn": "0001213900-26-058095",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1397187/000121390026058095/",
+        "score": 90.348837,
+        "metrics": {
+          "roe": "0.3401253967445436",
+          "roa": "0.1966599699191191",
+          "cfo": "0.199560835328192",
+          "leverage": "0.41326820502881545"
+        },
+        "percentiles": {
+          "roe": "88.83720930232558",
+          "roa": "97.67441860465115",
+          "cfo": "93.48837209302326",
+          "leverage": "79.53488372093022"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "RDDT",
+        "cik": "0001713445",
+        "company_name": "Reddit, Inc. Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-23",
+        "accn": "0001713445-26-000060",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1713445/000171344526000060/",
+        "score": 90.309654,
+        "metrics": {
+          "roe": "0.2094949846703033",
+          "roa": "0.19010834023223347",
+          "cfo": "0.24781339539234776",
+          "leverage": "0.09574511765811829"
+        },
+        "percentiles": {
+          "roe": "84.15300546448088",
+          "roa": "92.53187613843352",
+          "cfo": "92.53187613843352",
+          "leverage": "93.98907103825137"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "ESEA",
+        "cik": "0001341170",
+        "company_name": "Euroseas Ltd. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-29",
+        "accn": "0001171843-26-002807",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1341170/000117184326002807/",
+        "score": 90.30303,
+        "metrics": {
+          "roe": "0.3314821795592785",
+          "roa": "0.21207724044564497",
+          "cfo": "0.2185279462292757",
+          "leverage": "0.3383679966075562"
+        },
+        "percentiles": {
+          "roe": "90.9090909090909",
+          "roa": "96.36363636363636",
+          "cfo": "97.57575757575758",
+          "leverage": "72.72727272727273"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "APPF",
+        "cik": "0001433195",
+        "company_name": "AppFolio, Inc. - Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-28",
+        "accn": "0001433195-26-000031",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1433195/000143319526000031/",
+        "score": 90.145719,
+        "metrics": {
+          "roe": "0.26542445442893614",
+          "roa": "0.21422648206773104",
+          "cfo": "0.3680400107931851",
+          "leverage": "0.2124746177973691"
+        },
+        "percentiles": {
+          "roe": "87.61384335154827",
+          "roa": "94.53551912568307",
+          "cfo": "97.81420765027322",
+          "leverage": "78.87067395264117"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "MCRI",
+        "cik": "0000907242",
+        "company_name": "Monarch Casino & Resort, Inc. - Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-13",
+        "accn": "0001104659-26-042561",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/907242/000110465926042561/",
+        "score": 90.069767,
+        "metrics": {
+          "roe": "0.19213682161949105",
+          "roa": "0.14438909110587056",
+          "cfo": "0.2346129965708557",
+          "leverage": "0.24574489127430915"
+        },
+        "percentiles": {
+          "roe": "78.13953488372093",
+          "roa": "94.88372093023256",
+          "cfo": "97.20930232558139",
+          "leverage": "93.02325581395348"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "WDC",
+        "cik": "0000106040",
+        "company_name": "Western Digital Corporation - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-07-03",
+        "filed": "2026-10-05",
+        "accn": "0001628280-26-064909",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/106040/000162828026064909/",
+        "score": 89.858834,
+        "metrics": {
+          "roe": "1.3296649029982364",
+          "roa": "0.6764526432903851",
+          "cfo": "0.2820227541901446",
+          "leverage": "0.36050789986292475"
+        },
+        "percentiles": {
+          "roe": "98.36065573770492",
+          "roa": "99.54462659380692",
+          "cfo": "95.08196721311475",
+          "leverage": "58.46994535519126"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "ELMD",
+        "cik": "0001488917",
+        "company_name": "Electromed, Inc. Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-06-30",
+        "filed": "2026-09-29",
+        "accn": "0001437749-26-031465",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1488917/000143774926031465/",
+        "score": 89.786642,
+        "metrics": {
+          "roe": "0.23255957525620446",
+          "roa": "0.18824176098743223",
+          "cfo": "0.1609907636442379",
+          "leverage": "0.1854316628185975"
+        },
+        "percentiles": {
+          "roe": "91.28014842300557",
+          "roa": "94.61966604823748",
+          "cfo": "93.69202226345084",
+          "leverage": "76.62337662337663"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "NVR",
+        "cik": "0000906163",
+        "company_name": "NVR, Inc. Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-11",
+        "accn": "0000906163-26-000018",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/906163/000090616326000018/",
+        "score": 89.575758,
+        "metrics": {
+          "roe": "0.3318453967651281",
+          "roa": "0.21896142791608833",
+          "cfo": "0.18325339326509624",
+          "leverage": "0.34012033608050635"
+        },
+        "percentiles": {
+          "roe": "91.21212121212122",
+          "roa": "96.96969696969697",
+          "cfo": "93.93939393939394",
+          "leverage": "72.42424242424242"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "AU",
+        "cik": "0001973832",
+        "company_name": "AngloGold Ashanti PLC Ordinary Shares",
+        "model_family": "MATERIALS",
+        "accounting_standard": "IFRS",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-26",
+        "accn": "0001973832-26-000066",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1973832/000197383226000066/",
+        "score": 89.574468,
+        "metrics": {
+          "roe": "0.34445710564870585",
+          "roa": "0.22424756252649428",
+          "cfo": "0.3379963261268899",
+          "leverage": "0.34235309722774904"
+        },
+        "percentiles": {
+          "roe": "97.87234042553192",
+          "roa": "100.0",
+          "cfo": "100.0",
+          "leverage": "51.06382978723404"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "ISRG",
+        "cik": "0001035267",
+        "company_name": "Intuitive Surgical, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-03",
+        "accn": "0001035267-26-000010",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1035267/000103526726000010/",
+        "score": 89.573284,
+        "metrics": {
+          "roe": "0.1657030631278774",
+          "roa": "0.14570722337437728",
+          "cfo": "0.15460985309385514",
+          "leverage": "0.1230283449095006"
+        },
+        "percentiles": {
+          "roe": "87.569573283859",
+          "roa": "92.76437847866418",
+          "cfo": "92.76437847866418",
+          "leverage": "84.60111317254174"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "INSP",
+        "cik": "0001609550",
+        "company_name": "Inspire Medical Systems, Inc. Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-13",
+        "accn": "0001609550-26-000016",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1609550/000160955026000016/",
+        "score": 89.19295,
+        "metrics": {
+          "roe": "0.1977380503176724",
+          "roa": "0.16951914670396923",
+          "cfo": "0.136359503409687",
+          "leverage": "0.13904401658957122"
+        },
+        "percentiles": {
+          "roe": "89.23933209647495",
+          "roa": "93.5064935064935",
+          "cfo": "90.72356215213358",
+          "leverage": "81.81818181818181"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "UG",
+        "cik": "0000101295",
+        "company_name": "United-Guardian, Inc. - Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-06",
+        "accn": "0001171843-26-002251",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/101295/000117184326002251/",
+        "score": 89.133858,
+        "metrics": {
+          "roe": "0.18219763046121204",
+          "roa": "0.15652603364449913",
+          "cfo": "0.14619975370470595",
+          "leverage": "0.14315563876145537"
+        },
+        "percentiles": {
+          "roe": "85.03937007874016",
+          "roa": "95.2755905511811",
+          "cfo": "90.5511811023622",
+          "leverage": "85.8267716535433"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "BKTI",
+        "cik": "0000002186",
+        "company_name": "BK Technologies Corporation Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-23",
+        "accn": "0001140361-26-016248",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/2186/000114036126016248/",
+        "score": 89.098361,
+        "metrics": {
+          "roe": "0.36324115444994565",
+          "roa": "0.2348797057062789",
+          "cfo": "0.33734458914271337",
+          "leverage": "0.29896486825595986"
+        },
+        "percentiles": {
+          "roe": "92.34972677595628",
+          "roa": "95.44626593806922",
+          "cfo": "97.0856102003643",
+          "leverage": "66.3023679417122"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "BKE",
+        "cik": "0000885245",
+        "company_name": "Buckle, Inc. (The) Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-01-31",
+        "filed": "2026-04-22",
+        "accn": "0000885245-26-000016",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/885245/000088524526000016/",
+        "score": 89.069767,
+        "metrics": {
+          "roe": "0.494418626030854",
+          "roa": "0.22026703744699264",
+          "cfo": "0.26373991048343565",
+          "leverage": "0.571621107680078"
+        },
+        "percentiles": {
+          "roe": "93.48837209302326",
+          "roa": "98.6046511627907",
+          "cfo": "98.6046511627907",
+          "leverage": "58.6046511627907"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "LRCX",
+        "cik": "0000707549",
+        "company_name": "Lam Research Corporation - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-06-28",
+        "filed": "2026-09-24",
+        "accn": "0000707549-26-000047",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/707549/000070754926000047/",
+        "score": 88.878788,
+        "metrics": {
+          "roe": "0.6506555904523176",
+          "roa": "0.32380592821353127",
+          "cfo": "0.2610654755833665",
+          "leverage": "0.4699933186690564"
+        },
+        "percentiles": {
+          "roe": "95.75757575757575",
+          "roa": "98.48484848484848",
+          "cfo": "98.48484848484848",
+          "leverage": "54.54545454545455"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "GOOG",
+        "cik": "0001652044",
+        "company_name": "Alphabet Inc. - Class C Capital Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-24",
+        "accn": "0001308179-26-000342",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1652044/000130817926000342/",
+        "score": 88.852459,
+        "metrics": {
+          "roe": "0.3570478247421149",
+          "roa": "0.252827016164899",
+          "cfo": "0.3150782803478021",
+          "leverage": "0.3024050826416432"
+        },
+        "percentiles": {
+          "roe": "91.98542805100182",
+          "roa": "96.35701275045537",
+          "cfo": "96.35701275045537",
+          "leverage": "65.39162112932604"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "NSSC",
+        "cik": "0000069633",
+        "company_name": "NAPCO Security Technologies, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-06-30",
+        "filed": "2026-10-28",
+        "accn": "0001140361-26-040996",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/69633/000114036126040996/",
+        "score": 88.788707,
+        "metrics": {
+          "roe": "0.23929945941135902",
+          "roa": "0.19700601407022292",
+          "cfo": "0.2799621802664322",
+          "leverage": "0.1997167613588751"
+        },
+        "percentiles": {
+          "roe": "85.79234972677595",
+          "roa": "93.44262295081968",
+          "cfo": "94.35336976320583",
+          "leverage": "80.51001821493625"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "COCO",
+        "cik": "0001482981",
+        "company_name": "The Vita Coco Company, Inc. - Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-22",
+        "accn": "0001482981-26-000107",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1482981/000148298126000107/",
+        "score": 88.75,
+        "metrics": {
+          "roe": "0.2461891831919222",
+          "roa": "0.17644795004000247",
+          "cfo": "0.11454184113371511",
+          "leverage": "0.2813157084700792"
+        },
+        "percentiles": {
+          "roe": "93.18181818181817",
+          "roa": "97.72727272727273",
+          "cfo": "81.81818181818183",
+          "leverage": "79.54545454545455"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "SIGA",
+        "cik": "0001010086",
+        "company_name": "SIGA Technologies Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-28",
+        "accn": "0001140361-26-017421",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1010086/000114036126017421/",
+        "score": 88.719852,
+        "metrics": {
+          "roe": "0.1122897463809191",
+          "roa": "0.10038343745120519",
+          "cfo": "0.1874559507254415",
+          "leverage": "0.09407255383502593"
+        },
+        "percentiles": {
+          "roe": "82.3747680890538",
+          "roa": "89.23933209647495",
+          "cfo": "94.8051948051948",
+          "leverage": "89.98144712430427"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "XPEL",
+        "cik": "0001767258",
+        "company_name": "XPEL, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-30",
+        "accn": "0001767258-26-000020",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1767258/000176725826000020/",
+        "score": 88.621212,
+        "metrics": {
+          "roe": "0.20063449788500706",
+          "roa": "0.15334072707080776",
+          "cfo": "0.2003732789728991",
+          "leverage": "0.25446897727213313"
+        },
+        "percentiles": {
+          "roe": "83.03030303030303",
+          "roa": "94.24242424242424",
+          "cfo": "95.15151515151516",
+          "leverage": "81.81818181818181"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "ALAB",
+        "cik": "0001736297",
+        "company_name": "Astera Labs, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-23",
+        "accn": "0001140361-26-016359",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1736297/000114036126016359/",
+        "score": 88.59745,
+        "metrics": {
+          "roe": "0.1882244410726012",
+          "roa": "0.16945549506231028",
+          "cfo": "0.24691812455559634",
+          "leverage": "0.10979662793938987"
+        },
+        "percentiles": {
+          "roe": "81.23861566484517",
+          "roa": "91.2568306010929",
+          "cfo": "92.34972677595628",
+          "leverage": "91.62112932604735"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "WDFC",
+        "cik": "0000105132",
+        "company_name": "WD-40 Company - Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-08-31",
+        "filed": "2026-10-30",
+        "accn": "0000105132-26-000116",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/105132/000010513226000116/",
+        "score": 88.425197,
+        "metrics": {
+          "roe": "0.30435112035112033",
+          "roa": "0.1697530164319007",
+          "cfo": "0.21640592628629973",
+          "leverage": "0.447844458783479"
+        },
+        "percentiles": {
+          "roe": "96.06299212598425",
+          "roa": "96.06299212598425",
+          "cfo": "97.63779527559055",
+          "leverage": "55.90551181102362"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "DOCS",
+        "cik": "0001516513",
+        "company_name": "Doximity, Inc. Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2026-03-31",
+        "filed": "2026-07-15",
+        "accn": "0001516513-26-000032",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1516513/000151651326000032/",
+        "score": 88.360656,
+        "metrics": {
+          "roe": "0.19287304114854373",
+          "roa": "0.16423813105214582",
+          "cfo": "0.27341586836828874",
+          "leverage": "0.15382397411378793"
+        },
+        "percentiles": {
+          "roe": "82.87795992714025",
+          "roa": "90.52823315118397",
+          "cfo": "93.80692167577413",
+          "leverage": "87.06739526411658"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      },
+      {
+        "ticker": "JL",
+        "cik": "0001948436",
+        "company_name": "J-Long Group Limited - Class A Ordinary Shares",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "QUALITY_V1_SCORED",
+        "reason": "",
+        "financial_period": "2025-03-31",
+        "filed": "2025-07-28",
+        "accn": "0001213900-25-068049",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1948436/000121390025068049/",
+        "score": 88.232558,
+        "metrics": {
+          "roe": "0.20567011511190542",
+          "roa": "0.12854343581837285",
+          "cfo": "0.3581826876134592",
+          "leverage": "0.3585609225357556"
+        },
+        "percentiles": {
+          "roe": "80.0",
+          "roa": "91.16279069767442",
+          "cfo": "99.53488372093024",
+          "leverage": "82.7906976744186"
+        },
+        "missing_fields": [],
+        "valuation_support": "NO_PRICE_DCF_NOT_VALIDATED"
+      }
+    ],
+    "formula": "0.30 ROE + 0.25 ROA + 0.25 CFO/assets + 0.20 inverse liabilities/assets; P6.6 peer percentiles"
+  },
+  "garp": {
+    "history_available": 3606,
+    "ranked_issuers": 3101,
+    "top50": [
+      {
+        "ticker": "CDZI",
+        "cik": "0000727273",
+        "company_name": "Cadiz, Inc. - Common Stock",
+        "model_family": "UTILITIES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-31",
+        "accn": "0001437749-26-010517",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/727273/000143774926010517/",
+        "score": 99.412775,
+        "metrics": {
+          "revenue_growth_1y": "0.6978559533721898",
+          "revenue_cagr_3y": "1.2146525377495814",
+          "revenue_cagr_5y": "0.97655007644267",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.8505764151259758",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.901099,
+          "revenue_cagr_3y": 100.0,
+          "revenue_cagr_5y": 98.75,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 100.0,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "PROP",
+        "cik": "0001162896",
+        "company_name": "Prairie Operating Co. - Common Stock",
+        "model_family": "ENERGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-31",
+        "accn": "0001140361-26-012036",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1162896/000114036126012036/",
+        "score": 99.107143,
+        "metrics": {
+          "revenue_growth_1y": "29.438090439601964",
+          "revenue_cagr_3y": "6.754006081233409",
+          "revenue_cagr_5y": "2.5781990825213157",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "3.6109675719441787",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 100.0,
+          "revenue_cagr_3y": 100.0,
+          "revenue_cagr_5y": 100.0,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 96.428571,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "DVLT",
+        "cik": "0001682149",
+        "company_name": "Datavault AI Inc. - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-18",
+        "accn": "0001104659-26-031280",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1682149/000110465926031280/",
+        "score": 98.816158,
+        "metrics": {
+          "revenue_growth_1y": "13.61817501869858",
+          "revenue_cagr_3y": "1.264342835221505",
+          "revenue_cagr_5y": "0.7468563083515982",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "7.074214831416781",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 99.54023,
+          "revenue_cagr_3y": 98.148148,
+          "revenue_cagr_5y": 99.537037,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 98.039216,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "QXO",
+        "cik": "0001236275",
+        "company_name": "QXO, Inc. Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-27",
+        "accn": "0001628280-26-012601",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1236275/000162828026012601/",
+        "score": 98.733976,
+        "metrics": {
+          "revenue_growth_1y": "119.24956063268893",
+          "revenue_cagr_3y": "4.335918765551649",
+          "revenue_cagr_5y": "1.7802092939856822",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "1.2119667365643967",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 99.569892,
+          "revenue_cagr_3y": 99.50495,
+          "revenue_cagr_5y": 99.556213,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 96.30485,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "GEVO",
+        "cik": "0001392380",
+        "company_name": "Gevo, Inc. - Common Stock",
+        "model_family": "MATERIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-05",
+        "accn": "0001392380-26-000006",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1392380/000139238026000006/",
+        "score": 98.641369,
+        "metrics": {
+          "revenue_growth_1y": "8.493349098433344",
+          "revenue_cagr_3y": "4.148991164237575",
+          "revenue_cagr_5y": "0.9612778376309468",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "5.2435666864871715",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.765432,
+          "revenue_cagr_3y": 99.659864,
+          "revenue_cagr_5y": 99.612403,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 96.527778,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "SMTK",
+        "cik": "0001817760",
+        "company_name": "SmartKem, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-08",
+        "accn": "0001104659-26-040562",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1817760/000110465926040562/",
+        "score": 98.132004,
+        "metrics": {
+          "revenue_growth_1y": "7.5",
+          "revenue_cagr_3y": "1.5919695239353033",
+          "revenue_cagr_5y": "0.4929484434719511",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "109.1951219512195",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.082596,
+          "revenue_cagr_3y": 99.576271,
+          "revenue_cagr_5y": 95.321637,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 99.547511,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "NIXX",
+        "cik": "0001462223",
+        "company_name": "Nixxy, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-15",
+        "accn": "0001683168-26-002951",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1462223/000168316826002951/",
+        "score": 98.125781,
+        "metrics": {
+          "revenue_growth_1y": "16316.666666666666",
+          "revenue_cagr_3y": "0.6637548748838407",
+          "revenue_cagr_5y": "0.6303377632579321",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "2169.879935856842",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 99.557522,
+          "revenue_cagr_3y": 95.932203,
+          "revenue_cagr_5y": 97.465887,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 99.547511,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "EOSE",
+        "cik": "0001805077",
+        "company_name": "Eos Energy Enterprises, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-26",
+        "accn": "0001628280-26-011961",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1805077/000162828026011961/",
+        "score": 97.855249,
+        "metrics": {
+          "revenue_growth_1y": "6.317890554914777",
+          "revenue_cagr_3y": "0.8536157428024129",
+          "revenue_cagr_5y": "2.4955947911262317",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "8.956131689452238",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.787611,
+          "revenue_cagr_3y": 97.288136,
+          "revenue_cagr_5y": 99.512671,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 96.832579,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "WKHS",
+        "cik": "0001425287",
+        "company_name": "Workhorse Group, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-31",
+        "accn": "0001628280-26-022417",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1425287/000162828026022417/",
+        "score": 97.729512,
+        "metrics": {
+          "revenue_growth_1y": "2.011215218625781",
+          "revenue_cagr_3y": "0.6161550140339089",
+          "revenue_cagr_5y": "0.7241870922615339",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "3.6308295217483155",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.709677,
+          "revenue_cagr_3y": 97.772277,
+          "revenue_cagr_5y": 96.745562,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 97.690531,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "ONDS",
+        "cik": "0001646188",
+        "company_name": "Ondas Inc - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-30",
+        "accn": "0001213900-26-035981",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1646188/000121390026035981/",
+        "score": 97.621157,
+        "metrics": {
+          "revenue_growth_1y": "6.0528291394411236",
+          "revenue_cagr_3y": "1.8783554665305093",
+          "revenue_cagr_5y": "0.8795419728065126",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "3.660628879519777",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.640118,
+          "revenue_cagr_3y": 99.576271,
+          "revenue_cagr_5y": 98.245614,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 95.022624,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "SPRU",
+        "cik": "0001772720",
+        "company_name": "Spruce Power Holding Corporation Class A Common Stock",
+        "model_family": "UTILITIES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-07-24",
+        "accn": "0001628280-26-049579",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1772720/000162828026049579/",
+        "score": 97.141833,
+        "metrics": {
+          "revenue_growth_1y": "0.36178401354330325",
+          "revenue_cagr_3y": "0.6890881477072306",
+          "revenue_cagr_5y": "0.40622981735589425",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.7741958089872973",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 93.406593,
+          "revenue_cagr_3y": 98.823529,
+          "revenue_cagr_5y": 97.5,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 98.837209,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "NTRP",
+        "cik": "0000788611",
+        "company_name": "NextTrip, Inc. - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2026-02-28",
+        "filed": "2026-05-29",
+        "accn": "0001493152-26-026334",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/788611/000149315226026334/",
+        "score": 97.072914,
+        "metrics": {
+          "revenue_growth_1y": "6.409967233254159",
+          "revenue_cagr_3y": "1.1326964965505772",
+          "revenue_cagr_5y": "0.3441410785921579",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "10.380245277671476",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 99.54023,
+          "revenue_cagr_3y": 97.883598,
+          "revenue_cagr_5y": 91.358025,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 99.509804,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "WKSP",
+        "cik": "0001096275",
+        "company_name": "Worksport, Ltd. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-26",
+        "accn": "0001493152-26-012945",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1096275/000149315226012945/",
+        "score": 97.003621,
+        "metrics": {
+          "revenue_growth_1y": "0.8978098455997781",
+          "revenue_cagr_3y": "4.168331609537143",
+          "revenue_cagr_5y": "1.1556033637489214",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.6544502236722396",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 94.83871,
+          "revenue_cagr_3y": 99.50495,
+          "revenue_cagr_5y": 98.52071,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 95.150115,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "IBRX",
+        "cik": "0001326110",
+        "company_name": "ImmunityBio, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-23",
+        "accn": "0001326110-26-000030",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1326110/000132611026000030/",
+        "score": 96.855288,
+        "metrics": {
+          "revenue_growth_1y": "6.683146829433706",
+          "revenue_cagr_3y": "6.782531903289541",
+          "revenue_cagr_5y": "1.8480521102967962",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "21.082319769509144",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 96.487985,
+          "revenue_cagr_3y": 99.54955,
+          "revenue_cagr_5y": 97.922078,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 93.461538,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "SPWR",
+        "cik": "0001838987",
+        "company_name": "SunPower Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-28",
+        "filed": "2026-07-24",
+        "accn": "0001213900-26-081056",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1838987/000121390026081056/",
+        "score": 96.735741,
+        "metrics": {
+          "revenue_growth_1y": "1.7588236376009267",
+          "revenue_cagr_3y": "0.6546387144519732",
+          "revenue_cagr_5y": "0.5928673306638135",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.5402441619613396",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.064516,
+          "revenue_cagr_3y": 98.267327,
+          "revenue_cagr_5y": 96.153846,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 94.457275,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "TRAW",
+        "cik": "0001130598",
+        "company_name": "Traws Pharma, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-15",
+        "accn": "0001104659-26-043832",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1130598/000110465926043832/",
+        "score": 96.232243,
+        "metrics": {
+          "revenue_growth_1y": "11.345132743362832",
+          "revenue_cagr_3y": "1.310728551346454",
+          "revenue_cagr_5y": "0.6459933340207362",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "623.5666412915913",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.4122,
+          "revenue_cagr_3y": 95.27027,
+          "revenue_cagr_5y": 92.727273,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 99.519231,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "SPRO",
+        "cik": "0001701108",
+        "company_name": "Spero Therapeutics, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-26",
+        "accn": "0001193125-26-126192",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1701108/000119312526126192/",
+        "score": 95.854999,
+        "metrics": {
+          "revenue_growth_1y": "32.924528301886795",
+          "revenue_cagr_3y": "0.7129931525282283",
+          "revenue_cagr_5y": "1.176205145750893",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "198.24021299497196",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.890943,
+          "revenue_cagr_3y": 90.540541,
+          "revenue_cagr_5y": 96.103896,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 97.884615,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "AEVA",
+        "cik": "0001789029",
+        "company_name": "Aeva Technologies, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-20",
+        "accn": "0001193125-26-116518",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1789029/000119312526116518/",
+        "score": 95.774134,
+        "metrics": {
+          "revenue_growth_1y": "0.9943739658025372",
+          "revenue_cagr_3y": "0.6275566506562931",
+          "revenue_cagr_5y": "0.30145049053857087",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "10.412964971075802",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 95.698925,
+          "revenue_cagr_3y": 98.019802,
+          "revenue_cagr_5y": 90.532544,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 98.845266,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "ACTG",
+        "cik": "0000934549",
+        "company_name": "Acacia Research Corporation - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-12",
+        "accn": "0000934549-26-000010",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/934549/000093454926000010/",
+        "score": 95.707967,
+        "metrics": {
+          "revenue_growth_1y": "1.3320034011380733",
+          "revenue_cagr_3y": "0.6885634025100316",
+          "revenue_cagr_5y": "0.5713601901585428",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.2916662365578624",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.701149,
+          "revenue_cagr_3y": 96.296296,
+          "revenue_cagr_5y": 98.148148,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 90.686275,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "FDMT",
+        "cik": "0001650648",
+        "company_name": "4D Molecular Therapeutics, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-18",
+        "accn": "0001193125-26-114075",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1650648/000119312526114075/",
+        "score": 95.647047,
+        "metrics": {
+          "revenue_growth_1y": "2301.945945945946",
+          "revenue_cagr_3y": "2.007813148537106",
+          "revenue_cagr_5y": "0.4485661462030144",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "5074.911364203693",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 99.537893,
+          "revenue_cagr_3y": 97.297297,
+          "revenue_cagr_5y": 86.233766,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 99.519231,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "LCID",
+        "cik": "0001811210",
+        "company_name": "Lucid Group, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-24",
+        "accn": "0001628280-26-011053",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1811210/000162828026011053/",
+        "score": 95.479862,
+        "metrics": {
+          "revenue_growth_1y": "0.6758311133998158",
+          "revenue_cagr_3y": "0.305608777770249",
+          "revenue_cagr_5y": "2.2098912577577545",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "1.1527867276168617",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 94.193548,
+          "revenue_cagr_3y": 92.326733,
+          "revenue_cagr_5y": 99.556213,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 95.842956,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "OUST",
+        "cik": "0001816581",
+        "company_name": "Ouster, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-02",
+        "accn": "0001628280-26-013313",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1816581/000162828026013313/",
+        "score": 95.2356,
+        "metrics": {
+          "revenue_growth_1y": "0.5245947381211691",
+          "revenue_cagr_3y": "0.6040343479127346",
+          "revenue_cagr_5y": "0.5505644114092736",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.5008070776062026",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 93.333333,
+          "revenue_cagr_3y": 97.524752,
+          "revenue_cagr_5y": 95.857988,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 94.226328,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "LOCL",
+        "cik": "0001840780",
+        "company_name": "Local Bounti Corporation Common Stock",
+        "model_family": "CONSUMER_STAPLES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-27",
+        "accn": "0001628280-26-021706",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1840780/000162828026021706/",
+        "score": 95.132054,
+        "metrics": {
+          "revenue_growth_1y": "0.2681577429335571",
+          "revenue_cagr_3y": "0.35413501945121606",
+          "revenue_cagr_5y": "2.5827733609457204",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.2512917561316239",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 88.617886,
+          "revenue_cagr_3y": 96.296296,
+          "revenue_cagr_5y": 100.0,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 95.614035,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "LQDA",
+        "cik": "0001819576",
+        "company_name": "Liquidia Corporation - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-05",
+        "accn": "0001104659-26-023804",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1819576/000110465926023804/",
+        "score": 94.944636,
+        "metrics": {
+          "revenue_growth_1y": "10.311803372392111",
+          "revenue_cagr_3y": "1.149407456734119",
+          "revenue_cagr_5y": "1.925285796212279",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "8.341825911135226",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.227357,
+          "revenue_cagr_3y": 94.369369,
+          "revenue_cagr_5y": 98.181818,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 90.0,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "LEDS",
+        "cik": "0001333822",
+        "company_name": "SemiLEDS Corporation - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-08-31",
+        "filed": "2026-07-14",
+        "accn": "0001193125-25-301379",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1333822/000119312525301379/",
+        "score": 94.533152,
+        "metrics": {
+          "revenue_growth_1y": "7.298089909318927",
+          "revenue_cagr_3y": "0.8268792086621937",
+          "revenue_cagr_5y": "0.4795377261635463",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.5223199966756932",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.935103,
+          "revenue_cagr_3y": 97.118644,
+          "revenue_cagr_5y": 94.54191,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 88.536953,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "EVGO",
+        "cik": "0001821159",
+        "company_name": "EVgo Inc. - Common Stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-09",
+        "accn": "0001104659-26-024827",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1821159/000110465926024827/",
+        "score": 94.276759,
+        "metrics": {
+          "revenue_growth_1y": "0.49551640221941007",
+          "revenue_cagr_3y": "0.915928681099935",
+          "revenue_cagr_5y": "0.9670276725424776",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.22417399499072543",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 91.264368,
+          "revenue_cagr_3y": 97.089947,
+          "revenue_cagr_5y": 99.537037,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 89.215686,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "QBTS",
+        "cik": "0001907982",
+        "company_name": "D-Wave Quantum Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-26",
+        "accn": "0001907982-26-000026",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1907982/000190798226000026/",
+        "score": 94.132269,
+        "metrics": {
+          "revenue_growth_1y": "1.7854310637815791",
+          "revenue_cagr_3y": "0.5076281048937841",
+          "revenue_cagr_5y": "0.3665632413254569",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "4.666341686192088",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 94.690265,
+          "revenue_cagr_3y": 94.745763,
+          "revenue_cagr_5y": 91.617934,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 95.475113,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "CRMD",
+        "cik": "0001410098",
+        "company_name": "CorMedix Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-05",
+        "accn": "0001213900-26-023889",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1410098/000121390026023889/",
+        "score": 93.823292,
+        "metrics": {
+          "revenue_growth_1y": "6.1703395288921605",
+          "revenue_cagr_3y": "15.81743773435193",
+          "revenue_cagr_5y": "3.198282620394659",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.995932457862664",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 95.748614,
+          "revenue_cagr_3y": 99.54955,
+          "revenue_cagr_5y": 99.61039,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 80.384615,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "IDYA",
+        "cik": "0001676725",
+        "company_name": "IDEAYA Biosciences, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-17",
+        "accn": "0001193125-26-054533",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1676725/000119312526054533/",
+        "score": 93.74432,
+        "metrics": {
+          "revenue_growth_1y": "30.244285714285713",
+          "revenue_cagr_3y": "0.6252269855287407",
+          "revenue_cagr_5y": "0.6211620574865953",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "45.98229308869541",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 98.521257,
+          "revenue_cagr_3y": 88.738739,
+          "revenue_cagr_5y": 91.948052,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 95.769231,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "CLSK",
+        "cik": "0000827876",
+        "company_name": "CleanSpark, Inc. - Common Stock",
+        "model_family": "OTHER_FINANCIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-09-30",
+        "filed": "2025-11-25",
+        "accn": "0001193125-25-297510",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/827876/000119312525297510/",
+        "score": 93.342995,
+        "metrics": {
+          "revenue_growth_1y": "1.0221074074855925",
+          "revenue_cagr_3y": "0.7991800221770433",
+          "revenue_cagr_5y": "1.3805865773334371",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.8094983966544722",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 90.34749,
+          "revenue_cagr_3y": 92.825112,
+          "revenue_cagr_5y": 98.895028,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 91.304348,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "ARWR",
+        "cik": "0000879407",
+        "company_name": "Arrowhead Pharmaceuticals, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-09-30",
+        "filed": "2025-11-25",
+        "accn": "0000879407-25-000029",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/879407/000087940725000029/",
+        "score": 93.205994,
+        "metrics": {
+          "revenue_growth_1y": "232.5815263306111",
+          "revenue_cagr_3y": "0.5050452969338095",
+          "revenue_cagr_5y": "0.5663754755437986",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "169.3891960036117",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 99.537893,
+          "revenue_cagr_3y": 84.684685,
+          "revenue_cagr_5y": 90.909091,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 97.692308,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "CPOP",
+        "cik": "0001807389",
+        "company_name": "Pop Culture Group Co., Ltd - Class A Ordinary Shares",
+        "model_family": "COMMUNICATIONS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-06-30",
+        "filed": "2025-11-17",
+        "accn": "0001213900-25-111512",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1807389/000121390025111512/",
+        "score": 92.893314,
+        "metrics": {
+          "revenue_growth_1y": "1.271600085923073",
+          "revenue_cagr_3y": "0.4937926251320257",
+          "revenue_cagr_5y": "0.46993403397350453",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.22875480737559292",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.169811,
+          "revenue_cagr_3y": 96.511628,
+          "revenue_cagr_5y": 88.571429,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 89.320388,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "SENS",
+        "cik": "0001616543",
+        "company_name": "Senseonics Holdings, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-02",
+        "accn": "0001104659-26-022298",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1616543/000110465926022298/",
+        "score": 92.180864,
+        "metrics": {
+          "revenue_growth_1y": "0.5689302242791028",
+          "revenue_cagr_3y": "0.2908397705503709",
+          "revenue_cagr_5y": "0.915448555682697",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "1.3922022816886468",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 88.495575,
+          "revenue_cagr_3y": 88.983051,
+          "revenue_cagr_5y": 98.635478,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 92.609351,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "ALAB",
+        "cik": "0001736297",
+        "company_name": "Astera Labs, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-20",
+        "accn": "0001736297-26-000010",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/",
+        "score": 91.991224,
+        "metrics": {
+          "revenue_growth_1y": "1.151265487395594",
+          "revenue_cagr_3y": "1.2013680953062367",
+          "revenue_cagr_5y": "",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "1.750749284884459",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.4963042492127",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 93.067847,
+          "revenue_cagr_3y": 97.966102,
+          "revenue_cagr_5y": null,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": 88.695652,
+          "earnings_stability": null,
+          "operating_margin_expansion": 88.235294,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "revenue_cagr_5y",
+          "eps_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "EVLV",
+        "cik": "0001805385",
+        "company_name": "Evolv Technologies Holdings, Inc. - Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-10",
+        "accn": "0001805385-26-000012",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1805385/000180538526000012/",
+        "score": 91.440804,
+        "metrics": {
+          "revenue_growth_1y": "0.4047561738795551",
+          "revenue_cagr_3y": "0.40389315165171435",
+          "revenue_cagr_5y": "0.9349987153384212",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.4602876282752788",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 85.39823,
+          "revenue_cagr_3y": 93.220339,
+          "revenue_cagr_5y": 99.512671,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 87.631976,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "RKLB",
+        "cik": "0001819994",
+        "company_name": "Rocket Lab Corporation - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-26",
+        "accn": "0001819994-26-000013",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000013/",
+        "score": 91.375071,
+        "metrics": {
+          "revenue_growth_1y": "0.3795957947246076",
+          "revenue_cagr_3y": "0.4180486722213492",
+          "revenue_cagr_5y": "0.7648763864768935",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.05485330057797583",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 89.032258,
+          "revenue_cagr_3y": 95.29703,
+          "revenue_cagr_5y": 97.337278,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 83.833718,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "RBRK",
+        "cik": "0001943896",
+        "company_name": "Rubrik, Inc. Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2026-01-31",
+        "filed": "2026-03-19",
+        "accn": "0001943896-26-000013",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1943896/000194389626000013/",
+        "score": 91.363376,
+        "metrics": {
+          "revenue_growth_1y": "0.48463133245501644",
+          "revenue_cagr_3y": "0.2993922808043188",
+          "revenue_cagr_5y": "",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "7.080815493092556",
+          "earnings_stability": "",
+          "operating_margin_expansion": "1.0167243501943313",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 86.873156,
+          "revenue_cagr_3y": 89.322034,
+          "revenue_cagr_5y": null,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": 97.101449,
+          "earnings_stability": null,
+          "operating_margin_expansion": 92.156863,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "revenue_cagr_5y",
+          "eps_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "KRUS",
+        "cik": "0001772177",
+        "company_name": "Kura Sushi USA, Inc. - Class A Common Stock",
+        "model_family": "CONSUMER_DISCRETIONARY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-08-31",
+        "filed": "2025-11-06",
+        "accn": "0001193125-25-269773",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1772177/000119312525269773/",
+        "score": 91.255758,
+        "metrics": {
+          "revenue_growth_1y": "0.18877911376439926",
+          "revenue_cagr_3y": "0.26072447734489823",
+          "revenue_cagr_5y": "0.44324531524290656",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.03153136621078222",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 90.064103,
+          "revenue_cagr_3y": 94.863014,
+          "revenue_cagr_5y": 98.062016,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 82.033898,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "CUE",
+        "cik": "0001645460",
+        "company_name": "Cue Biopharma, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-16",
+        "accn": "0001193125-26-108287",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1645460/000119312526108287/",
+        "score": 91.157614,
+        "metrics": {
+          "revenue_growth_1y": "1.9574674275869497",
+          "revenue_cagr_3y": "1.8039689066868219",
+          "revenue_cagr_5y": "0.5417129905991998",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "3.501889545068754",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 92.606285,
+          "revenue_cagr_3y": 96.846847,
+          "revenue_cagr_5y": 88.831169,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 86.346154,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "RDDT",
+        "cik": "0001713445",
+        "company_name": "Reddit, Inc. Class A Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-06",
+        "accn": "0001713445-26-000022",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1713445/000171344526000022/",
+        "score": 91.098657,
+        "metrics": {
+          "revenue_growth_1y": "0.6939682588514888",
+          "revenue_cagr_3y": "0.4892097488924392",
+          "revenue_cagr_5y": "",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "2.1700908164210917",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.631811399799983",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 90.117994,
+          "revenue_cagr_3y": 94.237288,
+          "revenue_cagr_5y": null,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": 90.144928,
+          "earnings_stability": null,
+          "operating_margin_expansion": 89.894419,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "revenue_cagr_5y",
+          "eps_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "WLDS",
+        "cik": "0001887673",
+        "company_name": "Wearable Devices Ltd. - Ordinary Share",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-12",
+        "accn": "0001213900-26-026977",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1887673/000121390026026977/",
+        "score": 91.095235,
+        "metrics": {
+          "revenue_growth_1y": "0.23946360153256707",
+          "revenue_cagr_3y": "1.43113587272363",
+          "revenue_cagr_5y": "0.6256789191227323",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "2.1029449211509643",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 74.631268,
+          "revenue_cagr_3y": 98.813559,
+          "revenue_cagr_5y": 97.270955,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 93.665158,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "XTIA",
+        "cik": "0001529113",
+        "company_name": "XTI Aerospace, Inc. Common Stock  - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-15",
+        "accn": "0001213900-26-043785",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1529113/000121390026043785/",
+        "score": 90.872735,
+        "metrics": {
+          "revenue_growth_1y": "6.023735165521549",
+          "revenue_cagr_3y": "0.5439387714040227",
+          "revenue_cagr_5y": "0.1932730439154262",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "7.36114500469221",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 97.492625,
+          "revenue_cagr_3y": 94.915254,
+          "revenue_cagr_5y": 74.853801,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 96.229261,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "GWAV",
+        "cik": "0001589149",
+        "company_name": "Greenwave Technology Solutions, Inc. - Common Stock",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-09-18",
+        "accn": "0001493152-26-043414",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1589149/000149315226043414/",
+        "score": 90.390777,
+        "metrics": {
+          "revenue_growth_1y": "0.4005438070799856",
+          "revenue_cagr_3y": "0.1114869029960941",
+          "revenue_cagr_5y": "4.825357151689994",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.6036096640944466",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 90.107527,
+          "revenue_cagr_3y": 76.980198,
+          "revenue_cagr_5y": 99.556213,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 94.919169,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "RELY",
+        "cik": "0001782170",
+        "company_name": "Remitly Global, Inc. - Common stock",
+        "model_family": "OTHER_SERVICES",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-18",
+        "accn": "0001628280-26-009038",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1782170/000162828026009038/",
+        "score": 90.261528,
+        "metrics": {
+          "revenue_growth_1y": "0.2936668241079843",
+          "revenue_cagr_3y": "0.357459341204021",
+          "revenue_cagr_5y": "0.4479768378104354",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "1.799778404894032",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.07830015373974614",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 86.206897,
+          "revenue_cagr_3y": 92.063492,
+          "revenue_cagr_5y": 95.679012,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": 95.495495,
+          "earnings_stability": null,
+          "operating_margin_expansion": 81.862745,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "BBIO",
+        "cik": "0001743881",
+        "company_name": "BridgeBio Pharma, Inc. - Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-02-24",
+        "accn": "0001743881-26-000009",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1743881/000174388126000009/",
+        "score": 90.200266,
+        "metrics": {
+          "revenue_growth_1y": "1.262602410072915",
+          "revenue_cagr_3y": "0.8627365080955245",
+          "revenue_cagr_5y": "1.2746914315571662",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "1.6297356155406089",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 90.203327,
+          "revenue_cagr_3y": 91.666667,
+          "revenue_cagr_5y": 96.623377,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 82.307692,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "NIO",
+        "cik": "0001736541",
+        "company_name": "NIO Inc. American depositary shares, each  representing one Class A ordinary share",
+        "model_family": "INDUSTRIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-10",
+        "accn": "0001104659-26-041765",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1736541/000110465926041765/",
+        "score": 90.174653,
+        "metrics": {
+          "revenue_growth_1y": "0.3892601008729746",
+          "revenue_cagr_3y": "0.20533538379585803",
+          "revenue_cagr_5y": "0.3809485384539686",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.17228458263172455",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 89.677419,
+          "revenue_cagr_3y": 87.128713,
+          "revenue_cagr_5y": 92.899408,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 90.993072,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "DAVE",
+        "cik": "0001841408",
+        "company_name": "Dave Inc.  - Class A Common Stock",
+        "model_family": "OTHER_FINANCIALS",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-02",
+        "accn": "0001193125-26-085370",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1841408/000119312526085370/",
+        "score": 89.725731,
+        "metrics": {
+          "revenue_growth_1y": "0.5967165692816558",
+          "revenue_cagr_3y": "0.39331003332594827",
+          "revenue_cagr_5y": "",
+          "eps_growth_1y": "2.170995670995671",
+          "fcf_growth_1y": "1.3199679679679681",
+          "earnings_stability": "",
+          "operating_margin_expansion": "",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 84.555985,
+          "revenue_cagr_3y": 86.547085,
+          "revenue_cagr_5y": null,
+          "eps_growth_1y": 96.688742,
+          "fcf_growth_1y": 91.111111,
+          "earnings_stability": null,
+          "operating_margin_expansion": null,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "revenue_cagr_5y",
+          "earnings_stability",
+          "operating_margin_expansion",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "VNRX",
+        "cik": "0000093314",
+        "company_name": "VolitionRX Limited Common Stock",
+        "model_family": "HEALTHCARE",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-03-31",
+        "accn": "0001477932-26-001832",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/93314/000147793226001832/",
+        "score": 89.368526,
+        "metrics": {
+          "revenue_growth_1y": "0.4003798912210754",
+          "revenue_cagr_3y": "0.7795630525153163",
+          "revenue_cagr_5y": "1.6418060514473987",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "9.324304004698915",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 77.634011,
+          "revenue_cagr_3y": 91.216216,
+          "revenue_cagr_5y": 97.662338,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 90.961538,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "CIIT",
+        "cik": "0001557798",
+        "company_name": "Tianci International, Inc. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2026-07-31",
+        "filed": "2026-11-04",
+        "accn": "0001683168-26-008309",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1557798/000168316826008309/",
+        "score": 89.153232,
+        "metrics": {
+          "revenue_growth_1y": "0.5342686203604288",
+          "revenue_cagr_3y": "2.156740548370181",
+          "revenue_cagr_5y": "",
+          "eps_growth_1y": "2.3333333333333335",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.11936182284998942",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 87.905605,
+          "revenue_cagr_3y": 99.576271,
+          "revenue_cagr_5y": null,
+          "eps_growth_1y": 92.358804,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 76.772247,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "revenue_cagr_5y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      },
+      {
+        "ticker": "LASE",
+        "cik": "0001807887",
+        "company_name": "LASE Corp. - Common Stock",
+        "model_family": "TECHNOLOGY",
+        "accounting_standard": "US_GAAP",
+        "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+        "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+        "financial_period": "2025-12-31",
+        "filed": "2026-04-20",
+        "accn": "0001493152-26-018110",
+        "data_as_of": "2026-11-05",
+        "source_url": "https://www.sec.gov/Archives/edgar/data/1807887/000149315226018110/",
+        "score": 89.108729,
+        "metrics": {
+          "revenue_growth_1y": "1.4426147137675263",
+          "revenue_cagr_3y": "0.2889406172832216",
+          "revenue_cagr_5y": "0.3109609375921858",
+          "eps_growth_1y": "",
+          "fcf_growth_1y": "",
+          "earnings_stability": "",
+          "operating_margin_expansion": "0.29913429859169915",
+          "operating_leverage_ratio": ""
+        },
+        "percentiles": {
+          "revenue_growth_1y": 93.657817,
+          "revenue_cagr_3y": 88.474576,
+          "revenue_cagr_5y": 89.083821,
+          "eps_growth_1y": null,
+          "fcf_growth_1y": null,
+          "earnings_stability": null,
+          "operating_margin_expansion": 85.218703,
+          "operating_leverage_ratio": null
+        },
+        "missing_fields": [
+          "eps_growth_1y",
+          "fcf_growth_1y",
+          "earnings_stability",
+          "operating_leverage_ratio"
+        ],
+        "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+      }
+    ],
+    "formula": "equal-weight available historical growth percentiles; no forward EPS/PEG"
+  },
+  "intersections": {
+    "value_quality": 3,
+    "value_garp": 1,
+    "quality_garp": 2,
+    "all_three": 0
+  },
+  "classification": {
+    "p65_rows": 5453,
+    "value_rows_matched": 5453,
+    "quality_rows_matched": 5453,
+    "garp_rows_matched": 5453
+  }
+}

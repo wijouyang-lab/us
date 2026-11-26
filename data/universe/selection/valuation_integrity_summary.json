@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-11-06T08:26:54.658380+00:00",
+  "data_as_of": "2026-11-05",
+  "top50": 50,
+  "status_counts": {
+    "VALUATION_INPUT_SUSPECT": 7,
+    "VALUATION_VALID": 43
+  },
+  "suspect_tickers": [
+    "CRMT",
+    "CTRM",
+    "BOSC",
+    "JL",
+    "DOX",
+    "INMD",
+    "GASS"
+  ],
+  "extreme_tickers": [
+    "CRMT",
+    "CTRM"
+  ],
+  "validation_checks": [
+    "market_cap = price * sec_shares (1%)",
+    "P6.8 price vs P6.2 quote (1%)",
+    "FCF = CFO - |capex| (1%)",
+    "EY * derived PE ~= 1",
+    "filed <= as_of"
+  ],
+  "note": "Suspect status does not delete the original ranking; composite permissions remain separate."
+}

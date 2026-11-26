@@ -1,0 +1,31 @@
+{
+  "version": "P6.6-V1",
+  "status": "RESEARCH_ONLY",
+  "snapshot_date": "2026-11-05",
+  "universe": "P6.5 quality_standard_model_input_ready",
+  "weights": {
+    "roe": 0.3,
+    "roa": 0.25,
+    "cfo_to_avg_assets": 0.25,
+    "inverse_liabilities_to_assets": 0.2
+  },
+  "peer_key": [
+    "model_family",
+    "accounting_standard"
+  ],
+  "min_peer_issuers": 30,
+  "winsorization": "1%/99% within peer group",
+  "operating_margin": "diagnostic only; weight 0",
+  "period": "latest fully annual fiscal year, current and prior instant balances",
+  "pit_rule": "P6.3 pit_available_date <= 2026-11-05; no holiday adjustment",
+  "excluded_families": [
+    "BANKS",
+    "INSURANCE",
+    "REIT",
+    "BDC",
+    "OTHER_FINANCIALS",
+    "UTILITIES",
+    "ENERGY",
+    "UNCLASSIFIED"
+  ]
+}

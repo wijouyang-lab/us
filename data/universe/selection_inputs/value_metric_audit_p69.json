@@ -1,0 +1,303 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T12:39:16.390007+00:00",
+    "snapshot_date": "2026-11-05",
+    "p68_file": "data\\universe\\value_v1_readiness_p68.csv",
+    "ranking_unit": "unique CIK within model_family x accounting_standard",
+    "min_peer_issuers": 30,
+    "winsorization": "1%/99% within metric peer group",
+    "research_label": "RESEARCH_ONLY_NOT_ALPHA_NOT_BACKTESTED"
+  },
+  "pool": {
+    "target_securities": 5502,
+    "candidate_securities": 2529,
+    "candidate_unique_ciks": 2529,
+    "issuer_rows": 2529
+  },
+  "coverage": [
+    {
+      "metric": "PE",
+      "candidate_securities": 2529,
+      "candidate_unique_ciks": 2529,
+      "valid_securities": 1314,
+      "valid_unique_ciks": 1314,
+      "coverage_securities": 0.519573,
+      "coverage_ciks": 0.519573,
+      "ranked_unique_ciks": 1224
+    },
+    {
+      "metric": "PB",
+      "candidate_securities": 2529,
+      "candidate_unique_ciks": 2529,
+      "valid_securities": 2272,
+      "valid_unique_ciks": 2272,
+      "coverage_securities": 0.898379,
+      "coverage_ciks": 0.898379,
+      "ranked_unique_ciks": 2222
+    },
+    {
+      "metric": "PS",
+      "candidate_securities": 2529,
+      "candidate_unique_ciks": 2529,
+      "valid_securities": 2266,
+      "valid_unique_ciks": 2266,
+      "coverage_securities": 0.896006,
+      "coverage_ciks": 0.896006,
+      "ranked_unique_ciks": 2215
+    },
+    {
+      "metric": "EarningsYield",
+      "candidate_securities": 2529,
+      "candidate_unique_ciks": 2529,
+      "valid_securities": 2506,
+      "valid_unique_ciks": 2506,
+      "coverage_securities": 0.990905,
+      "coverage_ciks": 0.990905,
+      "ranked_unique_ciks": 2451
+    },
+    {
+      "metric": "FCFYield",
+      "candidate_securities": 2529,
+      "candidate_unique_ciks": 2529,
+      "valid_securities": 2170,
+      "valid_unique_ciks": 2170,
+      "coverage_securities": 0.858047,
+      "coverage_ciks": 0.858047,
+      "ranked_unique_ciks": 2118
+    }
+  ],
+  "intersections": {
+    "all_five": 992,
+    "four_of_five": 1051,
+    "three_of_five": 392
+  },
+  "by_type": {
+    "COMMON": {
+      "securities": 2529,
+      "PE": 1314,
+      "PB": 2272,
+      "PS": 2266,
+      "EarningsYield": 2506,
+      "FCFYield": 2170
+    },
+    "ADR": {
+      "securities": 0,
+      "PE": 0,
+      "PB": 0,
+      "PS": 0,
+      "EarningsYield": 0,
+      "FCFYield": 0
+    }
+  },
+  "by_accounting": {
+    "IFRS": {
+      "securities": 99,
+      "PE": 61,
+      "PB": 93,
+      "PS": 89,
+      "EarningsYield": 99,
+      "FCFYield": 85
+    },
+    "US_GAAP": {
+      "securities": 2430,
+      "PE": 1253,
+      "PB": 2179,
+      "PS": 2177,
+      "EarningsYield": 2407,
+      "FCFYield": 2085
+    }
+  },
+  "by_family": {
+    "COMMUNICATIONS": {
+      "securities": 60,
+      "PE": 32,
+      "PB": 50,
+      "PS": 60,
+      "EarningsYield": 60,
+      "FCFYield": 50
+    },
+    "CONSUMER_DISCRETIONARY": {
+      "securities": 234,
+      "PE": 167,
+      "PB": 203,
+      "PS": 230,
+      "EarningsYield": 233,
+      "FCFYield": 203
+    },
+    "CONSUMER_STAPLES": {
+      "securities": 96,
+      "PE": 58,
+      "PB": 82,
+      "PS": 91,
+      "EarningsYield": 95,
+      "FCFYield": 83
+    },
+    "HEALTHCARE": {
+      "securities": 657,
+      "PE": 167,
+      "PB": 583,
+      "PS": 478,
+      "EarningsYield": 653,
+      "FCFYield": 598
+    },
+    "INDUSTRIALS": {
+      "securities": 405,
+      "PE": 280,
+      "PB": 382,
+      "PS": 391,
+      "EarningsYield": 398,
+      "FCFYield": 320
+    },
+    "MATERIALS": {
+      "securities": 211,
+      "PE": 106,
+      "PB": 202,
+      "PS": 188,
+      "EarningsYield": 209,
+      "FCFYield": 170
+    },
+    "OTHER_SERVICES": {
+      "securities": 354,
+      "PE": 234,
+      "PB": 305,
+      "PS": 327,
+      "EarningsYield": 350,
+      "FCFYield": 285
+    },
+    "TECHNOLOGY": {
+      "securities": 512,
+      "PE": 270,
+      "PB": 465,
+      "PS": 501,
+      "EarningsYield": 508,
+      "FCFYield": 461
+    }
+  },
+  "correlations": {
+    "pe": {
+      "pe": 1.0,
+      "pb": 0.373374,
+      "ps": 0.374747,
+      "earnings_yield": -1.0,
+      "fcf_yield": -0.276277
+    },
+    "pb": {
+      "pe": 0.373374,
+      "pb": 1.0,
+      "ps": 0.485449,
+      "earnings_yield": 0.207062,
+      "fcf_yield": 0.167073
+    },
+    "ps": {
+      "pe": 0.374747,
+      "pb": 0.485449,
+      "ps": 1.0,
+      "earnings_yield": -0.072,
+      "fcf_yield": -0.250943
+    },
+    "earnings_yield": {
+      "pe": -1.0,
+      "pb": 0.207062,
+      "ps": -0.072,
+      "earnings_yield": 1.0,
+      "fcf_yield": 0.615337
+    },
+    "fcf_yield": {
+      "pe": -0.276277,
+      "pb": 0.167073,
+      "ps": -0.250943,
+      "earnings_yield": 0.615337,
+      "fcf_yield": 1.0
+    }
+  },
+  "pe_earnings_yield_spearman": -1.0,
+  "pe_ey_positive_overlap": 1314,
+  "winsorization_rank_abs_change": {
+    "n": 10230,
+    "mean": 0.0057,
+    "p95": 0.0,
+    "max": 0.4975
+  },
+  "extremes": {
+    "PE": {
+      "n": 1314,
+      "min": 0.004880498904636294,
+      "max": 64224451.36741669,
+      "q01": 0.36570841348813604,
+      "q99": 21000.365922802735,
+      "outside_winsor": 28
+    },
+    "PB": {
+      "n": 2272,
+      "min": 0.010353895423417544,
+      "max": 3766.7838461538463,
+      "q01": 0.1042152703534949,
+      "q99": 75.80538882817618,
+      "outside_winsor": 46
+    },
+    "PS": {
+      "n": 2266,
+      "min": 0.001099385046728972,
+      "max": 14485.7026,
+      "q01": 0.04376777517614978,
+      "q99": 2283.5670456957614,
+      "outside_winsor": 46
+    },
+    "EarningsYield": {
+      "n": 2506,
+      "min": -6318354.456030245,
+      "max": 204.8970852242251,
+      "q01": -10.409636603306245,
+      "q99": 1.289529749331191,
+      "outside_winsor": 52
+    },
+    "FCFYield": {
+      "n": 2170,
+      "min": -45.58210027590328,
+      "max": 9.317354158905696,
+      "q01": -5.046165216422292,
+      "q99": 0.5965427577734237,
+      "outside_winsor": 44
+    }
+  },
+  "provider_pe_mismatch_gt_20": 748,
+  "duplicate_cik_candidate_securities": 0,
+  "negative_earnings": 1190,
+  "negative_equity": 254,
+  "negative_fcf": 921,
+  "different_financial_periods": 178,
+  "status_counts": {
+    "METRIC_BLOCKED": 2973,
+    "METRIC_RANK_AVAILABLE": 2474,
+    "INSUFFICIENT_PEER_GROUP": 55
+  },
+  "metric_groups": 80,
+  "notes": [
+    "No composite score or weights are produced.",
+    "PE and Earnings Yield are mathematically reciprocal for positive earnings.",
+    "SIC model family is not GICS."
+  ],
+  "verification": {
+    "verified_at": "2026-11-05T12:39:39.111925+00:00",
+    "checks": {
+      "candidate_2529": true,
+      "unique_cik_2529": true,
+      "pe_positive": true,
+      "pb_positive": true,
+      "fcf_not_filled": true,
+      "pe_ey_reciprocal": true,
+      "all_five_992": true,
+      "rank_available_2474": true,
+      "no_composite_score": true
+    },
+    "all_checks_pass": true,
+    "candidate_securities": 2529,
+    "candidate_unique_ciks": 2529,
+    "coverage_rows": 5,
+    "status_counts": {
+      "METRIC_BLOCKED": 2973,
+      "METRIC_RANK_AVAILABLE": 2474,
+      "INSUFFICIENT_PEER_GROUP": 55
+    }
+  }
+}

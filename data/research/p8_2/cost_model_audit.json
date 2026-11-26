@@ -1,0 +1,178 @@
+{
+  "generated_at": "2026-11-08T14:54:58.574567+00:00",
+  "formula": {
+    "two_sided_turnover": "|hold XOR prev|/n",
+    "old": "cost=10bps * turnover * 2 (double counted both sides)",
+    "new": "cost=10bps * turnover; turnover already includes additions and removals",
+    "initial": "prev empty -> turnover=1.0 -> one 10bps initial cost"
+  },
+  "stock_methods": {
+    "A_RAW": {
+      "LOW_VOL_60": {
+        "new_cost_bps": 7.25,
+        "old_cost_bps_double": 14.5,
+        "new_cagr": 0.11980661011285232,
+        "old_cagr": 0.11019321199185916,
+        "turnover_total": 214.6,
+        "months": 296
+      },
+      "MOMENTUM_120": {
+        "new_cost_bps": 9.064846416382252,
+        "old_cost_bps_double": 18.129692832764505,
+        "new_cagr": 0.5280471809313569,
+        "old_cagr": 0.5117741081631983,
+        "turnover_total": 265.6,
+        "months": 293
+      },
+      "MOMENTUM_20": {
+        "new_cost_bps": 18.50841750841751,
+        "old_cost_bps_double": 37.01683501683502,
+        "new_cagr": 0.5251540936402928,
+        "old_cagr": 0.492180606263406,
+        "turnover_total": 549.7,
+        "months": 297
+      },
+      "MOMENTUM_60": {
+        "new_cost_bps": 12.425675675675675,
+        "old_cost_bps_double": 24.85135135135135,
+        "new_cagr": 0.43237347319421415,
+        "old_cagr": 0.4114851698766364,
+        "turnover_total": 367.79999999999995,
+        "months": 296
+      },
+      "REVERSAL_5": {
+        "new_cost_bps": 18.19463087248322,
+        "old_cost_bps_double": 36.38926174496644,
+        "new_cagr": 0.4113518968725953,
+        "old_cagr": 0.38135840050645475,
+        "turnover_total": 542.2,
+        "months": 298
+      },
+      "TREND_MA200": {
+        "new_cost_bps": 8.754325259515571,
+        "old_cost_bps_double": 17.508650519031143,
+        "new_cagr": 0.5154981720900083,
+        "old_cagr": 0.49991286401635304,
+        "turnover_total": 253.0,
+        "months": 289
+      }
+    },
+    "B_EXCLUDE_ALL": {
+      "LOW_VOL_60": {
+        "new_cost_bps": 7.1891891891891895,
+        "old_cost_bps_double": 14.378378378378379,
+        "new_cagr": 0.10195093450544013,
+        "old_cagr": 0.09256063607656517,
+        "turnover_total": 212.8,
+        "months": 296
+      },
+      "MOMENTUM_120": {
+        "new_cost_bps": 9.19112627986348,
+        "old_cost_bps_double": 18.38225255972696,
+        "new_cagr": 0.08898270168417177,
+        "old_cagr": 0.07709449007775859,
+        "turnover_total": 269.3,
+        "months": 293
+      },
+      "MOMENTUM_20": {
+        "new_cost_bps": 18.542087542087543,
+        "old_cost_bps_double": 37.08417508417509,
+        "new_cagr": 0.040949220436636846,
+        "old_cagr": 0.018051702335696085,
+        "turnover_total": 550.7,
+        "months": 297
+      },
+      "MOMENTUM_60": {
+        "new_cost_bps": 12.45608108108108,
+        "old_cost_bps_double": 24.91216216216216,
+        "new_cagr": 0.07648815763856565,
+        "old_cagr": 0.06057690416742756,
+        "turnover_total": 368.7,
+        "months": 296
+      },
+      "REVERSAL_5": {
+        "new_cost_bps": 18.21812080536913,
+        "old_cost_bps_double": 36.43624161073826,
+        "new_cagr": 0.06413587267079857,
+        "old_cagr": 0.04112171288274902,
+        "turnover_total": 542.9000000000001,
+        "months": 298
+      },
+      "TREND_MA200": {
+        "new_cost_bps": 8.84083044982699,
+        "old_cost_bps_double": 17.68166089965398,
+        "new_cagr": 0.08074210697599637,
+        "old_cagr": 0.06939620695853121,
+        "turnover_total": 255.5,
+        "months": 289
+      }
+    },
+    "C_PER_DATE": {
+      "LOW_VOL_60": {
+        "new_cost_bps": 7.253378378378378,
+        "old_cost_bps_double": 14.506756756756756,
+        "new_cagr": 0.09546176148492491,
+        "old_cagr": 0.08604112413584386,
+        "turnover_total": 214.7,
+        "months": 296
+      },
+      "MOMENTUM_120": {
+        "new_cost_bps": 9.119453924914676,
+        "old_cost_bps_double": 18.238907849829353,
+        "new_cagr": 0.11415394771691134,
+        "old_cagr": 0.10210209236929768,
+        "turnover_total": 267.2,
+        "months": 293
+      },
+      "MOMENTUM_20": {
+        "new_cost_bps": 18.525252525252526,
+        "old_cost_bps_double": 37.05050505050505,
+        "new_cagr": 0.07675877523259,
+        "old_cagr": 0.053149715247203355,
+        "turnover_total": 550.2,
+        "months": 297
+      },
+      "MOMENTUM_60": {
+        "new_cost_bps": 12.462837837837839,
+        "old_cost_bps_double": 24.925675675675677,
+        "new_cagr": 0.057237442515075676,
+        "old_cagr": 0.04157416752161214,
+        "turnover_total": 368.9,
+        "months": 296
+      },
+      "REVERSAL_5": {
+        "new_cost_bps": 18.211409395973153,
+        "old_cost_bps_double": 36.422818791946305,
+        "new_cagr": 0.14592471513363048,
+        "old_cagr": 0.121273304624955,
+        "turnover_total": 542.7,
+        "months": 298
+      },
+      "TREND_MA200": {
+        "new_cost_bps": 8.778546712802768,
+        "old_cost_bps_double": 17.557093425605537,
+        "new_cagr": 0.10394146286047601,
+        "old_cagr": 0.09243321229988033,
+        "turnover_total": 253.70000000000002,
+        "months": 289
+      }
+    }
+  },
+  "etf": {
+    "RISK_PARITY": {
+      "new_cagr": 0.09269002177494645,
+      "old_cagr": 0.07133428800162367,
+      "mean_new_cost_bps": 3.45124153363029,
+      "old_cost_bps": 20.0,
+      "months": 202
+    },
+    "TREND_RISK": {
+      "new_cagr": 0.0860614456795461,
+      "old_cagr": 0.06628520631826862,
+      "mean_new_cost_bps": 4.580858085808302,
+      "old_cost_bps": 20.0,
+      "months": 202
+    }
+  },
+  "status": "COST_MODEL_RECONCILED"
+}

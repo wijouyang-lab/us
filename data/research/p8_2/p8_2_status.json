@@ -1,0 +1,231 @@
+{
+  "generated_at": "2026-11-08T14:54:59.063698+00:00",
+  "status": "P8_2_FORMAL_METHOD_NO_GO",
+  "research_only": true,
+  "as_of": "2024-12-31",
+  "coverage": {
+    "member_days": 1095490,
+    "valid": 986358,
+    "verified": 986198,
+    "quarantined": 160,
+    "unknown": 109132,
+    "original_coverage": 0.90038065,
+    "repaired_coverage": 0.9002346,
+    "quarantine_rate": 0.00014605,
+    "unknown_rate": 0.09961935
+  },
+  "pit_coverage_mean": 0.9002346,
+  "data_issue": {
+    "VERIFIED_CORRUPT": 2466,
+    "VERIFIED_CORPORATE_ACTION": 0,
+    "VERIFIED_REAL_RETURN": 2,
+    "UNRESOLVED": 573
+  },
+  "methods": {
+    "A": "raw control",
+    "B": "all-history exclusion diagnostic",
+    "C": "per-date isolation formal"
+  },
+  "strategy_gate": [
+    {
+      "strategy": "MOMENTUM_20",
+      "family": "PIT_EQUITY_TECHNICAL",
+      "status": "NO-GO",
+      "cagr": 0.07675877523259,
+      "oos_cagr": 0.05442113728909437,
+      "sharpe": 0.3943040546624893,
+      "oos_sharpe": 0.38350837163222773,
+      "max_drawdown": -0.6791189559670259,
+      "hac_active_t": -0.40803597197622776,
+      "p_value": 0.6832472657794173,
+      "reason": "FAILED_HAC_OOS_DRAWDOWN",
+      "bh_q": 0.9109963543725564
+    },
+    {
+      "strategy": "MOMENTUM_60",
+      "family": "PIT_EQUITY_TECHNICAL",
+      "status": "NO-GO",
+      "cagr": 0.057237442515075676,
+      "oos_cagr": 0.07725275493658246,
+      "sharpe": 0.37140953951290406,
+      "oos_sharpe": 0.4839465330240045,
+      "max_drawdown": -0.5938829735400721,
+      "hac_active_t": -2.0919312879386585,
+      "p_value": 0.036444662754264945,
+      "reason": "FAILED_HAC_OOS_DRAWDOWN",
+      "bh_q": 0.29155730203411956
+    },
+    {
+      "strategy": "MOMENTUM_120",
+      "family": "PIT_EQUITY_TECHNICAL",
+      "status": "NO-GO",
+      "cagr": 0.11415394771691134,
+      "oos_cagr": 0.11351665625646246,
+      "sharpe": 0.5956188851926059,
+      "oos_sharpe": 0.6414420454222652,
+      "max_drawdown": -0.6360905276849317,
+      "hac_active_t": 0.21809804637274655,
+      "p_value": 0.8273527195374026,
+      "reason": "FAILED_HAC_OOS_DRAWDOWN",
+      "bh_q": 0.945545965185603
+    },
+    {
+      "strategy": "TREND_MA200",
+      "family": "PIT_EQUITY_TECHNICAL",
+      "status": "NO-GO",
+      "cagr": 0.10394146286047601,
+      "oos_cagr": 0.08026628997392948,
+      "sharpe": 0.56520342945586,
+      "oos_sharpe": 0.504532211893462,
+      "max_drawdown": -0.6098286471594271,
+      "hac_active_t": -0.10327853657152469,
+      "p_value": 0.9177419098493862,
+      "reason": "FAILED_HAC_OOS_DRAWDOWN",
+      "bh_q": 0.9177419098493862
+    },
+    {
+      "strategy": "LOW_VOL_60",
+      "family": "PIT_EQUITY_TECHNICAL",
+      "status": "NO-GO",
+      "cagr": 0.09546176148492513,
+      "oos_cagr": 0.11447095298850352,
+      "sharpe": 0.8726661815368215,
+      "oos_sharpe": 0.9198706252796145,
+      "max_drawdown": -0.34656991063973397,
+      "hac_active_t": -1.056378941871197,
+      "p_value": 0.2907951228413015,
+      "reason": "FAILED_HAC_OOS_DRAWDOWN",
+      "bh_q": 0.7754536609101373
+    },
+    {
+      "strategy": "REVERSAL_5",
+      "family": "PIT_EQUITY_TECHNICAL",
+      "status": "NO-GO",
+      "cagr": 0.14592471513363048,
+      "oos_cagr": 0.08632074036680959,
+      "sharpe": 0.5489444145693977,
+      "oos_sharpe": 0.44373137621821857,
+      "max_drawdown": -0.7604074928347753,
+      "hac_active_t": 1.339218362622785,
+      "p_value": 0.18049959624447998,
+      "reason": "FAILED_HAC_OOS_DRAWDOWN",
+      "bh_q": 0.7219983849779199
+    },
+    {
+      "strategy": "RISK_PARITY",
+      "family": "ETF_MULTIASSET",
+      "status": "NO-GO",
+      "cagr": 0.09269002177494645,
+      "oos_cagr": 0.06057252939257829,
+      "sharpe": 0.8329722213767771,
+      "oos_sharpe": 0.5922188916644381,
+      "max_drawdown": -0.22462290098735616,
+      "hac_active_t": -0.6417816815819313,
+      "p_value": 0.5210149452487449,
+      "reason": "OOS_BELOW_SPY_OR_RISK_MANAGEMENT_ONLY",
+      "bh_q": 0.8336239123979918
+    },
+    {
+      "strategy": "TREND_RISK",
+      "family": "ETF_MULTIASSET",
+      "status": "NO-GO",
+      "cagr": 0.08606144567954632,
+      "oos_cagr": 0.06496227797976006,
+      "sharpe": 0.7744698594546264,
+      "oos_sharpe": 0.642412515089416,
+      "max_drawdown": -0.21111777847475455,
+      "hac_active_t": -0.7534882928255006,
+      "p_value": 0.4511565437452587,
+      "reason": "OOS_BELOW_SPY_OR_RISK_MANAGEMENT_ONLY",
+      "bh_q": 0.9023130874905174
+    }
+  ],
+  "go_count": 0,
+  "walk_forward": {
+    "months": 228,
+    "cagr": 0.08924742244993933,
+    "sharpe": 0.539993553889779,
+    "max_drawdown": -0.6367251679090553,
+    "hac_active_t": -0.39142289772064287,
+    "p_value": 0.6954846698112043
+  },
+  "walk_forward_gate": "NO-GO",
+  "cost_model": {
+    "two_sided_turnover": "|hold XOR prev|/n",
+    "old": "cost=10bps * turnover * 2 (double counted both sides)",
+    "new": "cost=10bps * turnover; turnover already includes additions and removals",
+    "initial": "prev empty -> turnover=1.0 -> one 10bps initial cost"
+  },
+  "bh": {
+    "primary_family": 8,
+    "primary_q": {
+      "MOMENTUM_60": 0.29155730203411956,
+      "REVERSAL_5": 0.7219983849779199,
+      "LOW_VOL_60": 0.7754536609101373,
+      "TREND_RISK": 0.9023130874905174,
+      "RISK_PARITY": 0.8336239123979918,
+      "MOMENTUM_20": 0.9109963543725564,
+      "MOMENTUM_120": 0.945545965185603,
+      "TREND_MA200": 0.9177419098493862
+    },
+    "p8_1_q": {
+      "MOMENTUM_20": 0.095246614189886,
+      "MOMENTUM_60": 0.3542878351580381,
+      "MOMENTUM_120": 0.3806231242069781,
+      "TREND_MA200": 0.5303859921696622,
+      "LOW_VOL_60": 0.3768834885673633,
+      "REVERSAL_5": 0.3507739806327545,
+      "TREND_RISK": 0.44882336763867237,
+      "RISK_PARITY": 0.391207332837466
+    },
+    "consistency": {
+      "matching_names": 8,
+      "note": "P8.1 q is retained; P8.2 C uses corrected costs and method C. Differences are expected and documented."
+    },
+    "family_sensitivity": {
+      "8_hypotheses": {
+        "MOMENTUM_60": 0.29155730203411956,
+        "REVERSAL_5": 0.7219983849779199,
+        "LOW_VOL_60": 0.7754536609101373,
+        "TREND_RISK": 0.9023130874905174,
+        "RISK_PARITY": 0.8336239123979918,
+        "MOMENTUM_20": 0.9109963543725564,
+        "MOMENTUM_120": 0.945545965185603,
+        "TREND_MA200": 0.9177419098493862
+      },
+      "18_hypotheses_if_A_B_C_treated_as_independent": {
+        "A_RAW:LOW_VOL_60": 0.42937091893609836,
+        "C_PER_DATE:MOMENTUM_60": 0.3280019647883845,
+        "A_RAW:MOMENTUM_120": 0.4359322525785472,
+        "B_EXCLUDE_ALL:MOMENTUM_20": 0.35249309828723985,
+        "A_RAW:MOMENTUM_20": 0.3250359481193977,
+        "A_RAW:TREND_MA200": 0.40502945170273463,
+        "A_RAW:REVERSAL_5": 0.3569540714626753,
+        "A_RAW:MOMENTUM_60": 0.36318357867193896,
+        "C_PER_DATE:REVERSAL_5": 0.36099919248895995,
+        "C_PER_DATE:LOW_VOL_60": 0.5234312211143427,
+        "B_EXCLUDE_ALL:MOMENTUM_60": 0.5063507239281221,
+        "B_EXCLUDE_ALL:TREND_MA200": 0.5985783245480394,
+        "B_EXCLUDE_ALL:LOW_VOL_60": 0.8337196346026295,
+        "B_EXCLUDE_ALL:MOMENTUM_120": 0.7850900757658125,
+        "C_PER_DATE:MOMENTUM_20": 0.8198967189353008,
+        "B_EXCLUDE_ALL:REVERSAL_5": 0.8788371650752951,
+        "C_PER_DATE:MOMENTUM_120": 0.8760205265690145,
+        "C_PER_DATE:TREND_MA200": 0.9177419098493862
+      },
+      "count_18": 18
+    },
+    "status": "BH_RECONCILED_TWO_FAMILIES"
+  },
+  "data_blocked": [
+    "NASDAQ100",
+    "DOW30",
+    "historical fundamental PIT",
+    "2025-2026 historical panel"
+  ],
+  "limits": [
+    "C coverage uses full member-day denominator",
+    "109 tickers audited, not silently dropped",
+    "No P8 shadow"
+  ]
+}

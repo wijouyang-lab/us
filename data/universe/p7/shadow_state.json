@@ -1,0 +1,15 @@
+{
+  "shadow_id": "RESEARCH_SHADOW_P7",
+  "status": "PENDING_NEXT_SESSION",
+  "signal_date": "2026-11-05",
+  "next_tradable_session": "2026-11-06",
+  "paper_account_untouched": true,
+  "paper_account_read": false,
+  "paper_account_write": false,
+  "initial_capital": 50000.0,
+  "filled": false,
+  "reason": "NEXT_TRADABLE_SESSION_PRICE_REQUIRED",
+  "holdings": 13,
+  "cash_weight": 0.05,
+  "execution_status": "PENDING_NEXT_SESSION"
+}

@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-11-09T04:50:29.842586+00:00",
+  "status": "P8_3_NO_GO",
+  "as_of": "2024-12-31",
+  "factors": 33,
+  "horizons": [
+    5,
+    10,
+    20
+  ],
+  "ic_rows": 99,
+  "candidate_rows": 0,
+  "go_count": 0,
+  "candidates": [],
+  "data_blocked": [
+    "Nasdaq-100 membership",
+    "Dow 30 membership",
+    "historical fundamental PIT",
+    "2025-2026 history"
+  ],
+  "label_policy": "forward labels missing => NaN/CENSORED; never zero; signal eligibility uses formation-time base_valid and prior 60d shock rule",
+  "note": "Research only; no P8 shadow. No post-hoc P8.2.2 classification used for historical signals."
+}

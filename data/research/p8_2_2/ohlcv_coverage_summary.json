@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-11-08T15:05:06.642008+00:00",
+  "denominator": "all effective-dated S&P 500 member-days",
+  "duplicate_ticker_date_rows": 0,
+  "totals": {
+    "member_days": 1095490,
+    "valid_close": 986358,
+    "full_ohlcv": 986358,
+    "verified_tradable": 981362,
+    "unknown": 109132,
+    "corrupt": 117,
+    "zero_or_stale": 9,
+    "unresolved": 34,
+    "original_close_coverage": 0.90038065,
+    "full_ohlcv_coverage": 0.90038065,
+    "verified_tradable_coverage": 0.89582014
+  },
+  "policy": "full OHLCV = positive OHLC, low<=open/close<=high, finite volume; tradable also volume>0 and no unresolved/corrupt/stale flag"
+}
