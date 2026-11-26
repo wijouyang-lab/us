@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import os
+import tempfile
 import time
 from pathlib import Path
 
@@ -47,7 +49,7 @@ def main():
     if (a.out / "download_status.csv").exists():
         old = pd.read_csv(a.out / "download_status.csv", dtype=str)
         done = set(old[old.status == "SUCCESS"].ticker)
-    yf.set_tz_cache_location(r"C:\Users\ouyan\Documents\deepseek-harness\default-workspace\_yf_tmp")
+    yf.set_tz_cache_location(os.environ.get("YF_CACHE_DIR", tempfile.mkdtemp(prefix="yf-cache-")))
     status = []
     tick = valid.ticker.tolist()
     for bi in range(0, len(tick), a.batch):

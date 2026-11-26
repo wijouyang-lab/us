@@ -49,9 +49,9 @@ This is a research prioritization, not an expected-return probability.
 - GARP top20%: 621
 - Trend top20%: 1,107
 - Multi-style: 404
-- TIER_1: 343; TIER_2: 888; WATCH: 1,890; BLOCKED: 2,479
+- TIER_1: 343; TIER_2: 888; WATCH: 2,271; BLOCKED: 2,098
 - ELIGIBLE_FOR_RESEARCH: 2,774
-- Corporate-action blocked: 850
+- Corporate-action blocked: 469
 - Missing price: 579
 
 ## Limitations
