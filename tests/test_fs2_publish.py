@@ -27,14 +27,20 @@ def source(tmp_path, version, mutate=None):
     return p
 
 
+def small_source(tmp_path, version):
+    d = json.loads(json.dumps(SRC)); d['version'] = version; d['rows'] = d['rows'][:10]
+    p = tmp_path / f'small_{version}.json'; p.write_text(json.dumps(d, separators=(',', ':')), encoding='utf-8'); return p
+
+
 def publish(src, manifest, versions, version=None, keep=30):
     return pub.publish(SimpleNamespace(source=src, manifest=manifest, versions=versions, version=version, keep=keep))
 
 
-def test_31_versions_retention_and_consistency(tmp_path):
+def test_31_versions_retention_and_consistency(tmp_path, monkeypatch):
+    monkeypatch.setattr(pub, "ROWS", 10)
     manifest, versions = setup(tmp_path)
     for i in range(31):
-        publish(source(tmp_path, f"v{i}"), manifest, versions)
+        publish(small_source(tmp_path, f"v{i}"), manifest, versions)
     m = json.loads(manifest.read_text())
     disk = sorted(p.name for p in versions.glob("fs2_v*.json"))
     assert len(disk) == 30
@@ -174,3 +180,31 @@ def test_verify_entry_full_validation(tmp_path):
     d = json.loads((manifest.parent / m["current"]["path"]).read_text()); d["rows"][0]["composite_tier"]="NOT_A_TIER"
     (manifest.parent / m["current"]["path"]).write_text(json.dumps(d))
     with pytest.raises(ValueError): pub.verify_manifest(manifest)
+def test_rollback_over_30_protects_old_current(tmp_path, monkeypatch):
+    monkeypatch.setattr(pub, "ROWS", 10)
+    manifest, versions = setup(tmp_path)
+    for i in range(32):
+        publish(small_source(tmp_path, f"r{i}"), manifest, versions, keep=30)
+    old = json.loads(manifest.read_text())
+    old_current = Path(old["current"]["path"]).name
+    old_previous = Path(old["previous"]["path"]).name
+    pub.cmd_rollback(SimpleNamespace(manifest=manifest, versions=versions, version="r5", keep=30))
+    m = pub.verify_manifest(manifest); disk = set(p.name for p in versions.glob("fs2_v*.json"))
+    assert m["current"]["version"] == "r5"
+    assert Path(m["previous"]["path"]).name == old_current
+    assert old_current in disk and old_previous in disk
+    assert m["retained"] == sorted(disk)
+def test_durability_dir_fsync_true(tmp_path, monkeypatch):
+    manifest, versions = setup(tmp_path); monkeypatch.setattr(pub, "fsync_dir", lambda path: True)
+    publish(source(tmp_path, "dA"), manifest, versions)
+    assert json.loads(manifest.read_text())["durability"]["dir_fsync"] is True
+def test_durability_dir_fsync_false(tmp_path, monkeypatch):
+    manifest, versions = setup(tmp_path); monkeypatch.setattr(pub, "fsync_dir", lambda path: False)
+    publish(source(tmp_path, "dB"), manifest, versions)
+    assert json.loads(manifest.read_text())["durability"]["dir_fsync"] is False
+def test_durability_dir_fsync_failure_flag(tmp_path, monkeypatch):
+    manifest, versions = setup(tmp_path)
+    def boom(path): return False
+    monkeypatch.setattr(pub, "fsync_dir", boom)
+    publish(source(tmp_path, "dC"), manifest, versions)
+    assert json.loads(manifest.read_text())["durability"] == {"file_fsync": True, "dir_fsync": False}

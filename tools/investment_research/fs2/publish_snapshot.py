@@ -92,14 +92,16 @@ def fsync_dir(path: Path) -> bool:
         return False
 
 
-def atomic_write(path: Path, payload: bytes) -> bool:
+def atomic_write(path: Path, payload: bytes) -> dict:
+    """Return actual durability results, never inferred from platform."""
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent))
     try:
         with os.fdopen(fd, "wb") as f:
             f.write(payload); f.flush(); os.fsync(f.fileno())
+        file_fsync = True
         os.replace(tmp, path)
-        return fsync_dir(path.parent)
+        return {"file_fsync": file_fsync, "dir_fsync": fsync_dir(path.parent)}
     except BaseException:
         if os.path.exists(tmp):
             try: os.unlink(tmp)
@@ -191,8 +193,13 @@ def publish(args) -> dict:
     if prev: refs.add(Path(prev["path"]).name)
     if old and old.get("previous"): refs.add(Path(old["previous"]["path"]).name)
     retained = prune_versions(versions, refs, {Path(x).name for x in pinned}, args.keep)
-    m = build_manifest(manifest, new_info, prev, retained, pinned, {"file_fsync": True, "dir_fsync": os.name != "nt"})
-    atomic_write(manifest, json.dumps(m, indent=2).encode())
+    probe = {"file_fsync": True, "dir_fsync": fsync_dir(manifest.parent)}
+    m = build_manifest(manifest, new_info, prev, retained, pinned, probe)
+    actual = atomic_write(manifest, json.dumps(m, indent=2).encode())
+    if actual != probe:
+        m["durability"] = actual
+        actual2 = atomic_write(manifest, json.dumps(m, indent=2).encode())
+        m["durability"] = actual2
     verify_manifest(manifest)
     print(json.dumps(m, indent=2))
     return m
@@ -210,11 +217,16 @@ def cmd_rollback(args):
     d = load_json(target); validate(d)
     entry = info(target, args.manifest.parent, d)
     if entry["version"] != args.version: raise ValueError("version mismatch")
-    refs = {target.name}
+    refs = {target.name, Path(m["current"]["path"]).name}
     if m.get("previous"): refs.add(Path(m["previous"]["path"]).name)
     retained = prune_versions(args.versions, refs, {Path(x).name for x in m.get("pinned", [])}, args.keep)
-    new = build_manifest(args.manifest, entry, m["current"], retained, m.get("pinned", []), {"file_fsync": True, "dir_fsync": os.name != "nt"})
-    atomic_write(args.manifest, json.dumps(new, indent=2).encode())
+    probe = {"file_fsync": True, "dir_fsync": fsync_dir(args.manifest.parent)}
+    new = build_manifest(args.manifest, entry, m["current"], retained, m.get("pinned", []), probe)
+    actual = atomic_write(args.manifest, json.dumps(new, indent=2).encode())
+    if actual != probe:
+        new["durability"] = actual
+        actual2 = atomic_write(args.manifest, json.dumps(new, indent=2).encode())
+        new["durability"] = actual2
     verify_manifest(args.manifest)
     print(json.dumps(new, indent=2))
 
