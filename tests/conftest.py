@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
-"""pytest 兼容层（conftest）：阻止脚本式测试文件在 collection 阶段被 import。
-
-脚本式测试文件（test_dashboard_data_stability.py 等）是"线性脚本"：
-模块级执行 + 尾部 sys.exit(0/1)。它们无法被 pytest 以函数粒度收集，
-且 import 时触发 SystemExit 会导致 INTERNALERROR。
-
-通过 collect_ignore 跳过这些文件的 import，改由 test_script_runner.py
-以 subprocess 方式运行（退出码 0 = PASS）。
-"""
+"""pytest compatibility layer plus trusted workflow-context test fixture."""
+import json
 import os
+import subprocess
+import tempfile
+
+import pytest
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 脚本式测试文件（模块级执行 + sys.exit，无法函数级收集）
+# Script-style tests execute at module import and end with sys.exit; run them
+# through test_script_runner.py instead of pytest collection.
 SCRIPT_TESTS = [
     "test_dashboard_data_stability.py",
     "test_dashboard_runtime.py",
@@ -25,7 +23,43 @@ SCRIPT_TESTS = [
     "test_portfolio_50000.py",
     "test_review_dashboard_fields.py",
 ]
-
-# 阻止 pytest 在 collection 阶段 import 这些脚本式文件（模块级 sys.exit
-# 会触发 SystemExit → INTERNALERROR）。它们改由 test_script_runner.py 以 subprocess 运行。
 collect_ignore = SCRIPT_TESTS
+
+
+_OIDC = None
+
+
+def _oidc_material():
+    global _OIDC
+    if _OIDC is None:
+        out = subprocess.check_output(
+            ["node", os.path.join(REPO_ROOT, "tools/automation/oidc_test_token.mjs")],
+            text=True,
+        )
+        data = json.loads(out)
+        d = tempfile.mkdtemp()
+        path = os.path.join(d, "jwks.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(data["jwks"], fh)
+        _OIDC = (data["token"], path)
+    return _OIDC
+
+
+@pytest.fixture(autouse=True)
+def _trusted_test_context(monkeypatch):
+    token, path = _oidc_material()
+    monkeypatch.setenv("DSH_OIDC_TOKEN", token)
+    monkeypatch.setenv("DSH_OIDC_JWKS_FILE", path)
+    # CLI tests exercise Publisher behavior, not GitHub's runner. Production
+    # requires these values from the workflow; missing-context tests delete them.
+    for key, value in {
+        "GITHUB_ACTIONS": "true",
+        "GITHUB_REPOSITORY": "wijouyang-lab/us",
+        "GITHUB_WORKFLOW": "DSH Headless Task",
+        "GITHUB_JOB": "publisher",
+        "GITHUB_EVENT_NAME": "workflow_dispatch",
+        "GITHUB_REF": "refs/heads/deploy/dsh-automation-p0",
+        "GITHUB_RUN_ID": "123456",
+        "DSH_WORKFLOW_CONTEXT": "publisher",
+    }.items():
+        monkeypatch.setenv(key, value)

@@ -1,15 +1,15 @@
 name: Test
 
-# 让「全量回归通过」这个基线有强制机制（此前 9 个 workflow 无一跑 pytest）。
-# 参考 docs/HANDOVER.md:120 —— 全量测试必须用 Python 3.12（scan.py 含 3.11 无法解析的
-# f-string 反斜杠），Windows 本机另需 PYTHONUTF8=1；这里统一在 workflow 级声明。
+# 鐠佲斂鈧苯鍙忛柌蹇撴礀瑜版帡鈧俺绻冮妴宥堢箹娑擃亜鐔€缁炬寧婀佸鍝勫煑閺堝搫鍩楅敍鍫燁劃閸?9 娑?workflow 閺冪姳绔寸捄?pytest閿涘鈧?
+# 閸欏倽鈧?docs/HANDOVER.md:120 閳ユ柡鈧?閸忋劑鍣哄ù瀣槸韫囧懘銆忛悽?Python 3.12閿涘澃can.py 閸?3.11 閺冪姵纭剁憴锝嗙€介惃?
+# f-string 閸欏秵鏋╅弶鐙呯礆閿涘indows 閺堫剚婧€閸欙箓娓?PYTHONUTF8=1閿涙稖绻栭柌宀€绮烘稉鈧崷?workflow 缁狙冿紣閺勫簺鈧?
 #
-# 注意：bot 的 chore(dashboard) 提交带 [skip ci]，GitHub 对 push 事件会据此跳过本 workflow。
-# 功能分支也触发全量回归，避免只依赖 PR synchronize 事件；主分支的数据刷新仍被 [skip ci] 排除。
+# 濞夈劍鍓伴敍姝渙t 閻?chore(dashboard) 閹绘劒姘︾敮?[skip ci]閿涘瓘itHub 鐎?push 娴滃娆㈡导姘祦濮濄倛鐑︽潻鍥ㄦ拱 workflow閵?
+# 閸旂喕鍏橀崚鍡樻暜娑旂喕袝閸欐垵鍙忛柌蹇撴礀瑜版帪绱濋柆鍨帳閸欘亙绶风挧?PR synchronize 娴滃娆㈤敍娑楀瘜閸掑棙鏁惃鍕殶閹诡喖鍩涢弬棰佺矝鐞?[skip ci] 閹烘帡娅庨妴?
 #
-# 隐式依赖：多个前端测试用 subprocess.run(["node", ...])（如 test_macro_panel_frontend.py:39、
-# test_model_usage.py:165、test_market_indicators.py:282）。ubuntu-latest 自带 Node，无需安装；
-# 若将来换 runner 镜像，需显式安装。
+# 闂呮劕绱℃笟婵婄閿涙艾顦挎稉顏勫缁旑垱绁寸拠鏇犳暏 subprocess.run(["node", ...])閿涘牆顩?test_macro_panel_frontend.py:39閵?
+# test_model_usage.py:165閵嗕辜est_market_indicators.py:282閿涘鈧€乥untu-latest 閼奉亜鐢?Node閿涘本妫ら棁鈧€瑰顥婇敍?
+# 閼汇儱鐨㈤弶銉﹀床 runner 闂€婊冨剼閿涘矂娓堕弰鎯х础鐎瑰顥婇妴?
 
 on:
   push:
@@ -26,17 +26,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-production.txt
-          pip install pytest pyyaml
+          pip install -r requirements-production.lock
 
       - name: Run tests
         run: python -m pytest tests/ -v
@@ -44,3 +43,52 @@ jobs:
       - name: Run Dividend Quality frontend tests
         if: always()
         run: node tests/test_dividend_quality_frontend.js
+
+  dsh-install-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Install and verify pinned DSH (no secrets)
+        run: |
+          npm ci --prefix dsh-runtime --ignore-scripts --no-audit --no-fund
+          dsh-runtime/node_modules/.bin/dsh --version
+          dsh-runtime/node_modules/.bin/dsh --profile headless --help >/dev/null
+          test -f dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+          grep -q "SENSITIVE_ENV_PATTERN" dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+
+
+
+  dsh-subprocess-isolation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+      - name: Install locked DSH runtime
+        run: npm ci --prefix dsh-runtime --ignore-scripts --no-audit --no-fund
+      - name: Verify real DSH subprocess environment scrub
+        run: node tools/automation/dsh_subprocess_probe.mjs
+
+
+  dsh-process-cleanup-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-production.lock
+      - name: Windows process cleanup tests
+        run: python -m pytest -q tests/test_dsh_bounded_output.py

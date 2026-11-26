@@ -379,4 +379,5 @@ for name, ok, detail in results:
         print(f"  FAILED: {name} {detail}")
 print(f"结果：通过 {passed} / {total}")
 print("=" * 70)
-sys.exit(0 if passed == total else 1)
+if __name__ == "__main__":
+    sys.exit(0 if passed == total else 1)
