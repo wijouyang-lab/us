@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unified Stock Selection — Research Only</title>
+<style>
+body{margin:0;background:#0b1020;color:#e8edf8;font:14px/1.45 system-ui,Segoe UI,Arial}header{padding:16px 22px;border-bottom:1px solid #2a3555;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{margin:0;font-size:20px}.muted{color:#91a0c0;font-size:12px}.warn{color:#ffb547}.bad{color:#ff6b6b}.ok{color:#4cd58b}
+main{padding:16px 22px}.bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}label{display:block;font-size:11px;color:#91a0c0}select,input{width:100%;padding:7px;background:#151d33;color:#e8edf8;border:1px solid #2a3555;border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:6px 8px;border-bottom:1px solid #2a3555;text-align:left;white-space:nowrap}th{position:sticky;top:0;background:#10172b;color:#91a0c0;cursor:pointer}.wrap{max-height:60vh;overflow:auto;border:1px solid #2a3555;border-radius:8px}tr:hover{background:#1a2440;cursor:pointer}
+.tag{font-size:10px;border:1px solid #2a3555;padding:1px 4px;border-radius:4px;margin-right:3px}.tA{color:#4cd58b}.tB{color:#4ea1ff}.tC{color:#ffb547}.tX{color:#ff6b6b}
+#detail{display:none;margin-top:12px;background:#151d33;border:1px solid #2a3555;border-radius:8px;padding:12px}.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:5px 14px;font-size:12px}
+.note{font-size:11px;color:#91a0c0;margin:10px 0}.pager{margin-top:8px;display:flex;gap:8px;align-items:center}.pager button{background:#151d33;color:#e8edf8;border:1px solid #2a3555;padding:4px 9px;border-radius:5px}
+</style></head><body>
+<header><div><h1>Unified Stock Selection</h1><div class="muted" id="meta">loading…</div></div><div><span class="tag warn">RESEARCH ONLY — NOT A BUY/SELL SIGNAL</span><span class="tag">No PIT / no alpha claim</span></div></header>
+<main><div id="status" class="muted">Loading verified snapshot…</div>
+<div class="bar">
+<div><label>Search ticker / company</label><input id="q" placeholder="AAPL or Apple"></div>
+<div><label>Research group</label><select id="group"><option value="">All</option><option>TIER_A</option><option>TIER_B</option><option>TIER_C</option><option>BLOCKED</option></select></div>
+<div><label>Security type</label><select id="type"><option value="">All</option><option>COMMON</option><option>ADR</option><option>UNCLASSIFIED</option></select></div>
+<div><label>Industry</label><select id="industry"><option value="">All</option></select></div>
+<div><label>Data quality</label><select id="dq"><option value="">All</option><option>FULL</option><option>PARTIAL</option><option>MINIMAL</option><option>MISSING</option></select></div>
+<div><label>Sort</label><select id="sort"><option value="research_rank">Research rank</option><option value="composite_score">Composite score</option><option value="value_pct">Value</option><option value="quality_pct">Quality</option><option value="garp_pct">GARP</option><option value="trend_pct">Trend</option></select></div>
+</div>
+<div class="wrap"><table><thead><tr><th data-k="ticker">Ticker</th><th data-k="issuer_name">Company</th><th data-k="industry">Industry</th><th data-k="security_type">Type</th><th data-k="research_group">Group</th><th data-k="research_rank">Rank</th><th data-k="composite_score">Composite</th><th>Value</th><th>Quality</th><th>GARP</th><th>Trend</th><th data-k="dimension_coverage">Dims</th><th data-k="data_quality_status">Data</th><th>Risk</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="pager"><button id="prev">Prev</button><span id="page" class="muted"></span><button id="next">Next</button></div>
+<div id="detail"></div>
+<p class="note">Cross-sectional research ranking from existing FS2 ranks. Composite requires all four dimensions and is equal-weight display only, not a validated return model. BLOCKED/INSUFFICIENT_DATA names are excluded from rank. Fundamentals 2026-11-05; prices 2026-11-25; prices unadjusted; no PIT.</p>
+</main>
+<script>
+const S={all:[],f:[],p:0,n:50,sort:"research_rank",dir:1};
+const $=id=>document.getElementById(id); const miss=v=>v===null||v===undefined||v==="";
+const fmt=v=>miss(v)?"—":v; const money=v=>miss(v)||Number(v)===0?"—":"$"+(Number(v)/1e6).toFixed(1)+"M";
+async function sha(buf){const h=await crypto.subtle.digest("SHA-256",buf);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,"0")).join("")}
+function render(){const start=S.p*S.n,rows=S.f.slice(start,start+S.n);
+ $("rows").innerHTML=rows.length?rows.map(r=>`<tr data-t="${r.ticker}"><td><b>${r.ticker}</b></td><td>${r.issuer_name||"—"}</td><td>${r.industry||"—"}</td><td>${r.security_type}</td><td class="${r.research_group==="TIER_A"?"tA":r.research_group==="TIER_B"?"tB":r.research_group==="TIER_C"?"tC":"tX"}">${r.research_group}</td><td>${fmt(r.research_rank)}</td><td>${miss(r.composite_score)?"—":Number(r.composite_score).toFixed(3)}</td><td>${fmt(r.value_rank)}</td><td>${fmt(r.quality_rank)}</td><td>${fmt(r.garp_rank)}</td><td>${miss(r.trend_pct)?"—":Number(r.trend_pct).toFixed(2)}</td><td>${r.dimension_coverage}/4</td><td>${r.data_quality_status}</td><td>${r.risk_flags||"—"}</td></tr>`).join(""):`<tr><td colspan="14">No candidates match.</td></tr>`;
+ $("page").textContent=`${S.f.length?start+1:0}–${Math.min(start+S.n,S.f.length)} of ${S.f.length} · page ${S.p+1}/${Math.max(1,Math.ceil(S.f.length/S.n))}`;
+ document.querySelectorAll("#rows tr[data-t]").forEach(tr=>tr.onclick=()=>detail(tr.dataset.t));
+}
+function apply(){const q=$("q").value.toLowerCase(),g=$("group").value,ty=$("type").value,ind=$("industry").value,dq=$("dq").value;
+ S.f=S.all.filter(r=>(!g||r.research_group===g)&&(!ty||r.security_type===ty)&&(!ind||r.industry===ind)&&(!dq||r.data_quality_status===dq)&&(!q||`${r.ticker} ${r.issuer_name}`.toLowerCase().includes(q)));
+ S.p=0;render();}
+function detail(t){const r=S.all.find(x=>x.ticker===t);if(!r)return;$("detail").style.display="block";
+ $("detail").innerHTML=`<h3>${r.ticker} — ${r.issuer_name||""}</h3><div class="kv">
+ <div>Group: <b>${r.research_group}</b></div><div>Status: <b>${r.research_status}</b></div><div>Composite: <b>${miss(r.composite_score)?"—":Number(r.composite_score).toFixed(3)}</b> (rank ${fmt(r.research_rank)})</div>
+ <div>Dimensions: <b>${r.dimension_coverage}/4 · ${r.data_quality_status}</b></div><div>Value rank: <b>${fmt(r.value_rank)}</b></div><div>Quality rank: <b>${fmt(r.quality_rank)}</b></div><div>GARP rank: <b>${fmt(r.garp_rank)}</b></div><div>Trend pct: <b>${miss(r.trend_pct)?"—":Number(r.trend_pct).toFixed(3)}</b></div>
+ <div>ADV20: <b>${money(r.adv20_usd)}</b></div><div>Corporate action: <b>${r.corporate_action_status||"—"}</b></div><div>Missing: <b>${r.missing_reason||"none"}</b></div><div>Risk: <b>${r.risk_flags||"none"}</b></div>
+ <div>Data: <b>${r.fundamentals_as_of} / ${r.prices_as_of}</b></div><div>Explanation: <b>${r.selection_explanation||"—"}</b></div></div>`;}
+async function load(){try{
+ const js=await fetch("../dashboard/data/unified_selection_v1.json",{cache:"no-store"}); if(!js.ok)throw Error("HTTP "+js.status);
+ const buf=await js.arrayBuffer(); const want=(await (await fetch("../dashboard/data/unified_selection_v1.sha256",{cache:"no-store"})).text()).trim();
+ const got=await sha(buf); if(got!==want)throw Error("SHA256 mismatch");
+ const d=JSON.parse(new TextDecoder().decode(buf)); if(!d.research_only||!Array.isArray(d.rows)||d.rows.length!==5600)throw Error("schema/row count");
+ S.all=d.rows;
+ $("meta").textContent=`${d.version} · generated ${d.generated_at} · ${d.rows.length} rows · fundamentals ${d.fundamentals_as_of} · prices ${d.prices_as_of}`;
+ $("status").className="ok";$("status").textContent="Snapshot verified · RESEARCH ONLY";
+ const inds=[...new Set(S.all.map(r=>r.industry).filter(Boolean))].sort();$("industry").innerHTML='<option value="">All</option>'+inds.map(x=>`<option>${x}</option>`).join("");
+ apply();
+}catch(e){S.all=[];$("rows").innerHTML="";$("status").className="bad";$("status").textContent="UNIFIED SNAPSHOT UNAVAILABLE — "+e.message+". Fail closed.";}}
+document.querySelectorAll(".bar select,.bar input").forEach(x=>x.addEventListener("input",apply));
+document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;S.dir=S.sort===k?-S.dir:1;S.sort=k;S.f.sort((a,b)=>{let x=a[k],y=b[k];if(miss(x))x=S.dir>0?1e18:-1e18;if(miss(y))y=S.dir>0?1e18:-1e18;return (x>y?1:y>x?-1:0)*S.dir});S.p=0;render();});
+$("prev").onclick=()=>{if(S.p>0){S.p--;render();}};$("next").onclick=()=>{if((S.p+1)*S.n<S.f.length){S.p++;render();}};
+load();
+</script></body></html>
