@@ -1,0 +1,23 @@
+# Rejected Second-Wave Names
+
+- **ALAB** — Astera Labs, Inc. - Common Stock; flags: nan; P/E 72.11421802340422; EV/FCF N/A.
+- **LIF** — Life360, Inc. - Common Stock; flags: nan; P/E 19.893956511858885; EV/FCF 27.31749325438729.
+- **IDR** — Idaho Strategic Resources, Inc. Common Stock; flags: nan; P/E 10.462882394593612; EV/FCF 13.99848987614153.
+- **CRDO** — Credo Technology Group Holding Ltd - Ordinary Shares; flags: nan; P/E 37.28801467320527; EV/FCF N/A.
+- **IRMD** — iRadimed Corporation - Common Stock; flags: nan; P/E 45.11897690058836; EV/FCF N/A.
+- **SNDK** — Sandisk Corporation - Common Stock When-Issued; flags: DATA_OUTLIER; P/E 0.6915561801832484; EV/FCF 0.477708271322721.
+- **UTHR** — United Therapeutics Corporation - Common Stock; flags: nan; P/E 20.43864320652041; EV/FCF N/A.
+- **IPAR** — Interparfums, Inc. - Common Stock; flags: nan; P/E 34.992296759973335; EV/FCF 19.22426178621996.
+- **LIN** — Linde plc - Ordinary Shares; flags: nan; P/E 34.95499776144121; EV/FCF 50.97439657014369.
+- **REYN** — Reynolds Consumer Products Inc. - Common Stock; flags: nan; P/E 16.700573573842746; EV/FCF 24.556175317975825.
+- **CHD** — Church & Dwight Company, Inc. Common Stock; flags: nan; P/E 34.51831599879953; EV/FCF 26.94724072213072.
+- **CL** — Colgate-Palmolive Company Common Stock; flags: nan; P/E 40.501933147579685; EV/FCF 22.574236272543114.
+- **ECL** — Ecolab Inc. Common Stock; flags: nan; P/E 41.85809451469528; EV/FCF 52.09258437806519.
+- **MLM** — Martin Marietta Materials, Inc. Common Stock; flags: nan; P/E 16.59761217017746; EV/FCF 58.103897576271976.
+- **PG** — Procter & Gamble Company (The) Common Stock; flags: nan; P/E 25.10062290317905; EV/FCF 26.68002372615724.
+- **PATK** — Patrick Industries, Inc. - Common Stock; flags: nan; P/E 20.63945338666215; EV/FCF 19.819144916177752.
+- **EBS** — Emergent BioSolutions Inc. Common Stock; flags: GAAP_LOSS;ONE_TIME_OR_LOSS_RISK; P/E N/A; EV/FCF 3.2818396657218702.
+- **NUS** — Nu Skin Enterprises, Inc. Common Stock; flags: FCF_NEGATIVE;GAAP_LOSS;ONE_TIME_OR_LOSS_RISK; P/E N/A; EV/FCF N/A.
+- **USNA** — USANA Health Sciences, Inc. Common Stock; flags: GAAP_LOSS;ONE_TIME_OR_LOSS_RISK; P/E N/A; EV/FCF 1.7421058425409628.
+- **CCS** — Century Communities, Inc. Common Stock; flags: FCF_NEGATIVE; P/E 13.838678037165623; EV/FCF N/A.
+- **ARKO** — ARKO Corp. - Common Stock; flags: nan; P/E 31.51990347638686; EV/FCF 1102.2740845664753.
