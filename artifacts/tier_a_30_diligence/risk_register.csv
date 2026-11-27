@@ -1,0 +1,301 @@
+ticker,risk,level,evidence,source
+ADUS,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,债务和利息负担,LOW,net debt/EBITDA=-0.4839995613667296,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,现金流质量,HIGH,FCF=103788000.0,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+ADUS,估值下跌风险,MEDIUM,P/E=23.80502749175532; EV/FCF=21.27516848512596,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm
+AMTM,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,债务和利息负担,HIGH,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,现金流质量,MEDIUM,FCF=583000000.0,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,管理层执行风险,HIGH,执行与会计质量,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+AMTM,估值下跌风险,MEDIUM,P/E=18.007002963638303; EV/FCF=15.51177873363593,https://www.sec.gov/Archives/edgar/data/2011286/000162828026075740/amtm-20261002.htm
+BOOT,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,债务和利息负担,MEDIUM,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,现金流质量,MEDIUM,FCF=126342000.0,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+BOOT,估值下跌风险,MEDIUM,P/E=18.29246601373853; EV/FCF=33.976636614769895,https://www.sec.gov/Archives/edgar/data/1610250/000110465926119705/boot-20260926x10q.htm
+CHD,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,债务和利息负担,MEDIUM,net debt/EBITDA=1.0077735849056604,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,现金流质量,HIGH,FCF=1093000000.0,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,管理层执行风险,LOW,执行与会计质量,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+CHD,估值下跌风险,HIGH,P/E=36.2985765959146; EV/FCF=25.69084285075012,https://www.sec.gov/Archives/edgar/data/313927/000119312526441040/chd-20260930.htm
+COLL,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,债务和利息负担,MEDIUM,net debt/EBITDA=-0.7390320845831,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,现金流质量,MEDIUM,FCF=327583000.0,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,诉讼和监管风险,HIGH,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,技术替代风险,MEDIUM,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+COLL,估值下跌风险,MEDIUM,P/E=12.357016064895816; EV/FCF=1.9646581171794628,https://www.sec.gov/Archives/edgar/data/1267565/000162828026070589/coll-20260930.htm
+CRMD,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,现金流质量,MEDIUM,FCF=172786000.0,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,股权稀释,UNKNOWN,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,诉讼和监管风险,HIGH,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,技术替代风险,MEDIUM,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,管理层执行风险,HIGH,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+CRMD,估值下跌风险,HIGH,P/E=2.775560985502925; EV/FCF=0.5646506226845894,https://www.sec.gov/Archives/edgar/data/1410098/000141009826000067/crmd-20260930.htm
+DHI,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,现金流质量,HIGH,FCF=3346800000.0,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DHI,估值下跌风险,MEDIUM,P/E=14.528178424520975; EV/FCF=nan,https://www.sec.gov/Archives/edgar/data/882184/000088218426000157/dhi-20260930.htm
+DV,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,债务和利息负担,LOW,net debt/EBITDA=-1.6854990167701451,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,现金流质量,HIGH,FCF=172654000.0,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,行业周期风险,MEDIUM,行业属性,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,技术替代风险,HIGH,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+DV,估值下跌风险,HIGH,P/E=41.94415400572195; EV/FCF=10.979296166841293,https://www.sec.gov/Archives/edgar/data/1819928/000110465926120666/dv-20260930x10q.htm
+EPAM,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,债务和利息负担,LOW,net debt/EBITDA=-1.458053019940634,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,现金流质量,HIGH,FCF=612691000.0,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,技术替代风险,HIGH,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+EPAM,估值下跌风险,MEDIUM,P/E=22.241093974728148; EV/FCF=12.175466736393023,https://www.sec.gov/Archives/edgar/data/1352010/000135201026000052/epam-20260930.htm
+FLXS,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,供应商集中度,HIGH,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,现金流质量,MEDIUM,FCF=47576000.0,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+FLXS,估值下跌风险,MEDIUM,P/E=8.475208125138852; EV/FCF=6.124089767311248,https://www.sec.gov/Archives/edgar/data/37472/000119312526436394/flxs-20260930.htm
+G,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,现金流质量,HIGH,FCF=734653000.0,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,行业周期风险,MEDIUM,行业属性,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,技术替代风险,HIGH,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+G,估值下跌风险,MEDIUM,P/E=13.396465051701991; EV/FCF=10.958055792700826,https://www.sec.gov/Archives/edgar/data/1398659/000139865926000019/g-20260930.htm
+GDYN,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,债务和利息负担,LOW,net debt/EBITDA=-16.815328467153286,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,现金流质量,LOW,FCF=25266000.0,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,技术替代风险,HIGH,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GDYN,估值下跌风险,HIGH,P/E=117.3796291520861; EV/FCF=33.06203018453132,https://www.sec.gov/Archives/edgar/data/1743725/000174372526000031/gdyn-20260930.htm
+GSL,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,
+GSL,供应商集中度,LOW,供应链/采购集中度,
+GSL,债务和利息负担,MEDIUM,net debt/EBITDA=0.4805370115404706,
+GSL,现金流质量,MEDIUM,FCF=516863000.0,
+GSL,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,
+GSL,诉讼和监管风险,LOW,10-K风险因素/行业监管,
+GSL,行业周期风险,HIGH,行业属性,
+GSL,技术替代风险,LOW,技术/商业模式替代,
+GSL,管理层执行风险,MEDIUM,执行与会计质量,
+GSL,估值下跌风险,HIGH,P/E=3.464983213072168; EV/FCF=3.3097911516203897,
+HII,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,债务和利息负担,MEDIUM,net debt/EBITDA=2.349898580121704,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,现金流质量,MEDIUM,FCF=794000000.0,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+HII,估值下跌风险,MEDIUM,P/E=19.497206373703637; EV/FCF=17.77431971799836,https://www.sec.gov/Archives/edgar/data/1501585/000150158526000056/hii-20260930.htm
+IPAR,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,债务和利息负担,LOW,net debt/EBITDA=0.2287302237001004,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,现金流质量,HIGH,FCF=190486000.0,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+IPAR,估值下跌风险,MEDIUM,P/E=27.132345336452094; EV/FCF=24.339590490477825,https://www.sec.gov/Archives/edgar/data/822663/000175392626002061/ipar-20260930.htm
+LRN,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,债务和利息负担,LOW,net debt/EBITDA=-0.2239953302189912,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,现金流质量,HIGH,FCF=433227000.0,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,诉讼和监管风险,HIGH,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,行业周期风险,MEDIUM,行业属性,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,技术替代风险,MEDIUM,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LRN,估值下跌风险,MEDIUM,P/E=9.93430778629139; EV/FCF=7.456563000139552,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm
+LMB,客户集中度,UNKNOWN,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,供应商集中度,UNKNOWN,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,债务和利息负担,UNKNOWN,net debt/EBITDA=-0.2974092650953586,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,现金流质量,UNKNOWN,FCF=41893000.0,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,股权稀释,UNKNOWN,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,诉讼和监管风险,UNKNOWN,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,行业周期风险,UNKNOWN,行业属性,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,技术替代风险,UNKNOWN,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,管理层执行风险,UNKNOWN,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LMB,估值下跌风险,UNKNOWN,P/E=16.284277385325062; EV/FCF=14.704795831769944,https://www.sec.gov/Archives/edgar/data/1606163/000162828026069590/lmb-20260930.htm
+LOCO,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,债务和利息负担,MEDIUM,net debt/EBITDA=0.3376083846167106,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,现金流质量,MEDIUM,FCF=25441000.0,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,行业周期风险,MEDIUM,行业属性,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+LOCO,估值下跌风险,MEDIUM,P/E=17.604360341384403; EV/FCF=19.09728737085442,https://www.sec.gov/Archives/edgar/data/1606366/000160636626000063/loco-20260930x10q.htm
+NRDS,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,债务和利息负担,LOW,net debt/EBITDA=-0.0313620071684587,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,现金流质量,HIGH,FCF=130300000.0,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,技术替代风险,HIGH,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+NRDS,估值下跌风险,HIGH,P/E=nan; EV/FCF=nan,https://www.sec.gov/Archives/edgar/data/1625278/000162527826000068/nrds-20260930.htm
+OSPN,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,现金流质量,MEDIUM,FCF=50495000.0,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,行业周期风险,MEDIUM,行业属性,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,技术替代风险,HIGH,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+OSPN,估值下跌风险,MEDIUM,P/E=11.837060959497531; EV/FCF=nan,https://www.sec.gov/Archives/edgar/data/1044777/000104477726000053/ospn-20260930.htm
+PGNY,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,现金流质量,HIGH,FCF=191782000.0,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PGNY,估值下跌风险,HIGH,P/E=45.64574227431774; EV/FCF=nan,https://www.sec.gov/Archives/edgar/data/1551306/000155130626000170/pgny-20260930.htm
+PHM,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,债务和利息负担,LOW,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,现金流质量,HIGH,FCF=1748533000.0,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PHM,估值下跌风险,MEDIUM,P/E=11.187597064633447; EV/FCF=13.437696191729966,https://www.sec.gov/Archives/edgar/data/822416/000082241626000043/phm-20260930.htm
+PPG,客户集中度,MEDIUM,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,债务和利息负担,MEDIUM,net debt/EBITDA=1.424289728379644,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,现金流质量,HIGH,FCF=1163000000.0,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PPG,估值下跌风险,MEDIUM,P/E=17.465957572859555; EV/FCF=27.591013873453708,https://www.sec.gov/Archives/edgar/data/79879/000007987926000318/ppg-20260930.htm
+PRG,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,债务和利息负担,HIGH,net debt/EBITDA=3.279495678169884,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,现金流质量,MEDIUM,FCF=324920000.0,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+PRG,估值下跌风险,MEDIUM,P/E=11.0570456268023; EV/FCF=7.324774139686865,https://www.sec.gov/Archives/edgar/data/1808834/000162828026067756/prg-20260930.htm
+QNST,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,供应商集中度,LOW,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,债务和利息负担,LOW,net debt/EBITDA=-1.1800465338855797,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,现金流质量,MEDIUM,FCF=127906000.0,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,诉讼和监管风险,MEDIUM,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,技术替代风险,MEDIUM,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+QNST,估值下跌风险,MEDIUM,P/E=13.06872715910548; EV/FCF=7.741044601269164,https://www.sec.gov/Archives/edgar/data/1117297/000119312526451376/qnst-20260930.htm
+REYN,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,债务和利息负担,MEDIUM,net debt/EBITDA=nan,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,现金流质量,HIGH,FCF=316000000.0,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,管理层执行风险,LOW,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+REYN,估值下跌风险,MEDIUM,P/E=17.92121350282793; EV/FCF=21.83634577326331,https://www.sec.gov/Archives/edgar/data/1786431/000162828026069822/reyn-20260930.htm
+SFM,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,债务和利息负担,LOW,net debt/EBITDA=-0.1228421102526425,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,现金流质量,HIGH,FCF=467731000.0,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,行业周期风险,MEDIUM,行业属性,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+SFM,估值下跌风险,MEDIUM,P/E=9.391112857434708; EV/FCF=10.292625611842777,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm
+TMDX,客户集中度,HIGH,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,债务和利息负担,LOW,net debt/EBITDA=-3.3629573979140885,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,现金流质量,MEDIUM,FCF=133589000.0,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,股权稀释,MEDIUM,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,诉讼和监管风险,HIGH,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,技术替代风险,MEDIUM,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,管理层执行风险,HIGH,执行与会计质量,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+TMDX,估值下跌风险,HIGH,P/E=17.22356402078858; EV/FCF=21.11631362671986,https://www.sec.gov/Archives/edgar/data/1756262/000119312526449827/tmdx-20260930.htm
+URBN,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,债务和利息负担,LOW,net debt/EBITDA=-0.6521113158794437,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,现金流质量,HIGH,FCF=315022000.0,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,行业周期风险,HIGH,行业属性,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,技术替代风险,MEDIUM,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,管理层执行风险,MEDIUM,执行与会计质量,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+URBN,估值下跌风险,MEDIUM,P/E=14.13915565281288; EV/FCF=19.347239579934453,https://www.sec.gov/Archives/edgar/data/912615/000119312526386468/urbn-20260731.htm
+WDFC,客户集中度,LOW,公司披露/业务结构；详见10-K客户集中风险,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,供应商集中度,MEDIUM,供应链/采购集中度,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,债务和利息负担,LOW,net debt/EBITDA=0.122724377242096,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,现金流质量,HIGH,FCF=97573000.0,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,股权稀释,LOW,历史股数变动未完整提取，标 UNKNOWN,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,诉讼和监管风险,LOW,10-K风险因素/行业监管,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,行业周期风险,LOW,行业属性,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,技术替代风险,LOW,技术/商业模式替代,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,管理层执行风险,LOW,执行与会计质量,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
+WDFC,估值下跌风险,HIGH,P/E=36.98358818228901; EV/FCF=31.362083285937413,https://www.sec.gov/Archives/edgar/data/105132/000010513226000091/wdfc-20260831.htm
