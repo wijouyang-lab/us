@@ -73,10 +73,16 @@ the source file has no URL.
 - `research_rank` is group rank and only for eligible-peer groups.
 - Page shows `group_total_n / group_eligible_n / group_rank`, `composite_status`,
   fiscal period, raw metrics, source/filing/accession, adjustment and CA.
-- Peer score is displayed only on comparable-group rows, is explicitly display-only,
-  and is not available as a global sort key. Non-comparable rows show `N/C`.
-- `research_rank` is a peer-group rank, not a global rank; the page labels it
-  “Peer rank (within group)” and does not offer cross-group sorting.
+- Bucket score is displayed only on rows that pass the broad-category eligibility
+  gate; it is explicitly display-only and is not available as a global sort key.
+  Non-comparable rows show `N/C`.
+- `research_rank` is a broad-category rank, not a global rank or a true peer rank;
+  the page labels it “Bucket rank (within broad category)” and does not offer
+  cross-category sorting.
+- The source taxonomy is broad rather than a detailed sub-industry peer map. For
+  example, `MATERIALS` includes Interparfums, PPG, Church & Dwight, WD-40 and
+  Reynolds Consumer Products. Those companies have materially different business
+  models, so their common bucket must not be treated as a strict valuation peer set.
 - `artifacts/unified_selection/e2e.json` is a historical V1.0 artifact (16 TIER_A);
   it is not evidence of V1.1 browser E2E coverage.
 - PE, forward EPS, PEG remain UNAVAILABLE; no derivation.
