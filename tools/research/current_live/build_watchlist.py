@@ -48,7 +48,7 @@ base.loc[pd.to_numeric(meta.liabilities_to_assets,errors="coerce").reindex(base.
 base.loc[pd.to_numeric(meta.fcf_yield,errors="coerce").reindex(base.ticker).values<0,"risk_flags"]+="NEG_FCF;"
 base["risk_flags"]=base.risk_flags.str.rstrip(";")
 base["eligible"]=base.ticker.isin(meta.index)&base.security_type.isin(["COMMON","ADR"])&(base.price>=5)&(base.adv20>=2e6)&base.trend_ok&base.quality_pct.notna()&(base.score>=50)
-base["complete"]=base.eligible&base.filed.notna()&(base.data_quality_status=="VERIFIED")
+base["complete"]=base.eligible&base.filed.notna()&base.data_quality_status.isin(["FULL","VERIFIED"])
 base["entry_date"]=last.date().isoformat()
 # main top 10 max; no padding
 tmp=base[base.eligible].sort_values("score",ascending=False); chosen=[]; counts={}
