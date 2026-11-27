@@ -75,6 +75,8 @@ the source file has no URL.
   fiscal period, raw metrics, source/filing/accession, adjustment and CA.
 - Peer score is displayed only on comparable-group rows, is explicitly display-only,
   and is not available as a global sort key. Non-comparable rows show `N/C`.
+- `research_rank` is a peer-group rank, not a global rank; the page labels it
+  “Peer rank (within group)” and does not offer cross-group sorting.
 - `artifacts/unified_selection/e2e.json` is a historical V1.0 artifact (16 TIER_A);
   it is not evidence of V1.1 browser E2E coverage.
 - PE, forward EPS, PEG remain UNAVAILABLE; no derivation.
