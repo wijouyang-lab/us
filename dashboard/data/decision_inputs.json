@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-27T14:08:55Z",
-  "asof": "2026-11-27T14:08:32Z",
+  "generated_at": "2026-11-27T14:17:43Z",
+  "asof": "2026-11-27T14:17:07Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -62,7 +62,7 @@
       "key": "fg_score",
       "label": "恐惧贪婪",
       "group": "情绪",
-      "value": 20.14,
+      "value": 19.91,
       "unit": "",
       "status": "ok",
       "source": "market_indicators"
@@ -135,7 +135,7 @@
       "label": "讲话利空",
       "group": "新闻",
       "value": 5,
-      "unit": "/19",
+      "unit": "/14",
       "status": "ok",
       "source": "macro.speakers"
     }
