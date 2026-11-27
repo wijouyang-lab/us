@@ -1,0 +1,21 @@
+ticker,company,period,revenue,net_income,ocf,fcf,source
+FIVE,"Five Below, Inc. - Common Stock",FY2024,3559400000.0,301100000.0,499600000.0,,SEC XBRL 10-K
+FIVE,"Five Below, Inc. - Common Stock",FY2025,3876500000.0,253600000.0,430600000.0,,SEC XBRL
+FIVE,"Five Below, Inc. - Common Stock",FY2026,4764100000.0,358600000.0,586400000.0,,SEC XBRL
+FIVE,"Five Below, Inc. - Common Stock",Q2 2026,1261500000.0,221400000.0,,,SEC 10-Q
+FIVE,"Five Below, Inc. - Common Stock",TTM,5313868000.0,619182000.0,803480000.0,599250000.0,SEC FY+YTD-prior YTD
+FIZZ,National Beverage Corp. - Common Stock,FY2024,1191700000.0,176700000.0,197900000.0,,SEC XBRL 10-K
+FIZZ,National Beverage Corp. - Common Stock,FY2025,1201400000.0,186800000.0,206700000.0,,SEC XBRL
+FIZZ,National Beverage Corp. - Common Stock,FY2026,1180600000.0,183600000.0,181300000.0,,SEC XBRL
+FIZZ,National Beverage Corp. - Common Stock,Q1 FY2027,330700000.0,47000000.0,,,SEC 10-Q
+FIZZ,National Beverage Corp. - Common Stock,TTM,1180699000.0,174892000.0,187015000.0,161897000.0,SEC FY+YTD-prior YTD
+RELY,"Remitly Global, Inc. - Common stock",FY2023,944300000.0,-117800000.0,-53600000.0,,SEC XBRL 10-K
+RELY,"Remitly Global, Inc. - Common stock",FY2024,1264000000.0,-37000000.0,111600000.0,,SEC XBRL
+RELY,"Remitly Global, Inc. - Common stock",FY2025,1635100000.0,67900000.0,325100000.0,,SEC XBRL
+RELY,"Remitly Global, Inc. - Common stock",Q3 2026,509800000.0,67600000.0,,,SEC 10-Q
+RELY,"Remitly Global, Inc. - Common stock",TTM,1899974000.0,363730000.0,409436000.0,394533000.0,SEC FY+YTD-prior YTD
+USLM,"United States Lime & Minerals, Inc. - Common Stock",FY2023,281300000.0,74500000.0,92300000.0,,SEC XBRL 10-K
+USLM,"United States Lime & Minerals, Inc. - Common Stock",FY2024,317700000.0,108800000.0,126000000.0,,SEC XBRL
+USLM,"United States Lime & Minerals, Inc. - Common Stock",FY2025,372700000.0,134300000.0,165000000.0,,SEC XBRL
+USLM,"United States Lime & Minerals, Inc. - Common Stock",Q3 2026,106200000.0,38000000.0,,,SEC 10-Q
+USLM,"United States Lime & Minerals, Inc. - Common Stock",TTM,381087000.0,133683000.0,168863000.0,98733000.0,SEC FY+YTD-prior YTD
