@@ -33,3 +33,6 @@ def test_page_hides_non_comparable_score():
  assert 'r.composite_status==="GROUP_COMPARABLE_DISPLAY_ONLY"' in p
  assert '<th>Peer score (display only)</th>' in p
  assert '<option value="composite_score">' not in p
+ assert '<th>Peer rank (within group)</th>' in p
+ assert '<th data-k="research_rank">' not in p
+ assert 'id="sort"' not in p
