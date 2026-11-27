@@ -7,39 +7,39 @@
   },
   "horizon_maturity": {
     "5D": {
-      "max_sample_count": 8980,
+      "max_sample_count": 9277,
       "mature": true
     },
     "10D": {
-      "max_sample_count": 7486,
+      "max_sample_count": 7783,
       "mature": true
     },
     "20D": {
-      "max_sample_count": 4510,
+      "max_sample_count": 4804,
       "mature": true
     }
   },
   "sample_counts": {
     "max_N_by_horizon": {
       "5D": {
-        "max_sample_count": 8980,
+        "max_sample_count": 9277,
         "mature": true
       },
       "10D": {
-        "max_sample_count": 7486,
+        "max_sample_count": 7783,
         "mature": true
       },
       "20D": {
-        "max_sample_count": 4510,
+        "max_sample_count": 4804,
         "mature": true
       }
     }
   },
   "validation_status": {
     "status_counts": {
-      "INCONCLUSIVE": 40,
+      "INCONCLUSIVE": 38,
       "REGIME_DEPENDENT": 24,
-      "PROMISING": 8
+      "PROMISING": 10
     },
     "promising": [
       "MA20",
@@ -49,7 +49,9 @@
       "ATR_Pct",
       "ATR_Pct",
       "KDJ_J",
-      "Realized_Volatility_20D_Pct"
+      "Realized_Volatility_20D_Pct",
+      "ZScore_20D",
+      "VIX"
     ],
     "regime_dependent": [
       "RSI_14",
