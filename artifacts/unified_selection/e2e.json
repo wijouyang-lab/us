@@ -1,9 +1,21 @@
 {
-  "loaded": true,
-  "meta": "unified.v1 \u00b7 generated 2026-11-26 \u00b7 5600 rows \u00b7 fundamentals 2026-11-05 \u00b7 prices 2026-11-25",
-  "initial": "1\u201350 of 5600 \u00b7 page 1/112",
-  "tier_a": "1\u201316 of 16 \u00b7 page 1/1",
-  "search": "1\u20134 of 4 \u00b7 page 1/1",
-  "detail": true,
-  "fail": true
+  "sha_loaded": true,
+  "rows_initial": 50,
+  "total_text": "1\u201350 of 5600 \u00b7 page 1/112",
+  "tier_a": "1\u201330 of 30 \u00b7 page 1/1",
+  "type_common": "1\u201350 of 5186 \u00b7 page 1/104",
+  "dq_full": "1\u201350 of 660 \u00b7 page 1/14",
+  "industry_options": 16,
+  "industry_rows": "1\u201350 of 328 \u00b7 page 1/7",
+  "search_apple": "1\u20134 of 4 \u00b7 page 1/1",
+  "detail_fiscal": true,
+  "detail_raw": true,
+  "nc_shown": true,
+  "no_invalid_sort": true,
+  "bucket_label": true,
+  "no_buy": true,
+  "research_only": true,
+  "sha_mismatch_fail": true,
+  "json_missing_fail": true,
+  "all_pass": true
 }
