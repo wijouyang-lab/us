@@ -1,0 +1,42 @@
+{
+  "version": "unified.v1.1",
+  "rows": 5600,
+  "groups": {
+    "TIER_C": 2902,
+    "BLOCKED": 2578,
+    "TIER_B": 90,
+    "TIER_A": 30
+  },
+  "composite_status": {
+    "NOT_COMPARABLE": 5109,
+    "GROUP_COMPARABLE_DISPLAY_ONLY": 491
+  },
+  "comparable_groups": 30,
+  "groups_total": 30,
+  "groups_eligible_20plus": 6,
+  "ranked_rows": 491,
+  "unknown_counts": {
+    "fundamental_source": 303,
+    "fiscal_period": 246,
+    "filing_date": 246,
+    "accession": 246
+  },
+  "special_industry_rows": 959,
+  "raw_coverage": {
+    "pb": 3280,
+    "ps": 2963,
+    "earnings_yield": 3466,
+    "fcf_yield": 2808,
+    "roe": 2404,
+    "roa": 2404,
+    "cfo_to_avg_assets": 2404,
+    "liabilities_to_assets": 2404,
+    "revenue_growth_1y": 3904,
+    "eps_growth_1y": 2382,
+    "fcf_growth_1y": 1844
+  },
+  "input_sha": {
+    "unified_v1": "fa4cbb7cc29e9300da1543a70d5498f9757e779025f80e5decfa69d87a4c5bb8"
+  },
+  "research_only": true
+}

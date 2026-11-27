@@ -1,0 +1,31 @@
+{
+  "version": "unified.v1",
+  "rows": 5600,
+  "unique_tickers": 5600,
+  "groups": {
+    "TIER_C": 2744,
+    "BLOCKED": 2578,
+    "TIER_B": 262,
+    "TIER_A": 16
+  },
+  "data_quality": {
+    "PARTIAL": 2919,
+    "MINIMAL": 1922,
+    "FULL": 660,
+    "MISSING": 99
+  },
+  "composite_ready": 517,
+  "composite_not_ready": 5083,
+  "coverage": {
+    "value_pct": 850,
+    "quality_pct": 2312,
+    "garp_pct": 3101,
+    "trend_pct": 5501
+  },
+  "fundamentals_as_of": "2026-11-05",
+  "prices_as_of": "2026-11-25",
+  "inputs": {
+    "C:\\Users\\ouyan\\Documents\\deepseek-harness\\_unified\\data\\research\\fs2\\composite_candidates_v1.csv": "2cc5a072c93bf4d5b2cb5ff306bb2835914e3b8000c8d34e190b5b686fb97e92"
+  },
+  "research_only": true
+}
