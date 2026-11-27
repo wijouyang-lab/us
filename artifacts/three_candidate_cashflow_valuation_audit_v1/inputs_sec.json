@@ -1,0 +1,28 @@
+{
+  "prices": {"date": "2026-11-25", "IMMR": 6.55, "PHR": 12.09, "OPRX": 7.31},
+  "PHR": {
+    "fy": {"revenue": 480.591, "ocf": 78.814, "software": 13.296, "ppe": 11.101, "fcf": 54.417, "net_income": 2.31, "sbc_total": 68.738, "sbc_expense": 67.452, "sbc_cap": 1.286},
+    "ytd": {"revenue": 260.393, "ocf": 42.250, "software": 7.252, "ppe": 4.802, "fcf": 30.196, "net_income": 4.88, "sbc_total": 26.009, "sbc_expense": 25.429, "sbc_cap": 0.580},
+    "prior": {"revenue": 233.191, "ocf": 29.685, "software": 7.323, "ppe": 5.271, "fcf": 17.091, "net_income": 1.01, "sbc_total": 34.107, "sbc_expense": 33.455, "sbc_cap": 0.652},
+    "shares": 62.070944, "net_debt": -73.494, "price": 12.09, "pe": 71.83, "reported_fcf": 80.747
+  },
+  "OPRX": {
+    "fy": {"revenue": 109.429, "ocf": 18.715, "ppe": 0.100, "software": 0.0, "sbc_total": 6.962, "net_income": 5.132},
+    "ytd": {"revenue": 61.963, "ocf": 12.880, "ppe": 0.068, "software": 0.0, "sbc_total": 5.820, "net_income": -0.003, "accelerated_sbc": 0.588},
+    "prior": {"revenue": 77.190, "ocf": 11.627, "ppe": 0.047, "software": 0.0, "sbc_total": 5.002, "net_income": 0.112},
+    "shares": 18.906823, "net_debt": -8.950, "price": 7.31, "pe": 27.55
+  },
+  "IMMR": {
+    "parent_revenue": 15.924, "bned_revenue": 1714.770, "consolidated_revenue": 1730.694,
+    "nci": 0.674, "consolidated_ocf": 59.1, "consolidated_capex": 16.2,
+    "price": 6.55, "market_cap": 217.5, "net_debt": -103.8, "ev": 113.7
+  },
+  "sources": [
+    {"ticker":"IMMR","form":"10-K","period":"2026-04-30","filing_date":"2026-07-24","accession":"0001193125-26-316089","url":"https://www.sec.gov/Archives/edgar/data/1058811/000119312526316089/immr-20260430.htm"},
+    {"ticker":"IMMR","form":"10-Q","period":"2026-07-31","filing_date":"2026-09-14","accession":"0001193125-26-389919","url":"https://www.sec.gov/Archives/edgar/data/1058811/000119312526389919/immr-20260731.htm"},
+    {"ticker":"PHR","form":"10-K","period":"2026-01-31","filing_date":"2026-03-31","accession":"0001412408-26-000079","url":"https://www.sec.gov/Archives/edgar/data/1412408/000141240826000079/phr-20260131.htm"},
+    {"ticker":"PHR","form":"10-Q","period":"2026-07-31","filing_date":"2026-09-03","accession":"0001412408-26-000223","url":"https://www.sec.gov/Archives/edgar/data/1412408/000141240826000223/phr-20260731.htm"},
+    {"ticker":"OPRX","form":"10-K","period":"2025-12-31","filing_date":"2026-03-12","accession":"0001448431-26-000005","url":"https://www.sec.gov/Archives/edgar/data/1448431/000144843126000005/oprx-20251231.htm"},
+    {"ticker":"OPRX","form":"10-Q","period":"2026-09-30","filing_date":"2026-11-13","accession":"0001448431-26-000023","url":"https://www.sec.gov/Archives/edgar/data/1448431/000144843126000023/oprx-20260930.htm"}
+  ]
+}

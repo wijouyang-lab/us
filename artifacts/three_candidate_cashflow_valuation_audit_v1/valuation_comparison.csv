@@ -1,0 +1,4 @@
+ticker,price,market_cap,net_debt,ev,reported_pe,reported_ev_fcf,normalized_fcf,decision,reason,price_date
+IMMR,6.55,217.5,-103.8,113.7,9.41,1.86,,INSUFFICIENT_DATA,consolidated BNED/NCI; parent FCF unavailable; NCI omitted from EV,2026-11-25
+PHR,12.09,750.4,-73.494,676.9,71.83,8.38,6.881999999999991,WATCH,total-SBC FCF 6.882M; EV/FCF ~98x; base below price,2026-11-25
+OPRX,7.31,138.2,-8.95,129.2,27.55,6.5,12.066999999999997,WATCH,customer loss; SBC-adjusted FCF 12.067M; base 8.13,2026-11-25
