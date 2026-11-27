@@ -1,0 +1,731 @@
+{
+  "asof": "2026-11-25",
+  "generated_at": "2026-11-27T17:30:00+08:00",
+  "status": "WATCHLIST",
+  "coverage": {
+    "prices": 5072,
+    "spy_last": "2026-11-25",
+    "latest": "2026-11-25"
+  },
+  "market": {
+    "spy": 716.7000122070312,
+    "spy_6m": -0.05258561930094863,
+    "regime": "below 200d"
+  },
+  "signals": [
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "SN",
+      "company": "SharkNinja, Inc. Ordinary Shares",
+      "entry_price": 232.5,
+      "rank": 1,
+      "score": 96.04032227402377,
+      "why": "12-1 111.7%; 6m 90.7%; vs SPY +96.0%; near 52w high (100%); quality pct 91%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-11-04",
+      "quality_pct": 0.9070471249459576,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "EXEL",
+      "company": "Exelixis, Inc. - Common Stock",
+      "entry_price": 67.25,
+      "rank": 2,
+      "score": 95.92613094141333,
+      "why": "12-1 51.5%; 6m 33.2%; vs SPY +38.5%; near 52w high (92%); quality pct 99%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-10-29",
+      "quality_pct": 0.9896238651102464,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "CART",
+      "company": "Maplebear Inc. - Common Stock",
+      "entry_price": 57.68000030517578,
+      "rank": 3,
+      "score": 94.7001876450843,
+      "why": "12-1 42.4%; 6m 44.9%; vs SPY +50.2%; near 52w high (95%); quality pct 94%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-08-07",
+      "quality_pct": 0.9437959360138348,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "KNSA",
+      "company": "Kiniksa Pharmaceuticals International, plc - Class A Ordinary Shares",
+      "entry_price": 100.98500061035156,
+      "rank": 4,
+      "score": 93.96103054586582,
+      "why": "12-1 108.9%; 6m 108.7%; vs SPY +114.0%; near 52w high (98%); quality pct 95%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-10-27",
+      "quality_pct": 0.9459576307825336,
+      "data_quality": "PARTIAL",
+      "completeness": "PARTIAL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "QLYS",
+      "company": "Qualys, Inc. - Common Stock",
+      "entry_price": 196.3800048828125,
+      "rank": 5,
+      "score": 91.85464810768332,
+      "why": "12-1 60.7%; 6m 79.7%; vs SPY +84.9%; quality pct 94%",
+      "risk": "HIGH_VOL",
+      "filed": "2026-08-04",
+      "quality_pct": 0.9399048854301773,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "IPAR",
+      "company": "Interparfums, Inc. - Common Stock",
+      "entry_price": 142.64999389648438,
+      "rank": 6,
+      "score": 90.7389945452596,
+      "why": "12-1 48.3%; 6m 53.5%; vs SPY +58.7%; near 52w high (100%); quality pct 96%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-11-04",
+      "quality_pct": 0.9593601383484652,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "ULTA",
+      "company": "Ulta Beauty, Inc. - Common Stock",
+      "entry_price": 642.6400146484375,
+      "rank": 7,
+      "score": 90.47746271915223,
+      "why": "12-1 20.3%; 6m 26.3%; vs SPY +31.6%; near 52w high (91%); quality pct 96%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-08-27",
+      "quality_pct": 0.9649805447470816,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "AAPL",
+      "company": "Apple Inc. - Common Stock",
+      "entry_price": 355.5799865722656,
+      "rank": 8,
+      "score": 89.59101732813839,
+      "why": "12-1 25.7%; 6m 14.1%; vs SPY +19.4%; near 52w high (100%); quality pct 92%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-11-03",
+      "quality_pct": 0.9217466493731086,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "GRDN",
+      "company": "Guardian Pharmacy Services, Inc. Class A Common Stock",
+      "entry_price": 52.11000061035156,
+      "rank": 9,
+      "score": 88.62357014383407,
+      "why": "12-1 34.7%; 6m 34.5%; vs SPY +39.8%; near 52w high (100%); quality pct 97%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-08-06",
+      "quality_pct": 0.9723303069606573,
+      "data_quality": "PARTIAL",
+      "completeness": "PARTIAL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    },
+    {
+      "signal_date": "2026-11-25",
+      "ticker": "PG",
+      "company": "Procter & Gamble Company (The) Common Stock",
+      "entry_price": 173.22999572753906,
+      "rank": 10,
+      "score": 88.47513552097188,
+      "why": "12-1 10.3%; 6m 22.4%; vs SPY +27.6%; near 52w high (100%); quality pct 92%",
+      "risk": "none flagged; verify latest 10-Q",
+      "filed": "2026-10-22",
+      "quality_pct": 0.9182879377431906,
+      "data_quality": "FULL",
+      "completeness": "FULL",
+      "date_5d": "PENDING",
+      "ret_5d": null,
+      "date_10d": "PENDING",
+      "ret_10d": null,
+      "date_20d": "PENDING",
+      "ret_20d": null,
+      "date_40d": "PENDING",
+      "ret_40d": null
+    }
+  ],
+  "secondary": [
+    {
+      "ticker": "MU",
+      "issuer_name": "Micron Technology, Inc. - Common Stock",
+      "price": 601.25,
+      "score": 95.01177001081622,
+      "quality_pct": 0.9930825767401644,
+      "risk_flags": "HIGH_VOL"
+    },
+    {
+      "ticker": "INSW",
+      "issuer_name": "International Seaways, Inc. Common Stock",
+      "price": 102.38999938964844,
+      "score": 93.34254740189643,
+      "quality_pct": 0.938607868568958,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "VEEV",
+      "issuer_name": "Veeva Systems Inc. Class A Common Stock",
+      "price": 271.8999938964844,
+      "score": 92.86315999001474,
+      "quality_pct": 0.9200172935581497,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "WST",
+      "issuer_name": "West Pharmaceutical Services, Inc. Common Stock",
+      "price": 372.94000244140625,
+      "score": 91.46501142610092,
+      "quality_pct": 0.9602248162559448,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "HALO",
+      "issuer_name": "Halozyme Therapeutics, Inc. - Common Stock",
+      "price": 95.11000061035156,
+      "score": 88.78111107154169,
+      "quality_pct": 0.8841331603977518,
+      "risk_flags": "HIGH_LEVERAGE"
+    },
+    {
+      "ticker": "ATRC",
+      "issuer_name": "AtriCure, Inc. - Common Stock",
+      "price": 55.439998626708984,
+      "score": 87.89892357780423,
+      "quality_pct": 0.8270644185041072,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "LPG",
+      "issuer_name": "Dorian LPG Ltd. Common Stock",
+      "price": 45.7599983215332,
+      "score": 87.85710514346819,
+      "quality_pct": 0.8798097708603545,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "ELF",
+      "issuer_name": "e.l.f. Beauty, Inc. Common Stock",
+      "price": 108.93000030517578,
+      "score": 87.66552066071964,
+      "quality_pct": 0.6939040207522698,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "MEDP",
+      "issuer_name": "Medpace Holdings, Inc. - Common Stock",
+      "price": 607.6300048828125,
+      "score": 87.31059572143553,
+      "quality_pct": 0.924340683095547,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "TXN",
+      "issuer_name": "Texas Instruments Incorporated - Common Stock",
+      "price": 270.19000244140625,
+      "score": 86.53966155068439,
+      "quality_pct": 0.8880242109814094,
+      "risk_flags": "HIGH_VOL"
+    },
+    {
+      "ticker": "IDT",
+      "issuer_name": "IDT Corporation Class B Common Stock",
+      "price": 72.44999694824219,
+      "score": 85.85675433930227,
+      "quality_pct": 0.958063121487246,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "MRVL",
+      "issuer_name": "Marvell Technology, Inc. - Common Stock",
+      "price": 130.92999267578125,
+      "score": 85.50194827794732,
+      "quality_pct": 0.809770860354518,
+      "risk_flags": "HIGH_VOL"
+    },
+    {
+      "ticker": "PTGX",
+      "issuer_name": "Protagonist Therapeutics, Inc. - Common Stock",
+      "price": 132.8000030517578,
+      "score": 85.38832029538146,
+      "quality_pct": 0.7955036748811068,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "BMRN",
+      "issuer_name": "BioMarin Pharmaceutical Inc. - Common Stock",
+      "price": 68.86000061035156,
+      "score": 85.05638685808083,
+      "quality_pct": 0.9152615650670124,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "EBAY",
+      "issuer_name": "eBay Inc. - Common Stock",
+      "price": 115.54000091552734,
+      "score": 84.99695229424373,
+      "quality_pct": 0.7924773022049286,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "DAC",
+      "issuer_name": "Danaos Corporation Common Stock",
+      "price": 139.7899932861328,
+      "score": 84.86211890736716,
+      "quality_pct": 0.9135322092520536,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "FTNT",
+      "issuer_name": "Fortinet, Inc. - Common Stock",
+      "price": 134.9600067138672,
+      "score": 84.36427817028924,
+      "quality_pct": 0.8759187202766969,
+      "risk_flags": "HIGH_VOL;HIGH_LEVERAGE"
+    },
+    {
+      "ticker": "SWKS",
+      "issuer_name": "Skyworks Solutions, Inc. - Common Stock",
+      "price": 82.01000213623047,
+      "score": 84.27669933896699,
+      "quality_pct": 0.8253350626891482,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "NUE",
+      "issuer_name": "Nucor Corporation Common Stock",
+      "price": 248.33999633789062,
+      "score": 84.09661253053513,
+      "quality_pct": 0.7833981841763943,
+      "risk_flags": "NEG_FCF"
+    },
+    {
+      "ticker": "FRSH",
+      "issuer_name": "Freshworks Inc. - Class A Common Stock",
+      "price": 13.029999732971191,
+      "score": 84.06899548169078,
+      "quality_pct": 0.8724600086467791,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "BJ",
+      "issuer_name": "BJ's Wholesale Club Holdings, Inc. Common Stock",
+      "price": 101.69999694824219,
+      "score": 83.95610357485648,
+      "quality_pct": 0.8309554690877647,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "WHD",
+      "issuer_name": "Cactus, Inc. Class A Common Stock",
+      "price": 61.43000030517578,
+      "score": 83.88593360030765,
+      "quality_pct": 0.9001297016861219,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "STX",
+      "issuer_name": "Seagate Technology Holdings PLC - Ordinary Shares (Ireland)",
+      "price": 472.3299865722656,
+      "score": 83.74330936974684,
+      "quality_pct": 0.9169909208819714,
+      "risk_flags": "HIGH_VOL"
+    },
+    {
+      "ticker": "WSM",
+      "issuer_name": "Williams-Sonoma, Inc. Common Stock (DE)",
+      "price": 212.38999938964844,
+      "score": 83.54607472186566,
+      "quality_pct": 0.9718979680069174,
+      "risk_flags": "HIGH_VOL"
+    },
+    {
+      "ticker": "ZBRA",
+      "issuer_name": "Zebra Technologies Corporation - Class A Common Stock",
+      "price": 318.3699951171875,
+      "score": 83.51219314557815,
+      "quality_pct": 0.6744487678339819,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "RDVT",
+      "issuer_name": "Red Violet, Inc. - Common Stock",
+      "price": 69.18000030517578,
+      "score": 83.49792442826637,
+      "quality_pct": 0.9641158668396024,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "URI",
+      "issuer_name": "United Rentals, Inc. Common Stock",
+      "price": 1015.719970703125,
+      "score": 83.35041011986267,
+      "quality_pct": 0.8127972330306961,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "IRDM",
+      "issuer_name": "Iridium Communications Inc - Common Stock",
+      "price": 42.959999084472656,
+      "score": 83.22533038931775,
+      "quality_pct": 0.8426286208387376,
+      "risk_flags": "HIGH_LEVERAGE"
+    },
+    {
+      "ticker": "IEX",
+      "issuer_name": "IDEX Corporation Common Stock",
+      "price": 225.25,
+      "score": 83.21713549581446,
+      "quality_pct": 0.7695633376567229,
+      "risk_flags": ""
+    },
+    {
+      "ticker": "NTRA",
+      "issuer_name": "Natera, Inc. - Common Stock",
+      "price": 301.3299865722656,
+      "score": 83.17316043904167,
+      "quality_pct": 0.7565931690445309,
+      "risk_flags": "HIGH_VOL"
+    }
+  ],
+  "excluded": [
+    {
+      "ticker": "MU",
+      "issuer_name": "Micron Technology, Inc. - Common Stock",
+      "price": 601.25,
+      "score": 95.01177001081622,
+      "risk_flags": "HIGH_VOL",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "INSW",
+      "issuer_name": "International Seaways, Inc. Common Stock",
+      "price": 102.38999938964844,
+      "score": 93.34254740189643,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "VEEV",
+      "issuer_name": "Veeva Systems Inc. Class A Common Stock",
+      "price": 271.8999938964844,
+      "score": 92.86315999001474,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "WST",
+      "issuer_name": "West Pharmaceutical Services, Inc. Common Stock",
+      "price": 372.94000244140625,
+      "score": 91.46501142610092,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "HALO",
+      "issuer_name": "Halozyme Therapeutics, Inc. - Common Stock",
+      "price": 95.11000061035156,
+      "score": 88.78111107154169,
+      "risk_flags": "HIGH_LEVERAGE",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "ATRC",
+      "issuer_name": "AtriCure, Inc. - Common Stock",
+      "price": 55.439998626708984,
+      "score": 87.89892357780423,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "LPG",
+      "issuer_name": "Dorian LPG Ltd. Common Stock",
+      "price": 45.7599983215332,
+      "score": 87.85710514346819,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "ELF",
+      "issuer_name": "e.l.f. Beauty, Inc. Common Stock",
+      "price": 108.93000030517578,
+      "score": 87.66552066071964,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "MEDP",
+      "issuer_name": "Medpace Holdings, Inc. - Common Stock",
+      "price": 607.6300048828125,
+      "score": 87.31059572143553,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "TXN",
+      "issuer_name": "Texas Instruments Incorporated - Common Stock",
+      "price": 270.19000244140625,
+      "score": 86.53966155068439,
+      "risk_flags": "HIGH_VOL",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "IDT",
+      "issuer_name": "IDT Corporation Class B Common Stock",
+      "price": 72.44999694824219,
+      "score": 85.85675433930227,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "MRVL",
+      "issuer_name": "Marvell Technology, Inc. - Common Stock",
+      "price": 130.92999267578125,
+      "score": 85.50194827794732,
+      "risk_flags": "HIGH_VOL",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "PTGX",
+      "issuer_name": "Protagonist Therapeutics, Inc. - Common Stock",
+      "price": 132.8000030517578,
+      "score": 85.38832029538146,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "BMRN",
+      "issuer_name": "BioMarin Pharmaceutical Inc. - Common Stock",
+      "price": 68.86000061035156,
+      "score": 85.05638685808083,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "EBAY",
+      "issuer_name": "eBay Inc. - Common Stock",
+      "price": 115.54000091552734,
+      "score": 84.99695229424373,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "DAC",
+      "issuer_name": "Danaos Corporation Common Stock",
+      "price": 139.7899932861328,
+      "score": 84.86211890736716,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "FTNT",
+      "issuer_name": "Fortinet, Inc. - Common Stock",
+      "price": 134.9600067138672,
+      "score": 84.36427817028924,
+      "risk_flags": "HIGH_VOL;HIGH_LEVERAGE",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "SWKS",
+      "issuer_name": "Skyworks Solutions, Inc. - Common Stock",
+      "price": 82.01000213623047,
+      "score": 84.27669933896699,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "NUE",
+      "issuer_name": "Nucor Corporation Common Stock",
+      "price": 248.33999633789062,
+      "score": 84.09661253053513,
+      "risk_flags": "NEG_FCF",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "FRSH",
+      "issuer_name": "Freshworks Inc. - Class A Common Stock",
+      "price": 13.029999732971191,
+      "score": 84.06899548169078,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "BJ",
+      "issuer_name": "BJ's Wholesale Club Holdings, Inc. Common Stock",
+      "price": 101.69999694824219,
+      "score": 83.95610357485648,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "WHD",
+      "issuer_name": "Cactus, Inc. Class A Common Stock",
+      "price": 61.43000030517578,
+      "score": 83.88593360030765,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "STX",
+      "issuer_name": "Seagate Technology Holdings PLC - Ordinary Shares (Ireland)",
+      "price": 472.3299865722656,
+      "score": 83.74330936974684,
+      "risk_flags": "HIGH_VOL",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "WSM",
+      "issuer_name": "Williams-Sonoma, Inc. Common Stock (DE)",
+      "price": 212.38999938964844,
+      "score": 83.54607472186566,
+      "risk_flags": "HIGH_VOL",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "ZBRA",
+      "issuer_name": "Zebra Technologies Corporation - Class A Common Stock",
+      "price": 318.3699951171875,
+      "score": 83.51219314557815,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "RDVT",
+      "issuer_name": "Red Violet, Inc. - Common Stock",
+      "price": 69.18000030517578,
+      "score": 83.49792442826637,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "URI",
+      "issuer_name": "United Rentals, Inc. Common Stock",
+      "price": 1015.719970703125,
+      "score": 83.35041011986267,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "IRDM",
+      "issuer_name": "Iridium Communications Inc - Common Stock",
+      "price": 42.959999084472656,
+      "score": 83.22533038931775,
+      "risk_flags": "HIGH_LEVERAGE",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "IEX",
+      "issuer_name": "IDEX Corporation Common Stock",
+      "price": 225.25,
+      "score": 83.21713549581446,
+      "risk_flags": "",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    },
+    {
+      "ticker": "NTRA",
+      "issuer_name": "Natera, Inc. - Common Stock",
+      "price": 301.3299865722656,
+      "score": 83.17316043904167,
+      "risk_flags": "HIGH_VOL",
+      "exclude_reason": "TREND_NOT_CONFIRMED"
+    }
+  ],
+  "weekly": {
+    "status": "SAMPLE_TOO_SMALL",
+    "asof": "2026-11-25",
+    "signals": 10,
+    "matured_5d": 0,
+    "matured_10d": 0,
+    "matured_20d": 0,
+    "matured_40d": 0,
+    "note": "No trading days have elapsed after the 2026-11-25 signal."
+  }
+}
