@@ -1,0 +1,31 @@
+ticker,total_debt,method,date,components,cash,net_debt
+ADUS,21921000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 21921000.0, ""LongTermDebtCurrent"": 973000.0}",96954000.0,-75033000.0
+COLL,11500000.0,TOTAL_TAG,2019-12-31,"{""DebtCurrent"": 2667000.0}",144797000.0,-133297000.0
+CRMD,1326626.0,SUM_COMPONENTS,2025-12-31,"{""ConvertibleDebtNoncurrent"": 144626.0, ""FinanceLeaseLiabilityNoncurrent"": 586000.0, ""FinanceLeaseLiabilityCurrent"": 596000.0}",355150000.0,-353823374.0
+FLXS,20600000.0,SUM_COMPONENTS,2020-03-31,"{""LongTermDebtCurrent"": 15000000.0, ""LineOfCredit"": 5600000.0}",4407000.0,16193000.0
+GDYN,4806000.0,SUM_COMPONENTS,2026-09-30,"{""LongTermDebtNoncurrent"": 4806000.0, ""LineOfCredit"": 0.0}",304287000.0,-299481000.0
+IPAR,190465000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 147381000.0, ""LongTermDebtCurrent"": 43084000.0, ""LineOfCredit"": 134400000.0}",79764000.0,110701000.0
+LMB,40000000.0,TOTAL_TAG,2020-09-30,"{""LongTermDebtNoncurrent"": 29816000.0, ""LongTermDebtCurrent"": 8961000.0, ""FinanceLeaseLiabilityNoncurrent"": 23430000.0, ""FinanceLeaseLiabilityCurrent"": 6461000.0}",29062000.0,10938000.0
+LOCO,23000000.0,TOTAL_TAG,2026-09-30,"{""FinanceLeaseLiabilityNoncurrent"": 1297000.0, ""FinanceLeaseLiabilityCurrent"": 99000.0}",3415000.0,19585000.0
+NRDS,70000000.0,SUM_COMPONENTS,2022-09-30,"{""LongTermDebtNoncurrent"": 70000000.0}",73500000.0,-3500000.0
+OSPN,,N/A,,{},51393000.0,
+PGNY,,N/A,,{},116820000.0,
+QNST,85049000.0,SUM_COMPONENTS,2026-09-30,"{""LongTermDebtNoncurrent"": 70000000.0, ""LongTermDebtCurrent"": 15000000.0, ""DebtCurrent"": 49000.0}",141512000.0,-56463000.0
+REYN,1531000000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 1531000000.0, ""LongTermDebtCurrent"": 0.0, ""FinanceLeaseLiabilityNoncurrent"": 13000000.0, ""FinanceLeaseLiabilityCurrent"": 1000000.0, ""LineOfCredit"": 0.0}",25000000.0,1506000000.0
+SFM,125000000.0,TOTAL_TAG,2023-12-31,"{""LongTermDebtNoncurrent"": 453000000.0, ""LongTermDebtCurrent"": 7753000.0, ""FinanceLeaseLiabilityNoncurrent"": 11022000.0, ""FinanceLeaseLiabilityCurrent"": 1653000.0, ""LineOfCredit"": 0.0}",228664000.0,-103664000.0
+TMDX,34023000.0,TOTAL_TAG,2019-09-28,"{""LongTermDebtNoncurrent"": 58802000.0, ""LongTermDebtCurrent"": 54818000.0, ""ConvertibleDebtNoncurrent"": 454994000.0, ""FinanceLeaseLiabilityNoncurrent"": 351533000.0}",511400000.0,-477377000.0
+URBN,120000000.0,TOTAL_TAG,2020-07-31,"{""LongTermDebtNoncurrent"": 50000000.0, ""LineOfCredit"": 0.0}",598756000.0,-478756000.0
+WDFC,85249000.0,TOTAL_TAG,2026-08-31,"{""LongTermDebtNoncurrent"": 85249000.0, ""LongTermDebtCurrent"": 0.0, ""DebtCurrent"": 800000.0, ""LineOfCredit"": 50000000.0}",70607000.0,14642000.0
+AMTM,3531000000.0,TOTAL_TAG,2026-10-02,"{""LongTermDebtNoncurrent"": 3478000000.0, ""LongTermDebtCurrent"": 53000000.0}",521000000.0,3010000000.0
+BOOT,258190000.0,TOTAL_TAG,2016-06-25,"{""FinanceLeaseLiabilityNoncurrent"": 11729000.0, ""FinanceLeaseLiabilityCurrent"": 1221000.0}",97416000.0,160774000.0
+CHD,2206900000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 1782200000.0, ""LongTermDebtCurrent"": 424700000.0}",446900000.0,1760000000.0
+DHI,6053900000.0,TOTAL_TAG,2026-09-30,"{""NotesPayable"": 6053900000.0, ""ConvertibleNotesPayable"": 432200000.0}",2060400000.0,3993500000.0
+DV,50380000.0,SUM_COMPONENTS,2026-09-30,"{""LongTermDebtNoncurrent"": 22000000.0, ""FinanceLeaseLiabilityNoncurrent"": 14557000.0, ""FinanceLeaseLiabilityCurrent"": 13823000.0}",250852000.0,-200472000.0
+EPAM,35000000.0,TOTAL_TAG,2015-12-31,"{""LongTermDebtNoncurrent"": 25000000.0, ""LineOfCredit"": 0.0}",965173000.0,-930173000.0
+G,1174160000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 1147955000.0, ""LongTermDebtCurrent"": 26205000.0, ""FinanceLeaseLiabilityNoncurrent"": 8055000.0, ""FinanceLeaseLiabilityCurrent"": 7400000.0}",499053000.0,675107000.0
+GSL,823178000.0,TOTAL_TAG,2023-12-31,"{""LongTermDebtNoncurrent"": 541575000.0, ""LongTermDebtCurrent"": 147567000.0, ""FinanceLeaseLiabilityCurrent"": 11275000.0}",273876000.0,549302000.0
+HII,2905000000.0,TOTAL_TAG,2022-12-31,"{""LongTermDebtNoncurrent"": 2704000000.0, ""LongTermDebtCurrent"": 503000000.0}",387000000.0,2518000000.0
+LRN,418431000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 417995000.0, ""LongTermDebtCurrent"": 418431000.0, ""FinanceLeaseLiabilityNoncurrent"": 104661000.0, ""FinanceLeaseLiabilityCurrent"": 85463000.0, ""NotesPayable"": 2300000.0, ""LineOfCredit"": 35000000.0}",547750000.0,-129319000.0
+PHM,43900000.0,TOTAL_TAG,2025-12-31,"{""NotesPayable"": 1808896000.0, ""LineOfCredit"": 0.0}",1369902000.0,-1326002000.0
+PPG,6831000000.0,TOTAL_TAG,2026-09-30,"{""LongTermDebtNoncurrent"": 6155000000.0, ""LongTermDebtCurrent"": 702000000.0, ""DebtCurrent"": 686000000.0, ""FinanceLeaseLiabilityNoncurrent"": 5000000.0, ""FinanceLeaseLiabilityCurrent"": 2000000.0, ""LineOfCredit"": 0.0}",1593000000.0,5238000000.0
+PRG,865841000.0,TOTAL_TAG,2026-09-30,{},108917000.0,756924000.0
