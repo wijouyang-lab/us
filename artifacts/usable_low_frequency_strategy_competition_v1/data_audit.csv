@@ -1,0 +1,9 @@
+item,value
+daily price coverage,"2007-01-03 to 2024-12-31; 987 symbols; 3,479,190 rows"
+monthly panel,166320 rows; 987 symbols; 2007-01 to 2024-12
+2024 month-end names,710
+delisted names,NOT VERIFIED — symbol set is static; survivorship bias likely
+ticker/name changes,NOT VERIFIED
+splits/dividends,adjusted_close available; raw close for price filter
+PIT fundamentals,NO — current quality_pct/industry static; quality variants are exploratory and look-ahead biased
+ETF benchmark,SPY/QQQ 2007-2024
