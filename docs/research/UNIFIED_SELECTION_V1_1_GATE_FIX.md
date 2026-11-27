@@ -72,7 +72,11 @@ the source file has no URL.
   diagnostic only.
 - `research_rank` is group rank and only for eligible-peer groups.
 - Page shows `group_total_n / group_eligible_n / group_rank`, `composite_status`,
-  raw metrics, source/filing/accession, adjustment and CA.
+  fiscal period, raw metrics, source/filing/accession, adjustment and CA.
+- Peer score is displayed only on comparable-group rows, is explicitly display-only,
+  and is not available as a global sort key. Non-comparable rows show `N/C`.
+- `artifacts/unified_selection/e2e.json` is a historical V1.0 artifact (16 TIER_A);
+  it is not evidence of V1.1 browser E2E coverage.
 - PE, forward EPS, PEG remain UNAVAILABLE; no derivation.
 
 ## Tests
