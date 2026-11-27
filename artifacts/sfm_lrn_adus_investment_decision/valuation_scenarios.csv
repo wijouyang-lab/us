@@ -1,0 +1,10 @@
+ticker,scenario,rev_growth,fcf_margin,fcf,multiple,implied_equity,implied_price,key_assumption
+SFM,Bear,-0.02,0.025,220000000,12,2743664000,29.747214746710856,Comps stay negative and margin pressure persists
+SFM,Base,0.02,0.038,346000000,15,5293664000,57.394695489291834,New stores offset flat comps; capex normalizes
+SFM,Bull,0.05,0.042,420000000,18,7663664000,83.09058935592591,Comps recover and FCF margin returns above 4%
+LRN,Bear,-0.03,0.14,340000000,7,2509319000,59.67627701997008,Enrollment/state funding pressure
+LRN,Base,0.04,0.19,500000000,9,4629319000,110.09382348669534,Enrollment stable and margin sustained
+LRN,Bull,0.08,0.21,570000000,11,6399319000,152.18771841410276,New states/programs scale
+ADUS,Bear,0.03,0.07,110000000,13,1505033000,80.77107692479427,Medicaid rates/labor pressure
+ADUS,Base,0.07,0.095,150000000,16,2475033000,132.8283704306845,"Organic 6-7%, acquisitions integrate"
+ADUS,Bull,0.1,0.1,175000000,19,3400033000,182.47063485640453,Rate updates and margin expansion
