@@ -19,13 +19,13 @@ Date: 2026-11-27. Research only; NOT a buy/sell recommendation.
 | BOOT | Boot Barn Holdings, Inc. | **WATCH** | MEDIUM | Revenue rose from $1.67B to $2.25B with positive comps. |
 | CHD | Church & Dwight Company, Inc. | **WATCH** | HIGH | Steady revenue and strong brands; FCF $1.09B. |
 | COLL | Collegium Pharmaceutical, Inc. | **WATCH** | MEDIUM | FCF $328M on $781M revenue; cash generation strong. |
-| CRMD | CorMedix Inc. | **ELIMINATE** | MEDIUM | FY2025 revenue jumped to $312M and operating income turned positive. |
+| CRMD | CorMedix | **ELIMINATE** | MEDIUM | Q3 2026 revenue fell to $54.5M and net loss was -$14.7M; reimbursement/contract concentration; FY2025 earnings quality uncertain. |
 | DHI | D.R. Horton, Inc. | **WATCH** | HIGH | Scale and low-cost land strategy; FCF $3.35B. |
 | DV | DoubleVerify Holdings, Inc. | **WATCH** | MEDIUM | Revenue grew from $573M to $748M; FCF $173M. |
 | EPAM | EPAM Systems, Inc. | **WATCH** | MEDIUM | Revenue $5.46B and FCF $613M; net cash. |
 | FLXS | Flexsteel Industries, Inc. | **WATCH** | LOW | Revenue and margins improved through FY2026; FCF $47.6M. |
 | G | Genpact Limited | **CONTINUE** | MEDIUM | FCF $735M on $5.08B revenue; FCF yield ~10%. |
-| GDYN | Grid Dynamics Holdings, Inc. - Class A | **ELIMINATE** | MEDIUM | Revenue grew from $313M to $412M. |
+| GDYN | Grid Dynamics | **ELIMINATE** | MEDIUM | P/E ~117 and EV/EBITDA ~47 with ~2.3% net margin; valuation disconnected from profitability. |
 | GSL | Global Ship Lease Inc New Class A Common Shares | **WATCH** | MEDIUM | P/E ~3.5 and FCF yield ~36%, deeply cyclical value. |
 | HII | Huntington Ingalls Industries, Inc. | **WATCH** | HIGH | Revenue $12.5B and FCF $794M; backlog visibility. |
 | IPAR | Interparfums, Inc. | **WATCH** | HIGH | Revenue grew from $1.32B to $1.49B; FCF $190M. |
@@ -33,7 +33,7 @@ Date: 2026-11-27. Research only; NOT a buy/sell recommendation.
 | LMB | Limbach Holdings, Inc. | **WATCH** | MEDIUM | Revenue grew from $516M to $647M; FCF $42M. |
 | LOCO | El Pollo Loco Holdings, Inc. | **WATCH** | LOW | Positive FCF and modest growth. |
 | NRDS | NerdWallet, Inc. - Class A | **WATCH** | MEDIUM | Revenue grew from $599M to $837M; FCF $130M. |
-| OSPN | OneSpan Inc. | **ELIMINATE** | MEDIUM | FCF $50M and net cash. |
+| OSPN | OneSpan | **ELIMINATE** | MEDIUM | Revenue flat at ~$243M; FY2024-25 net income boosted by non-operating items. |
 | PGNY | Progyny, Inc. | **WATCH** | MEDIUM | Revenue grew from $1.09B to $1.29B; FCF $192M. |
 | PHM | PulteGroup, Inc. | **WATCH** | HIGH | FCF $1.75B and net cash. |
 | PPG | PPG Industries, Inc. | **WATCH** | MEDIUM | Revenue $15.9B and FCF $1.16B. |
