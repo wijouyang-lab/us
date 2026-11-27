@@ -1,0 +1,10 @@
+{
+  "status": "SAMPLE_TOO_SMALL",
+  "asof": "2026-11-25",
+  "signals": 10,
+  "matured_5d": 0,
+  "matured_10d": 0,
+  "matured_20d": 0,
+  "matured_40d": 0,
+  "note": "Forward returns are filled only when the Nth trading day exists; otherwise PENDING."
+}
