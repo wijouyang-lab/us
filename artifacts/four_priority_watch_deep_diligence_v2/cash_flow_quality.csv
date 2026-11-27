@@ -1,0 +1,5 @@
+ticker,ocf_ttm,capex_ttm,fcf_ttm,sbc_fy,net_income_ttm,quality,flag
+RELY,409436000.0,14903000.0,394533000.0,155100000.0,363730000.0,"P/E distorted by $136M deferred-tax release; FCF before SBC $395M, after SBC ~$239M",TAX_BENEFIT_NONCASH
+FIVE,803480000.0,204230000.0,599250000.0,34700000.0,619182000.0,TTM includes $169.5M pre-tax IEEPA tariff refund; normalized net/FCF lower,ONE_TIME_TARIFF_REFUND
+USLM,168863000.0,70130000.0,98733000.0,8100000.0,133683000.0,FCF positive but capex elevated; cyclical lime pricing,CYCLICAL_CAPEX
+FIZZ,187015000.0,25118000.0,161897000.0,400000.0,174892000.0,"FCF solid; volume -6.4%, price +7.1%; no growth",VOLUME_DECLINE

@@ -1,0 +1,17 @@
+ticker,risk,level,evidence
+RELY,REGULATORY,HIGH,AML/remittance licensing
+RELY,TAX_QUALITY,HIGH,$136M valuation allowance release
+RELY,SBC,HIGH,$155M SBC
+RELY,COMPETITION,MEDIUM,remittance price competition
+FIVE,TARIFF_REFUND,HIGH,$169.5M one-time benefit
+FIVE,CONSUMER,MEDIUM,teen discretionary
+FIVE,INVENTORY,MEDIUM,seasonal/import
+FIVE,LEASE,MEDIUM,store lease obligations
+USLM,CYCLICAL,HIGH,steel/construction demand
+USLM,REGIONAL,MEDIUM,Texas/regional concentration
+USLM,CAPEX,MEDIUM,kiln/mine investment
+USLM,VALUATION,MEDIUM,22x P/E
+FIZZ,VOLUME,HIGH,case volume -6.4%
+FIZZ,BRAND,MEDIUM,LaCroix competition
+FIZZ,MARGIN,MEDIUM,input/transport costs
+FIZZ,CONTROL,MEDIUM,family control
