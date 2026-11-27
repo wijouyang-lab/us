@@ -1,0 +1,15 @@
+{
+  "version": "multi_style.v1",
+  "snapshot_date": "2026-11-25",
+  "fundamentals_as_of": "2026-11-05",
+  "generated_at": "2026-11-27T14:20:00+08:00",
+  "row_count": 1342,
+  "priority_count": 40,
+  "sha256": {
+    "all_style_candidates.csv": "821054f797dfff303d8352a395f7ef28972666ac0936b735abaebcfccb4c6468",
+    "priority_research_candidates.csv": "abdf2b20d1b712060a5656bcb9708efad60c5b4355e676f1f10f3fe3800ab592",
+    "multi_style_candidates_v1.json": "8636e111a7b9e0f32972813e4bdaf702250a2a3b6564f6305eca9ad6f1eea42e"
+  },
+  "previous": null,
+  "status": "INITIAL_SNAPSHOT"
+}
