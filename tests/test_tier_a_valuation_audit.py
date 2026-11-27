@@ -7,11 +7,11 @@ def test_ttm_identity():
  for c in ["revenue","net_income","ocf","capex"]:
   assert ((x[f"{c}_fy"]+x[f"{c}_ytd"]-x[f"{c}_prior_ytd"]-x[f"{c}_ttm"]).abs()<2).all()
 def test_fy_as_ttm():
- d=pd.read_csv(P/"ttm_metrics.csv"); x=d[d.ttm_method=="FY_AS_TTM"]; assert set(x.ticker)=={"DHI","AMTM","WDFC","GSL"}
+ d=pd.read_csv(P/"ttm_metrics.csv"); x=d[d.ttm_method=="TTM_UNAVAILABLE_FY_ONLY"]; assert set(x.ticker)=={"DHI","AMTM","WDFC","GSL"} and x.pe_ttm.isna().all()
 def test_fcf_identity():
  d=pd.read_csv(P/"ttm_metrics.csv"); x=d.dropna(subset=["ocf_ttm","capex_ttm","fcf_ttm"]); assert ((x.ocf_ttm-x.capex_ttm-x.fcf_ttm).abs()<2).all()
 def test_no_zero_fill():
- d=pd.read_csv(P/"ttm_metrics.csv"); assert not d.pe_ttm.fillna(0).eq(0).any(); assert d.ev_fcf_ttm.isna().sum()>=2
+ d=pd.read_csv(P/"ttm_metrics.csv"); assert (d.pe_ttm.dropna()!=0).all(); assert d.ev_fcf_ttm.isna().sum()>=2
 def test_debt_methods():
  d=pd.read_csv(P/"balance_sheet_debt_audit.csv"); assert len(d)==30; assert d.method.fillna("N/A").isin(["TOTAL_TAG","SUM_COMPONENTS","N/A"]).all()
 def test_market_cap():

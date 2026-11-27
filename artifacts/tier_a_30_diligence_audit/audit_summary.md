@@ -7,8 +7,8 @@ PR #633 base; audit branch `research/tier-a-30-valuation-audit-v1`.
 
 - 30/30 companies have a TTM or explicit FY-as-TTM state.
 - 26 companies: `FY + latest YTD - prior-year YTD`.
-- 4 companies: latest annual report is the latest period (`FY_AS_TTM`): DHI, AMTM, WDFC, GSL.
-- 0 companies with `TTM_UNAVAILABLE` in the final table.
+- 4 companies: `TTM_UNAVAILABLE_FY_ONLY` (latest annual only): DHI, AMTM, WDFC, GSL.
+- 4 companies have `TTM_UNAVAILABLE_FY_ONLY`; their FY data is retained but no TTM multiple is claimed.
 - Previous labels `revenue_ttm`, `net_income`, `fcf` were not true TTM for 26 companies. They are replaced.
 
 ## Before → after highlights

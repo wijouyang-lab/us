@@ -78,7 +78,7 @@ def ttm(facts,tags):
     if len(fy)==0: return None,"NO_ANNUAL",None,None,None,None,None
     fyv=float(fy.iloc[-1].val)
     if len(it)==0 or it.iloc[-1].end<=fy.iloc[-1].end:
-        return fyv,"FY_AS_TTM",fy.iloc[-1].end.date().isoformat(),None,None,fyv,None
+        return None,"TTM_UNAVAILABLE_FY_ONLY",fy.iloc[-1].end.date().isoformat(),None,None,fyv,None
     pv,pt=prior_ytd(facts,tags,it)
     if len(pv)==0: return None,"TTM_UNAVAILABLE_YTD_PRIOR_MISSING",fy.iloc[-1].end.date().isoformat(),it.iloc[-1].end.date().isoformat(),None,fyv,float(it.iloc[-1].val)
     t=compute_ttm(fyv,float(it.iloc[-1].val),float(pv.iloc[-1].val))

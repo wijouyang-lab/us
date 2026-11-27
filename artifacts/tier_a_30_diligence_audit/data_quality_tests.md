@@ -12,7 +12,7 @@ pytest -q tests/test_tier_a_valuation_audit.py
 |---|---|---|
 | 1 | 30 rows, unique tickers | PASS |
 | 2 | 26 TTM rows satisfy FY + YTD − prior YTD | PASS |
-| 3 | 4 FY_AS_TTM are exactly DHI/AMTM/WDFC/GSL | PASS |
+| 3 | 4 TTM_UNAVAILABLE_FY_ONLY are DHI/AMTM/WDFC/GSL; P/E TTM N/A | PASS |
 | 4 | FCF = OCF − Capex for all populated rows | PASS |
 | 5 | No valuation missing value is filled with 0 | PASS |
 | 6 | Debt method is TOTAL_TAG / SUM_COMPONENTS / N/A | PASS |
@@ -31,7 +31,7 @@ pytest -q tests/test_tier_a_valuation_audit.py
 
 ## Data gaps
 
-- 4 companies use FY as TTM because no later interim exists: DHI, AMTM, WDFC, GSL.
+- 4 companies have TTM_UNAVAILABLE_FY_ONLY: DHI, AMTM, WDFC, GSL; FY values retained but no TTM multiple claimed.
 - GSL is a 20-F filer; no 10-Q quarterly series.
 - NRDS share count missing; FS2 market cap fallback.
 - Some XBRL tags (gross profit, D&A, debt) are unavailable and remain N/A.
