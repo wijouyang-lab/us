@@ -1,0 +1,40 @@
+ticker,catalyst,trigger
+CRMD,next 10-Q/10-K; FCF and margin update,Historical ELIMINATE override
+ALAB,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+RELY,next 10-Q/10-K; FCF and margin update,"Positive FCF, net cash, P/E <25; business quality to verify"
+OPRX,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+GOLD,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+PHR,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+AG,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+GLBE,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+LIF,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+FIVE,next 10-Q/10-K; FCF and margin update,"Positive FCF, net cash, P/E <25; business quality to verify"
+USLM,next 10-Q/10-K; FCF and margin update,"Positive FCF, net cash, P/E <25; business quality to verify"
+IDR,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+INMD,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+CRDO,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+FIZZ,next 10-Q/10-K; FCF and margin update,"Positive FCF, net cash, P/E <25; business quality to verify"
+IRMD,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+RIGL,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+MU,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+SNDK,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+UTHR,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+IPAR,next 10-Q/10-K; FCF and margin update,Prior diligence WATCH; needs price/evidence
+LIN,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+REYN,next 10-Q/10-K; FCF and margin update,Prior diligence WATCH; needs price/evidence
+WDFC,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+CHD,next 10-Q/10-K; FCF and margin update,Prior diligence WATCH; needs price/evidence
+CL,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+ECL,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+MLM,next 10-Q/10-K; FCF and margin update,Leverage >3x EBITDA
+PG,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+PATK,next 10-Q/10-K; FCF and margin update,Leverage >3x EBITDA
+EBS,next 10-Q/10-K; FCF and margin update,TTM net loss
+NUS,next 10-Q/10-K; FCF and margin update,TTM net loss
+PSFE,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+USNA,next 10-Q/10-K; FCF and margin update,TTM net loss
+NATR,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+IMMR,next 10-Q/10-K; FCF and margin update,Screen candidate; valuation/evidence not sufficient for priority
+DOX,next 10-Q/10-K; FCF and margin update,TTM revenue/FCF unavailable or invalid
+CCS,next 10-Q/10-K; FCF and margin update,Negative TTM FCF
+ARKO,next 10-Q/10-K; FCF and margin update,Leverage >3x EBITDA
