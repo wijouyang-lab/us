@@ -19,5 +19,17 @@ def test_page_json_hash():
 def test_unknown_traceability_clean():
  d=pd.read_csv(P)
  for c in ["fundamental_source","fiscal_period","filing_date","accession"]:
-  assert d[c].notna().all(); assert (~d[c].astype(str).str.lower().eq("nan")).all()
+  assert d[c].notna().all()
+  assert (~d[c].astype(str).str.lower().eq("nan")).all()
+  assert (~d[c].astype(str).str.strip().eq("")).all()
  assert (d.fundamental_source=="UNKNOWN").sum()==303
+
+def test_page_shows_fiscal_period():
+ p=Path("terminal/unified.html").read_text(encoding="utf-8")
+ assert 'fiscal period <b>${r.fiscal_period||"UNKNOWN"}</b>' in p
+
+def test_page_hides_non_comparable_score():
+ p=Path("terminal/unified.html").read_text(encoding="utf-8")
+ assert 'r.composite_status==="GROUP_COMPARABLE_DISPLAY_ONLY"' in p
+ assert '<th>Peer score (display only)</th>' in p
+ assert '<option value="composite_score">' not in p
