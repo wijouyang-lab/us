@@ -3,6 +3,7 @@
 import json, math
 from pathlib import Path
 import numpy as np, pandas as pd
+from timing import spy_trend_backtest
 
 ROOT=Path(__file__).resolve().parents[3]
 DATA=ROOT/"data/research/strategy_competition"
@@ -85,8 +86,8 @@ def backtest(mode, cost_bps=10, market_filter=False, topn=20):
 def metrics(r):
     r=r.dropna(); eq=(1+r).cumprod(); yrs=len(r)/12
     cagr=eq.iloc[-1]**(1/yrs)-1 if len(eq) and eq.iloc[-1]>0 else np.nan
-    vola=r.std(ddof=0)*math.sqrt(12); sh=cagr/vola if vola else np.nan
-    dn=r[r<0].std(ddof=0)*math.sqrt(12); so=cagr/dn if dn else np.nan
+    vola=r.std(ddof=0)*math.sqrt(12); sh=(r.mean()*12)/vola if vola else np.nan
+    dn=r[r<0].std(ddof=0)*math.sqrt(12); so=(r.mean()*12)/dn if dn else np.nan
     dd=(eq/eq.cummax()-1).min(); cal=cagr/abs(dd) if dd else np.nan
     wins=r[r>0]; losses=r[r<0]
     return {"CAGR":cagr,"Vol":vola,"Sharpe":sh,"Sortino":so,"MaxDD":dd,"Calmar":cal,"WinRate":len(wins)/len(r) if len(r) else np.nan,"ProfitFactor":wins.sum()/abs(losses.sum()) if len(losses) and losses.sum() else np.nan,"Months":len(r)}
@@ -101,8 +102,7 @@ for cost in [5,10,20]:
             r=etf[s].pct_change().reindex(months)
             gross=net=r; tos=pd.Series(0.0); ws=[]
         elif s=="SPY_TREND":
-            r=etf.SPY.pct_change(); pos=(etf.SPY>etf.SPY.rolling(10).mean().shift(1)).astype(float)
-            gross=pos*r; tos=pos.diff().abs().fillna(pos.abs()); net=gross-tos*cost/10000; ws=[]
+            gross,net,tos,pos=spy_trend_backtest(etf.SPY,10,cost); ws=[]
         else:
             mode,mf,tn=configs[s]; gross,net,tos,ws=backtest(mode,cost,mf,tn)
         for pname,(a,b) in periods.items():
@@ -114,16 +114,17 @@ res=pd.DataFrame(rows); res.to_csv(OUT/"strategy_results.csv",index=False)
 curves=[]
 for s in strats:
     if s=="SPY" or s=="QQQ": r=etf[s].pct_change().reindex(months)
-    elif s=="SPY_TREND": r=etf.SPY.pct_change().where(etf.SPY>etf.SPY.rolling(10).mean().shift(1),0)
+    elif s=="SPY_TREND": _,r,_,_=spy_trend_backtest(etf.SPY,10,10)
     else: _,r,_,_=backtest(configs[s][0],10,False,20)
     eq=(1+r.fillna(0)).cumprod()*50000
     for d,v in eq.items(): curves.append({"month":d,"strategy":s,"equity":v})
 pd.DataFrame(curves).to_csv(OUT/"equity_curves.csv",index=False)
-# parameter stability A_MOM_QUAL_IND topN, filter
+# SPY trend parameter stability: 10m pre-specified; 8/12 are exploratory
 stab=[]
-for tn in [10,20,30]:
-    for mf in [False,True]:
-        g,n,_,_=backtest("MOM_QUAL_IND",10,mf,tn); m=metrics(n.loc["2008-01":"2024-12"]); m.update({"topn":tn,"market_filter":mf}); stab.append(m)
+for win in [8,10,12]:
+    g,n,tos,pos=spy_trend_backtest(etf.SPY,win,10)
+    for pname,(a,b) in {"train":("2008-01","2016-12"),"validation":("2017-01","2019-12"),"oos":("2020-01","2024-12"),"full":("2008-01","2024-12")}.items():
+        idx=n.index[(n.index>=a)&(n.index<=b)]; mm=metrics(n.loc[idx]); mm.update({"window_months":win,"period":pname,"pre_specified":win==10,"annual_turnover":float(tos.mean()*12),"trades":int((tos>0).sum())}); stab.append(mm)
 pd.DataFrame(stab).to_csv(OUT/"parameter_stability.csv",index=False)
 # latest signal example (2024-12)
 t=len(months)-1; picks=select(t,"MOM_QUAL_IND")

@@ -1,39 +1,37 @@
-# Validation Notes — Strategy Competition V1
+# Validation Report — Corrected Timing
 
-Date: 2026-11-27
+## Engineering fix
 
-## What is validated
+- Month-end signal at `t` -> position at `t+1`.
+- Cost charged on actual position change at `t+1`.
+- Equity curve uses corrected net returns.
+- Standard Sharpe: mean monthly excess ×12 / (std × sqrt12); rf=0 disclosed.
+- SPY 8/10/12 windows all use the same next-month execution.
 
-- Monthly prices: 987 symbols, 2007-2024; adjusted close; 166,320 month-end rows.
-- Backtest returns are generated from the monthly panel; signals use only data up to
-  the rebalance month and returns start the following month.
-- Costs are applied to turnover at 5/10/20 bps.
-- Periods are chronological: train 2008-2016, validation 2017-2019, OOS 2020-2024.
-- Max weight 5%; max 4 names per industry.
-- Benchmarks: SPY, QQQ, SPY 10m trend, simple 12-1 momentum.
-- $50,000 initial capital.
+## Tests added
 
-## What is NOT validated
+`tests/test_spy_timing.py` calls the real timing functions on synthetic series:
 
-- **Survivorship:** static 987-symbol list; delisted names not verified.
-- **PIT fundamentals:** current quality/industry used in quality/industry variants.
-- **Route C:** no historical filing-date panel; not run.
-- **Ticker changes:** not verified.
-- **Parameter stability:** only topN and market filter tested for Route A; SPY
-  trend 8/10/12-month variants not fully tested.
-- No intraday execution, borrow, taxes, or market impact.
-- No claim of proven alpha or profitability.
+1. signal cannot affect same-month return;
+2. exit starts next month;
+3. entry starts next month;
+4. cost charged on switch month;
+5. equity equals cumprod net returns;
+6. Sharpe uses mean, not CAGR;
+7. no cost when no switch.
 
-## Interpretation
+## Results
 
-All stock-selection results are exploratory. SPY_TREND is a benchmark fallback
-that meets the 15% drawdown target; it is not a stock-selection strategy and is
-not PAPER-50000 authorized.
+- SPY_TREND full CAGR 8.23%, MaxDD -23.43%, Sharpe 0.78.
+- OOS 9.40%, MaxDD -23.43%.
+- 20 bps full 8.05%.
+- 8m full 10.32%, DD -23.43%; 12m full 8.74%, DD -16.89%.
+- No window meets 15% DD.
 
-## Reproduction
+## Data limits
 
-```bash
-python tools/research/strategy_competition/backtest.py
-```
-
-Reads `data/research/strategy_competition/*`; writes `artifacts/usable_low_frequency_strategy_competition_v1/`.
+- 987 static symbols; delisted not verified -> survivorship.
+- No PIT fundamentals; Route C unavailable.
+- No taxes/slippage; monthly close.
+- Zero risk-free simplification.
+- No PAPER-50000, no orders.

@@ -1,40 +1,40 @@
-# Failure Analysis
+# Failure Analysis — Corrected
 
-## Route A — Momentum + quality
+## SPY_TREND
 
-- OOS 2020-2024 looks strong (A_MOM_QUAL +49.3% CAGR, Sharpe 1.60).
-- Full 2008-2024 max drawdown is **-52.2%**, far above the 15% target.
-- At 20 bps, full CAGR 25.6%; costs are not the main problem.
-- Quality filter uses current static `quality_pct`, a look-ahead input.
-- 987-symbol static universe -> survivorship bias.
-- Parameter instability: topN 10/20/30 changes full CAGR from 32.5% to 23.2%; market filter still leaves DD ~26.5%.
-- **Fail: drawdown, PIT, survivorship, parameter stability.**
+The original 18.3% CAGR / -8.3% DD / Sharpe 1.82 was produced with same-month
+look-ahead: the month-end position earned that month's return. After shifting
+positions one month:
 
-## Route B — Industry first
+- Full CAGR: 8.23%
+- Full MaxDD: -23.43%
+- Full standard Sharpe: 0.78
+- OOS CAGR: 9.40%
+- 20 bps full CAGR: 8.05%
 
-- Full CAGR 15.2%, Sharpe 0.76, max DD **-45.0%**.
-- Annual turnover ~14.9x; 20 bps costs reduce full CAGR to 13.5%.
-- Industry classification is current static; historical industry membership not PIT.
-- Top-3 industry concentration raises timing risk; 27 switches? 203 rebalance months.
-- **Fail: drawdown, turnover, PIT, survivorship.**
+This is below SPY's 10.59% full CAGR and above the 15% drawdown target.
+It fails.
 
-## Route C — Fundamental improvement + price
+## Route A
 
-- **NOT HISTORICALLY EVALUABLE.**
-- Repository has no historical filing-date fundamental panel.
-- Using current `quality_pct` would leak future data.
-- No synthetic/estimated EPS or PEG was created.
-- **Fail: no PIT data. Not a strategy failure; a data failure.**
+- A_MOM_QUAL OOS 49.3% but full MaxDD -52.2%.
+- Quality filter uses current static classification, a look-ahead input.
+- Static universe -> survivorship bias.
+- Parameter instability: topN 10/20/30 changes full CAGR from 32.5% to 23.2%.
+- Fails drawdown, PIT, survivorship.
 
-## Benchmark fallback — SPY 10-month trend
+## Route B
 
-- Full CAGR 18.3%, Sharpe 1.82, max DD **-8.3%**, 27 switches.
-- At 20 bps full CAGR 18.1%.
-- Beats SPY and QQQ risk-adjusted; no single-stock dependence.
-- **But it is not stock selection and proves no alpha.**
-- Parameter stability across 8/10/12 months was not fully tested in this PR.
+- Full CAGR 15.2%, MaxDD -45.0%, turnover ~14.9x.
+- Static industry classification; no PIT.
+- Fails drawdown and data quality.
 
-## Single most important blocker
+## Route C
 
-**No delisted/PIT universe and no PIT fundamentals.** Until those are acquired,
-A/B cannot be labeled historically validated.
+- No historical filing-date fundamentals.
+- Cannot be evaluated; no synthetic EPS/PEG was created.
+
+## Remaining blocker
+
+No delisted/PIT universe and no PIT fundamentals. All stock-selection results
+remain exploratory; no strategy is validated.
