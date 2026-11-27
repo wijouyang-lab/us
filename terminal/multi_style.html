@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Multi-Style Opportunities — Research Only</title>
+<style>
+body{margin:0;background:#0b1020;color:#e8edf8;font:14px/1.45 system-ui,Segoe UI,Arial}header{padding:16px 22px;border-bottom:1px solid #2a3555;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}h1{margin:0;font-size:20px}.muted{color:#91a0c0;font-size:12px}.pill{border:1px solid #2a3555;border-radius:999px;padding:3px 8px;font-size:11px;color:#91a0c0}.warn{color:#ffb547;border-color:#6b5220}
+main{padding:16px 22px}.bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}label{display:block;font-size:11px;color:#91a0c0}select,input{width:100%;padding:7px;background:#151d33;color:#e8edf8;border:1px solid #2a3555;border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:6px 8px;border-bottom:1px solid #2a3555;text-align:left;white-space:nowrap}th{position:sticky;top:0;background:#10172b;color:#91a0c0}.wrap{max-height:60vh;overflow:auto;border:1px solid #2a3555;border-radius:8px}tr:hover{background:#1a2440;cursor:pointer}
+.tA{color:#4cd58b}.tB{color:#4ea1ff}.tC{color:#ffb547}.tX{color:#ff6b6b}.pager{display:flex;gap:8px;align-items:center;margin-top:8px}.pager button{background:#151d33;color:#e8edf8;border:1px solid #2a3555;padding:4px 9px;border-radius:5px}
+#detail{display:none;margin-top:12px;background:#151d33;border:1px solid #2a3555;border-radius:8px;padding:12px}.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:5px 14px;font-size:12px}.note{font-size:11px;color:#91a0c0;margin:10px 0}
+</style></head><body>
+<header><div><h1>Multi-Style Opportunities</h1><div class="muted" id="meta">loading…</div></div><div><span class="pill warn">RESEARCH ONLY — NOT A BUY/SELL SIGNAL</span><span class="pill">5 independent styles</span></div></header>
+<main><div id="status" class="muted">Loading verified snapshot…</div>
+<div class="bar">
+<div><label>Search ticker / company</label><input id="q" placeholder="AAPL or Apple"></div>
+<div><label>Style</label><select id="style"><option value="">All styles</option><option>VALUE</option><option>QUALITY</option><option>GARP</option><option>TREND</option><option>TURNAROUND</option></select></div>
+<div><label>Status</label><select id="tier"><option value="">All</option><option>PRIORITY_RESEARCH</option><option>RESEARCH</option><option>WATCH</option><option>REJECT</option></select></div>
+<div><label>Data quality</label><select id="dq"><option value="">All</option><option>VERIFIED</option><option>PARTIAL</option><option>UNKNOWN</option><option>BLOCKED</option></select></div>
+<div><label>Security type</label><select id="type"><option value="">All</option><option>COMMON</option><option>ADR</option></select></div>
+<div><label>Industry</label><select id="industry"><option value="">All</option></select></div>
+<div><label>Liquidity</label><select id="liq"><option value="">All</option><option value="high">ADV20 ≥ $20M</option><option value="mid">$2M–$20M</option></select></div>
+<div><label>Market cap</label><select id="mcap"><option value="">All</option><option value="small">&lt; $300M</option><option value="mid">$300M–$2B</option><option value="large">$2B–$10B</option><option value="mega">&gt; $10B</option></select></div>
+<div><label>Risk</label><select id="risk"><option value="">All</option><option value="neg">Negative FCF flag</option><option value="none">No risk flag</option></select></div>
+</div>
+<div class="wrap"><table><thead><tr><th>Ticker</th><th>Company</th><th>Industry</th><th>Type</th><th>Style</th><th>Score</th><th>Rank</th><th>Status</th><th>Data</th><th>Mkt Cap</th><th>ADV20</th><th>Risk</th></tr></thead><tbody id="rows"></tbody></table></div>
+<div class="pager"><button id="prev">Prev</button><span id="page" class="muted"></span><button id="next">Next</button></div>
+<div id="detail"></div>
+<p class="note">Five independent style screens; no unified composite. Scores are within-style peer percentiles. Missing data is not zero. Prices are unadjusted; CA-review names excluded from trend. Not a recommendation.</p>
+</main>
+<script>
+const S={all:[],f:[],p:0,n:50};
+const $=id=>document.getElementById(id); const miss=v=>v===null||v===undefined||v==="";
+const fmt=v=>miss(v)?"—":v; const money=v=>miss(v)||Number(v)===0?"—":"$"+(Number(v)/1e6).toFixed(1)+"M";
+function render(){const st=S.p*S.n,rows=S.f.slice(st,st+S.n);
+ $("rows").innerHTML=rows.length?rows.map(r=>`<tr data-t="${r.ticker}" data-s="${r.style}"><td><b>${r.ticker}</b></td><td>${r.issuer_name||"—"}</td><td>${r.industry||"—"}</td><td>${r.security_type}</td><td>${r.style}</td><td>${miss(r.style_score)?"—":Number(r.style_score).toFixed(3)}</td><td>${fmt(r.style_rank)}</td><td>${r.tier}</td><td>${r.data_quality}</td><td>${money(r.market_cap)}</td><td>${money(r.adv20_usd)}</td><td>${r.risk_flags||"—"}</td></tr>`).join(""):`<tr><td colspan="12">No candidates match.</td></tr>`;
+ $("page").textContent=`${S.f.length?st+1:0}–${Math.min(st+S.n,S.f.length)} of ${S.f.length} · page ${S.p+1}/${Math.max(1,Math.ceil(S.f.length/S.n))}`;
+ document.querySelectorAll("#rows tr[data-t]").forEach(tr=>tr.onclick=()=>detail(tr.dataset.t,tr.dataset.s));
+}
+function apply(){const q=$("q").value.toLowerCase(),sty=$("style").value,tier=$("tier").value,dq=$("dq").value,ty=$("type").value,ind=$("industry").value,lq=$("liq").value,mc=$("mcap").value,rk=$("risk").value;
+ S.f=S.all.filter(r=>{const adv=Number(r.adv20_usd)||0; if(sty&&r.style!==sty)return false; if(tier&&r.tier!==tier)return false; if(dq&&r.data_quality!==dq)return false; if(ty&&r.security_type!==ty)return false; if(ind&&r.industry!==ind)return false; if(lq==="high"&&adv<20e6)return false; if(lq==="mid"&&(adv<2e6||adv>=20e6))return false; const m=Number(r.market_cap)||0; if(mc==="small"&&m>=300e6)return false; if(mc==="mid"&&(m<300e6||m>=2e9))return false; if(mc==="large"&&(m<2e9||m>=10e9))return false; if(mc==="mega"&&m<10e9)return false; if(rk==="neg"&&!String(r.risk_flags).includes("NEGATIVE_FCF"))return false; if(rk==="none"&&String(r.risk_flags).length>0)return false; if(q&&!(`${r.ticker} ${r.issuer_name}`.toLowerCase().includes(q)))return false; return true;}); S.p=0;render();}
+function detail(t,s){const r=S.all.find(x=>x.ticker===t&&x.style===s);if(!r)return;$("detail").style.display="block";$("detail").innerHTML=`<h3>${r.ticker} — ${r.issuer_name||""} · ${r.style}</h3><div class="kv"><div>Peer group: <b>${r.peer_group}</b></div><div>Peer N: <b>${r.peer_n}</b></div><div>Style score: <b>${Number(r.style_score).toFixed(3)}</b> / rank ${r.style_rank}</div><div>Status: <b>${r.tier}</b></div><div>Data: <b>${r.data_quality}</b></div><div>Mkt cap: <b>${money(r.market_cap)}</b></div><div>ADV20: <b>${money(r.adv20_usd)}</b></div><div>Revenue growth: <b>${fmt(r.revenue_growth_1y)}</b></div><div>ROE/ROA: <b>${fmt(r.roe)} / ${fmt(r.roa)}</b></div><div>FCF yield: <b>${fmt(r.fcf_yield)}</b></div><div>PB/PS: <b>${fmt(r.pb)} / ${fmt(r.ps)}</b></div><div>Risk: <b>${r.risk_flags||"none"}</b></div></div>`;}
+async function load(){try{const js=await fetch("../dashboard/data/multi_style_candidates_v1.json",{cache:"no-store"});if(!js.ok)throw Error("HTTP "+js.status);const buf=await js.arrayBuffer();const want=(await(await fetch("../dashboard/data/multi_style_candidates_v1.sha256",{cache:"no-store"})).text()).trim();const h=await crypto.subtle.digest("SHA-256",buf);const got=[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,"0")).join("");if(got!==want)throw Error("SHA mismatch");const d=JSON.parse(new TextDecoder().decode(buf));if(!d.research_only||!Array.isArray(d.rows)||d.rows.length!==1342)throw Error("schema/row count");S.all=d.rows;$("meta").textContent=`${d.as_of} · ${d.candidates} candidates · ${d.priority} priority · ${d.universe} universe`;$("status").className="muted";$("status").textContent="Snapshot verified · RESEARCH ONLY";const inds=[...new Set(S.all.map(r=>r.industry).filter(Boolean))].sort();$("industry").innerHTML='<option value="">All</option>'+inds.map(x=>`<option>${x}</option>`).join("");apply();}catch(e){S.all=[];$("rows").innerHTML="";$("status").className="bad";$("status").textContent="MULTI-STYLE SNAPSHOT UNAVAILABLE — "+e.message+". Fail closed.";}}
+document.querySelectorAll(".bar select,.bar input").forEach(x=>x.addEventListener("input",apply));
+$("prev").onclick=()=>{if(S.p>0){S.p--;render();}};$("next").onclick=()=>{if((S.p+1)*S.n<S.f.length){S.p++;render();}};load();
+</script></body></html>
