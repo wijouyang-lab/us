@@ -1,0 +1,4 @@
+ticker,price,price_date,provider,adjusted,retrieved_at,note
+SFM,53.32,2026-11-25,yfinance,UNADJUSTED_CLOSE,2026-11-27T14:05:00+08:00,2026-11-27 session not closed at retrieval; 11-26 US holiday
+LRN,79.9,2026-11-25,yfinance,UNADJUSTED_CLOSE,2026-11-27T14:05:00+08:00,2026-11-27 session not closed at retrieval; 11-26 US holiday
+ADUS,122.53,2026-11-25,yfinance,UNADJUSTED_CLOSE,2026-11-27T14:05:00+08:00,2026-11-27 session not closed at retrieval; 11-26 US holiday
