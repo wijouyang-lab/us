@@ -13,7 +13,7 @@ for f in sorted((OUT/"snapshots").glob("signal_*.json")):
     s=json.loads(f.read_text()); d=s["asof"]
     for r in s.get("signals",[]):
         t=r["ticker"]; x=close.get(t)
-        row={"snapshot":f.name,"signal_date":d,"ticker":t,"entry_price":r.get("entry_price",r.get("price")),"rank":r.get("rank"),"score":r["score"]}
+        row={"snapshot":f.name,"signal_date":d,"ticker":t,"company":r.get("company",r.get("issuer_name")),"entry_price":r.get("entry_price",r.get("price")),"rank":r.get("rank"),"score":r.get("score"),"why":r.get("why"),"risk":r.get("risk"),"filed":r.get("filed"),"quality_pct":r.get("quality_pct"),"data_quality":r.get("data_quality",r.get("data_quality_status")),"completeness":r.get("completeness")}
         if x is None or d not in x.index:
             for n in [5,10,20,40]: row[f"date_{n}d"]="PENDING"; row[f"ret_{n}d"]=None
             rows.append(row); continue
