@@ -1,0 +1,10 @@
+ticker,scenario,fcf,ev_fcf_multiple,net_debt,equity_value,diluted_shares,implied_price,current_price,return_pct,formula
+SFM,Bear,220000000.0,12,-103664000,2743664000.0,93666000,29.291994960818226,53.32,-0.4506377539231391,Equity = FCF*multiple - net debt; price = equity/diluted shares
+SFM,Base,346000000.0,15,-103664000,5293664000.0,93666000,56.516388016996565,53.32,0.05994726213421919,Equity = FCF*multiple - net debt; price = equity/diluted shares
+SFM,Bull,420000000.0,18,-103664000,7663664000.0,93666000,81.81905921038584,53.32,0.5344909829404696,Equity = FCF*multiple - net debt; price = equity/diluted shares
+LRN,Bear,350000000.0,7,-129319000,2579319000.0,44828092,57.53800540964358,79.9,-0.2798747758492669,Equity = FCF*multiple - net debt; price = equity/diluted shares
+LRN,Base,440000000.0,9,-129319000,4089319000.0,44828092,91.22224073244072,79.9,0.1417051405812355,Equity = FCF*multiple - net debt; price = equity/diluted shares
+LRN,Bull,500000000.0,11,-129319000,5629319000.0,44828092,125.57569927357159,79.9,0.5716608169408208,Equity = FCF*multiple - net debt; price = equity/diluted shares
+ADUS,Bear,110000000.0,13,-75033000,1505033000.0,18574000,81.02901905889954,122.53,-0.3387005708079692,Equity = FCF*multiple - net debt; price = equity/diluted shares
+ADUS,Base,150000000.0,16,-75033000,2475033000.0,18574000,133.2525573382147,122.53,0.08750964937741523,Equity = FCF*multiple - net debt; price = equity/diluted shares
+ADUS,Bull,175000000.0,19,-75033000,3400033000.0,18574000,183.0533541509637,122.53,0.4939472304820347,Equity = FCF*multiple - net debt; price = equity/diluted shares
