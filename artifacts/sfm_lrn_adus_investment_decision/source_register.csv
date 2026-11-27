@@ -1,0 +1,7 @@
+ticker,filing_type,period,filing_date,url,data_fields_supported
+SFM,10-K,FY2025,2026-02-19,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000008/sfm-20251228.htm,"annual financials, debt, cash, shares"
+SFM,10-Q,Q3 2026,2026-10-28,https://www.sec.gov/Archives/edgar/data/1575515/000157551526000060/sfm-20260927.htm,"Q3 revenue, comps, gross margin, YTD OCF/capex"
+LRN,10-K,FY2026,2026-08-05,https://www.sec.gov/Archives/edgar/data/1157408/000110465926090515/lrn-20260630x10k.htm,"annual financials, debt, cash, shares"
+LRN,10-Q,Q1 FY2027,2026-10-21,https://www.sec.gov/Archives/edgar/data/1157408/000110465926117480/lrn-20260930x10q.htm,"Q1 revenue, margin, YTD OCF/capex"
+ADUS,10-K,FY2025,2026-02-24,https://www.sec.gov/Archives/edgar/data/1468328/000143774926005352/adus20251231_10k.htm,"annual financials, debt, cash, shares"
+ADUS,10-Q,Q3 2026,2026-11-04,https://www.sec.gov/Archives/edgar/data/1468328/000143774926034965/adus20260930_10q.htm,"Q3 revenue, same-store growth, YTD OCF/capex"
