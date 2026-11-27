@@ -1,4 +1,6 @@
-ticker,top_customer_pct,source,note,top5_pct,license_concentration
-PHR,none >10%,10-K FY2026,receivables concentration >10% from at least one entity,,
-OPRX,,10-K FY2025,one customer ~10% FY2025 generated no revenue in current period; three 10%+ customers in 2025,~47%,
-IMMR,,10-K FY2026,BNED is consolidated VIE; NCI 67.4%,,15% of royalty/license revenue from one customer (FY2026)
+ticker,metric,value,source
+PHR,top customer >10%,none,10-K FY2026
+OPRX,top five concentration,~47%,10-K FY2025/10-Q 2026
+OPRX,10% customer current revenue,zero,10-Q 2026
+OPRX,net revenue retention,121% -> 83%,10-Q 2026
+OPRX,re-contract amount/timing,NOT_DISCLOSED,10-Q 2026

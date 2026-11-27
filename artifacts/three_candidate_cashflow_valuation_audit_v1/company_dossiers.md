@@ -1,25 +1,25 @@
-# Company Dossiers
+# V2 Company Dossiers
 
-## IMMR — Immersion
+## IMMR — INSUFFICIENT_DATA
 
-**Decision: INSUFFICIENT_DATA.** Immersion's FY2026 consolidated results include Barnes & Noble Education (BNED), a consolidated VIE with ~67.4% noncontrolling interest. Parent/licensing revenue is $15.924M; BNED revenue is $1,714.770M. Consolidated OCF was $59.1M and capex $16.2M, but the 10-K does not provide a parent-only cash-flow statement that can be attributed to IMMR common shareholders.
+FY2026 consolidated revenue $1,730.694M = parent/licensing $15.924M + BNED $1,714.770M. BNED is a consolidated VIE with NCI 67.4%. Consolidated OCF $59.1M, capex $16.2M. No parent-only FCF is disclosed.
 
-The reported TTM FCF $61.1M and EV/FCF 1.86 are therefore **not a valid parent-level valuation**. Market cap $217.5M, net cash ~$103.8M, EV ~$113.7M are consolidated. The prior Base $25.17 is revoked. Material weaknesses in internal control and the BNED consolidation add risk.
+The old "TTM revenue $173.3M" is neither consolidated ($1,730.694M) nor parent ($15.924M); it is retired. Consolidated EV $113.7M omits NCI. Parent FCF cannot be derived from a simple NCI percentage. EV/FCF 1.86 and Base $25.17 are invalid.
 
-This is not an ELIMINATE call on the licensing business; it is a data/attribution failure. No valuation is defensible without segment cash flow.
+**No valuation.** INSUFFICIENT_DATA.
 
-## PHR — Phreesia
+## PHR — WATCH
 
-**Decision: WATCH.** FY2026 revenue $495.0M, net income $10.4M, OCF $78.8M, capex $24.4M, FCF $54.4M. TTM FCF $80.7M. But SBC is **$67.5M**, 84% of TTM FCF; SBC-adjusted FCF is only **$13.2M**. Capitalized software $13.3M is already inside capex.
+TTM revenue $507.793M, net income $6.18M, OCF $91.379M, capex $23.857M (software $13.225M + PPE $10.632M), reported FCF $67.522M.
 
-At $12.09, market cap $750.4M, net cash $73.5M, EV ~$676.9M. SBC-adjusted EV/FCF is ~51x, not 8.4x. P/E is 71.8. The business has SaaS quality and net cash, but the apparent FCF is largely stock compensation. Base $4.37; current price is 2.8x base. No safety margin.
+TTM SBC: total $60.640M, expense $59.426M, capitalized $1.214M. Expense-SBC-adjusted FCF $8.096M; total-SBC economic FCF $6.882M. Capitalized SBC is non-cash and is not in cash capex; no double count. Cash-settled SBC UNKNOWN.
 
-## OPRX — OptimizeRx
+EV $676.9M; total-SBC EV/FCF ~98x. Base $2.51; current $12.09. **WATCH**, no margin.
 
-**Decision: WATCH.** TTM revenue $94.2M, net income $5.0M, OCF $19.889M, FCF $19.9M. SBC $7.0M → normalized FCF $12.9M. At $7.31, market cap $138.2M, net cash $9.0M, EV ~$129.2M; SBC-adjusted EV/FCF ~10x.
+## OPRX — WATCH
 
-Customer concentration: top five ~47% of revenue; one customer ~10% of FY2025 revenue generated **no revenue in the current period**, though it has been re-contracted. The amount/timing is not fully disclosed. The customer loss has damaged the original growth thesis; microcap liquidity and concentration require a discount. Base $8.66 (+18.5%), not 25% margin.
+TTM revenue $94.202M, net income $5.017M, OCF $19.968M, PPE capex $0.121M, reported FCF $19.847M. TTM SBC $7.780M; 9M 2026 includes $0.588M accelerated vesting; normal TTM SBC $7.192M. SBC-adjusted FCF $12.067M.
 
-## Common limitations
+EV $129.2M; SBC-adjusted EV/FCF ~10.7x. Base $8.13; current $7.31 (+11.2%). Top five ~47%; the 10% customer had zero current-period revenue; NRR 121%→83%; re-contract amount/timing not disclosed. **WATCH**.
 
-Prices 2026-11-25, unadjusted. TTM from FY + YTD − prior YTD. No PIT, no forward estimates. No PAPER/IBKR/orders.
+Prices 2026-11-25; unadjusted.

@@ -1,59 +1,52 @@
-# Three Candidates — Cash Flow and Valuation Audit
+# V2 — Financial Period, SBC and Valuation Reconciliation
 
-Date: 2026-11-27. Prices 2026-11-25, unadjusted. **Research only; no PAPER/IBKR/orders.**
+Date: 2026-11-27. Prices 2026-11-25, unadjusted. Research only; no PAPER/IBKR/orders.
 
 ## Decisions
 
-| Ticker | Decision | Price | Reported P/E | Reported EV/FCF | Normalized FCF | SBC-Adj EV/FCF | Base | Base vs price |
-|---|---|---:|---:|---:|---:|---:|---:|---:|
-| IMMR | **INSUFFICIENT_DATA** | $6.55 | 9.4 | 1.86 | N/A | N/A | NOT_ESTIMABLE | — |
-| PHR | **WATCH** | $12.09 | 71.8 | 8.38 | $13.2M | ~51x | $4.37 | -63.8% |
-| OPRX | **WATCH** | $7.31 | 27.6 | 6.50 | $12.9M | ~10x | $8.66 | +18.5% |
+| Ticker | Decision | Price | Reported FCF | SBC-adjusted FCF | Base | Base vs price |
+|---|---|---:|---:|---:|---:|---:|
+| IMMR | **INSUFFICIENT_DATA** | $6.55 | N/A | N/A | NOT_ESTIMABLE | — |
+| PHR | **WATCH** | $12.09 | $67.522M | **$6.882M** | **$2.51** | **-79.2%** |
+| OPRX | **WATCH** | $7.31 | $19.847M | **$12.067M** | **$8.13** | **+11.2%** |
 
 **PAPER_CANDIDATE: 0.**
 
-## IMMR — EV/FCF 1.86 is invalid
+## PHR — corrected TTM
 
-- FY2026 consolidated revenue $1.730B: **parent/licensing $15.924M + BNED $1.714770B**.
-- BNED is a consolidated VIE; **NCI ~67.4%**.
-- Consolidated OCF $59.1M, capex $16.2M, but parent-only FCF is not disclosed.
-- The TTM FCF $61.1M includes BNED's working capital/cash flows; it cannot be attributed to IMMR common shareholders without a segment cash-flow allocation.
-- EV/FCF 1.86 and Base $25.17 are **revoked**. There is no defensible parent-level FCF.
-- Decision: **INSUFFICIENT_DATA**, not a buy/priority.
+TTM revenue = 480.591 + 260.393 − 233.191 = **$507.793M**.  
+TTM OCF = 78.814 + 42.250 − 29.685 = **$91.379M**.  
+TTM capex = software (13.296+7.252−7.323 = 13.225) + PPE (11.101+4.802−5.271 = 10.632) = **$23.857M**.  
+TTM reported FCF = **$67.522M**.  
+TTM total SBC = 68.738+26.009−34.107 = **$60.640M**; expense SBC = **$59.426M**; capitalized SBC = **$1.214M**.  
+Expense-SBC-adjusted FCF = **$8.096M**; total-SBC economic FCF = **$6.882M**.
 
-## PHR — FCF is mostly SBC
+Capitalized SBC is non-cash and is not in cash capex; it is not double-counted. Cash-settled SBC is UNKNOWN.
 
-- FY2026 revenue $495.0M, net income $10.4M, OCF $78.8M, capex $24.4M, FCF $54.4M.
-- SBC **$67.5M**, or **84% of reported TTM FCF $80.7M**.
-- SBC-adjusted FCF ≈ **$13.2M**. EV ≈ $676.9M → **~51x SBC-adjusted EV/FCF**, not 8.4x.
-- Capitalized software was $13.3M; already in capex, not added again.
-- Decision: **WATCH**; the apparent cheap FCF is an accounting/SBC artifact and does not provide safety.
+At $12.09, market cap $750.4M, net cash $73.5M, EV $676.9M. Total-SBC EV/FCF ≈ **98x**; expense-SBC ≈ **84x**. Base $2.51, not $4.37. PHR is **WATCH**; the apparent FCF is largely SBC.
 
-## OPRX — customer loss changed the thesis
+## OPRX — corrected TTM
 
-- TTM revenue $94.2M, net income $5.0M, OCF **$19.889M**, FCF $19.9M.
-- SBC $7.0M → normalized FCF **$12.9M**; EV ~$129.2M → ~10x, not 6.5x.
-- Top five customers ~47% of revenue; one customer ~10% of FY2025 revenue generated **no current-period revenue**. It has been re-contracted, but the timing/amount is not fully disclosed.
-- Microcap ($138M), customer concentration, and revenue quality require a discount.
-- Decision: **WATCH**; no 25% safety margin.
+TTM revenue = 109.429+61.963−77.190 = **$94.202M**.  
+TTM OCF = 18.715+12.880−11.627 = **$19.968M**.  
+TTM SBC = 6.962+5.820−5.002 = **$7.780M**.  
+9M 2026 includes **$0.588M accelerated vesting**; normal TTM SBC ≈ $7.192M.  
+TTM PPE capex $0.121M; no capitalized software; reported FCF **$19.847M**; SBC-adjusted FCF **$12.067M**.
 
-## Direct answers
+At $7.31, market cap $138.2M, net cash $8.95M, EV $129.2M; SBC-adjusted EV/FCF ≈ 10.7x. Base $8.13 (+11.2%).  
+Customer: top five ~47%; a ~10% FY2025 customer generated zero current-period revenue; NRR fell from 121% to 83%; re-contract amount/timing not fully disclosed. **WATCH**.
 
-1. **IMMR EV/FCF 1.86 is wrong/uncomparable.** Consolidated BNED + NCI; parent-only FCF is unavailable.
-2. **PHR after SBC is not attractive.** SBC-adjusted EV/FCF ~51x; FCF is largely SBC.
-3. **OPRX customer loss has damaged the original thesis.** One 10% customer contributed zero current-period revenue; top-five ~47%.
-4. **No company has ≥25% verified safety margin.** OPRX base is +22% only on a microcap/12x normalized FCF assumption; PHR is below price; IMMR N/A.
-5. **Most worth watching: PHR** on business quality, but not at this price; OPRX is cheaper but customer-riskier.
-6. **0 PAPER_CANDIDATE.**
+## IMMR — still invalid
 
-## Data limitations
+FY2026 consolidated revenue $1,730.694M; parent/licensing $15.924M; BNED $1,714.770M; NCI 67.4%. Consolidated OCF $59.1M, capex $16.2M. Parent-only FCF is not disclosed.
 
-- IMMR segment cash flows are not disclosed; no reliable parent FCF.
-- PHR 8-quarter SBC/capitalized-software series was not fully extracted; annual SBC used.
-- OPRX customer re-contracting amount/timing is not fully disclosed.
-- Prices unadjusted; no PIT; no forward estimates.
-- No full 10-K line-by-line review of all notes.
+The old TTM revenue $173.3M does not match either consolidated $1,730.694M or parent $15.924M; it is a mixed/invalid series and is retired. EV $113.7M omits NCI; an EV including NCI cannot be computed without a defensible BNED equity value. EV/FCF 1.86 and Base $25.17 remain **invalid/revoked**. Decision **INSUFFICIENT_DATA**.
 
-## Files
+## Answers
 
-`artifacts/three_candidate_cashflow_valuation_audit_v1/` with entity, quarterly, FCF reconciliation, SBC, customer concentration, normalized FCF, scenarios, comparison, risk, catalysts, sources, decisions, validation.
+1. IMMR 1.86 is invalid — consolidation/NCI, no parent FCF.
+2. PHR after SBC is not attractive: $6.9M economic FCF vs $676.9M EV.
+3. OPRX customer loss/NRR collapse has damaged the thesis.
+4. No company has ≥25% conservative margin; PHR is far below price; OPRX base +11%.
+5. PHR is the highest-quality business but expensive; OPRX is closer to base but customer-riskier. Neither is a buy.
+6. 0 PAPER.

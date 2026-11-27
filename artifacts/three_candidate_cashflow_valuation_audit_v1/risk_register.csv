@@ -1,13 +1,7 @@
 ticker,risk,level,evidence
-IMMR,CONSOLIDATION,HIGH,BNED VIE 67.4% NCI; FCF attribution impossible
-IMMR,CONTROL,HIGH,material weakness in internal control
-IMMR,LICENSING,MEDIUM,15% license revenue concentration
-IMMR,VALUATION,HIGH,EV/FCF 1.86 not comparable
-PHR,SBC,HIGH,$67.5M SBC = 84% of FCF
-PHR,VALUATION,HIGH,SBC-adjusted EV/FCF ~51x
-PHR,SOFTWARE,MEDIUM,$13.3M capitalized software
-PHR,COMPETITION,MEDIUM,healthcare SaaS
-OPRX,CUSTOMER,HIGH,10% customer lost; top5 ~47%
+IMMR,CONSOLIDATION,HIGH,BNED NCI 67.4%; parent FCF unavailable
+IMMR,VALUATION,HIGH,EV/FCF 1.86 invalid
+PHR,SBC,HIGH,total SBC 60.6M vs FCF 67.5M
+PHR,VALUATION,HIGH,SBC-adjusted EV/FCF ~98x
+OPRX,CUSTOMER,HIGH,10% customer zero current; NRR 121->83
 OPRX,MICROCAP,HIGH,$138M market cap
-OPRX,SBC,MEDIUM,$7.0M SBC
-OPRX,CASHFLOW,MEDIUM,FCF $19.9M but customer transition

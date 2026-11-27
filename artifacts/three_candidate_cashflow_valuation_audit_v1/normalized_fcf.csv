@@ -1,4 +1,4 @@
-ticker,reported_fcf,normalized_fcf,reason
-IMMR,61134000.0,N/A,consolidated BNED/NCI; parent FCF not separable
-PHR,80747000.0,13247000.0,subtract SBC 67.5M; software already in capex
-OPRX,19889000.0,12889000.0,subtract SBC 7.0M; microcap discount
+ticker,reported_fcf,fcf_expense_sbc,fcf_total_sbc,normalized_fcf,method
+PHR,67.52199999999999,8.09599999999999,6.881999999999991,6.881999999999991,total SBC economic cost
+OPRX,19.846999999999998,12.066999999999997,12.066999999999997,12.066999999999997,total SBC; accelerated 0.588 flagged
+IMMR,,,,,N/A due consolidation

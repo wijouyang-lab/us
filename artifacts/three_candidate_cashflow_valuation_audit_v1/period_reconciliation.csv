@@ -1,0 +1,10 @@
+ticker,item,fy,ytd,prior_ytd,ttm,formula,unit
+PHR,Revenue,480.591,260.393,233.191,507.7929999999999,FY+current YTD-prior YTD,USD millions
+PHR,OCF,78.814,42.25,29.685,91.37899999999999,FY+current YTD-prior YTD,USD millions
+PHR,Capitalized software,13.296,7.252,7.323,13.224999999999998,FY+current YTD-prior YTD,USD millions
+PHR,PPE capex,11.101,4.802,5.271,10.632000000000001,FY+current YTD-prior YTD,USD millions
+PHR,Reported FCF,54.417,30.196,17.091,67.52199999999999,FY+current YTD-prior YTD,USD millions
+OPRX,Revenue,109.429,61.963,77.19,94.202,FY+current YTD-prior YTD,USD millions
+OPRX,OCF,18.715,12.88,11.627,19.967999999999996,FY+current YTD-prior YTD,USD millions
+OPRX,SBC,6.962,5.82,5.002,7.78,FY+current YTD-prior YTD,USD millions
+IMMR,Consolidated revenue,1730.694,,,,FY only; TTM invalid due BNED consolidation,USD millions

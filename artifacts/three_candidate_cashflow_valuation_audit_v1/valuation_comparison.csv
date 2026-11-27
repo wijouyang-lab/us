@@ -1,4 +1,4 @@
 ticker,price,market_cap,net_debt,ev,reported_pe,reported_ev_fcf,normalized_fcf,decision,reason,price_date
-IMMR,6.55,217500000.0,-103800000.0,113700000.0,9.41,1.86,,INSUFFICIENT_DATA,"EV/FCF invalid: consolidated BNED, 67.4% NCI, parent FCF not separable",2026-11-25
-PHR,12.09,750400000.0,-73500000.0,676900000.0,71.83,8.38,13247000.0,WATCH,SBC 67.5M; SBC-adjusted EV/FCF ~51x; no margin,2026-11-25
-OPRX,7.31,138200000.0,-8950000.0,129200000.0,27.55,6.5,12889000.0,WATCH,10% customer lost; microcap; SBC-adjusted EV/FCF ~10x but revenue quality impaired,2026-11-25
+IMMR,6.55,217.5,-103.8,113.7,9.41,1.86,,INSUFFICIENT_DATA,consolidated BNED/NCI; EV/FCF invalid; NCI omitted,2026-11-25
+PHR,12.09,750.4,-73.5,676.9,71.83,8.38,6.881999999999991,WATCH,total-SBC FCF 6.9M; EV/FCF ~98x; base below price,2026-11-25
+OPRX,7.31,138.2,-8.95,129.2,27.55,6.5,12.066999999999997,WATCH,customer loss; SBC-adjusted FCF 12.1M; base 8.1,2026-11-25
