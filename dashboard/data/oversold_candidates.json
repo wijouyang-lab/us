@@ -1,463 +1,256 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-25T14:09:56Z",
-  "asof": "2026-11-25",
+  "generated_at": "2026-11-27T14:07:09Z",
+  "asof": "2026-11-27",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
   "ai_model": null,
-  "ai_count": 7,
+  "ai_count": 4,
   "candidates": [
-    {
-      "ticker": "BG",
-      "name": "Bunge Global",
-      "score": 55.0,
-      "tag": "超跌反弹",
-      "rsi": 24.2,
-      "bias_pct": -12.71,
-      "drawdown_pct": -17.07,
-      "zscore": -3.78,
-      "atr_pct": 4.04,
-      "momentum_60d_pct": -27.67,
-      "volume_ratio_20d": 2.11,
-      "beta": 0.106,
-      "rs_20d_vs_spy": -10.46,
-      "market_regime": "PANIC",
-      "technical_score": 5.0,
-      "event_score": 8.0,
-      "quant_score": 25.0,
-      "snapshot_sector": "Other",
-      "sector": "Consumer Defensive",
-      "ref_price": 84.06,
-      "stop_loss": 78.97,
-      "confirm": "RSI 回升过 35 且站回 MA20 $96.30",
-      "invalid": "跌破参考止损 $78.97 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 24.2 / Bias -12.7% / ZScore -3.78；ATR 4.0% · 20日量比 2.1067；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Consumer Defensive",
-        "industry": "Farm Products",
-        "pe_ttm": 14.443298,
-        "pe_forward": 7.625956,
-        "pb": 0.99113333,
-        "roe": 0.0692,
-        "profit_margin": 0.0124,
-        "revenue_growth": 0.074,
-        "earnings_growth": 0.947,
-        "market_cap": 16151605248.0,
-        "news": [
-          {
-            "title": "A Former Glencore Agriculture CEO Sits on Bunge’s Board. He Just Bought $1.2 Million of Stock 31% Below Its High",
-            "publisher": "TIKR",
-            "time": "2026-11-25T04:27:50Z"
-          },
-          {
-            "title": "Bunge Global (BG) Forms Enerseed With GDM, Is The Stock 41% Undervalued?",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-24T23:23:47Z"
-          },
-          {
-            "title": "Bunge (BG) Stock Is Down 7.9% Today Without Company News",
-            "publisher": "GuruFocus.com",
-            "time": "2026-11-24T20:46:12Z"
-          },
-          {
-            "title": "Bunge Stock: Is Wall Street Bullish or Bearish?",
-            "publisher": "Barchart",
-            "time": "2026-11-24T12:57:17Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "观察",
-        "technical": "RSI24.2超卖，较MA20低12.71%，20日动量-17.07%，量比2.11，市场PANIC，技术分5，弱势下行未确认企稳。",
-        "fundamental": "PE_TTM14.44、前瞻7.63，PB0.99；ROE6.92%、净利率1.24%偏低；营收增7.4%、盈利增94.7%，估值与盈利改善并存。",
-        "news": "董事以较高点低31%买入120万美元；与GDM设Enerseed；无公司消息日跌7.9%；华尔街情绪报道。市场层面数据缺失。",
-        "risk": "PANIC下ATR4.04%波动高，相对SPY弱10.46%，利润率低，下跌原因不明，需防继续去杠杆。",
-        "summary": "超卖、低估值与内部人买入提供观察点，但趋势极弱且市场恐慌，暂列观察，等待企稳信号。"
-      }
-    },
-    {
-      "ticker": "COIN",
-      "name": "Coinbase",
-      "score": 46.0,
-      "tag": "深度超跌",
-      "rsi": 27.3,
-      "bias_pct": -21.36,
-      "drawdown_pct": -36.46,
-      "zscore": -1.69,
-      "atr_pct": 8.71,
-      "momentum_60d_pct": -45.59,
-      "volume_ratio_20d": 0.76,
-      "beta": 2.3,
-      "rs_20d_vs_spy": -29.85,
-      "market_regime": "PANIC",
-      "technical_score": 10.0,
-      "event_score": 8.0,
-      "quant_score": 27.0,
-      "snapshot_sector": "Financials",
-      "sector": "Financial Services",
-      "ref_price": 102.35,
-      "stop_loss": 90.07,
-      "confirm": "RSI 回升过 35 且站回 MA20 $130.15",
-      "invalid": "跌破参考止损 $90.07 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 27.3 / Bias -21.4% / ZScore -1.69；ATR 8.7% · 20日量比 0.7636；板块 Financials。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Financial Services",
-        "industry": "Financial Data & Stock Exchanges",
-        "pe_ttm": null,
-        "pe_forward": 42.654057,
-        "pb": 1.943764,
-        "roe": -0.046830002,
-        "profit_margin": -0.12894,
-        "revenue_growth": -0.342,
-        "earnings_growth": 0.674,
-        "market_cap": 27097212928.0,
-        "news": [
-          {
-            "title": "Can Robinhood's Rothera Expansion Reduce Its Reliance on Kalshi?",
-            "publisher": "Zacks",
-            "time": "2026-11-25T11:09:00Z"
-          },
-          {
-            "title": "SpaceX, Anthropic IPOs Shut Out Retail Investors, Says Coinbase CEO — Brian Armstrong Resumes Buying Back COIN Shares",
-            "publisher": "Stocktwits",
-            "time": "2026-11-25T06:01:44Z"
-          },
-          {
-            "title": "HOOD, COIN Get Wedbush Outperform Ratings: Here’s What The Firm Sees In Fintech’s Next Growth Phase",
-            "publisher": "Stocktwits",
-            "time": "2026-11-25T04:33:11Z"
-          },
-          {
-            "title": "Outlook Cut Might Change The Case For Investing In DraftKings Stock (DKNG)",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-25T00:15:54Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI14 27.3超卖，但20日跌36.5%、跑输SPY 29.9个百分点；ATR 8.7%、Beta 2.3，恐慌市况，趋势极弱。",
-        "fundamental": "PE_TTM缺失；远期PE 42.7、PB 1.94；ROE -4.7%、净利率-12.9%、营收同比-34.2%，盈利增长+67.4%。",
-        "news": "市场新闻缺失；个股层面CEO恢复回购COIN，Wedbush给予COIN跑赢评级；另有零售IPO准入及HOOD/DKNG消息。",
-        "risk": "Beta 2.3、ATR 8.7%，20日跑输SPY 29.9个百分点；恐慌市况下高波动，营收下滑与负利润率加大基本面风险。",
-        "summary": "技术超卖但趋势与市况极弱，基本面偏弱；回购与评级形成消息支撑。列为谨慎观察，不预测价格。"
-      }
-    },
-    {
-      "ticker": "FCX",
-      "name": "Freeport-McMoRan",
-      "score": 40.8,
-      "tag": "深度超跌",
-      "rsi": 29.1,
-      "bias_pct": -17.62,
-      "drawdown_pct": -27.63,
-      "zscore": -1.87,
-      "atr_pct": 6.84,
-      "momentum_60d_pct": -36.98,
-      "volume_ratio_20d": 1.2,
-      "beta": 1.874,
-      "rs_20d_vs_spy": -21.02,
-      "market_regime": "PANIC",
-      "technical_score": 10.0,
-      "event_score": 4.0,
-      "quant_score": 26.0,
-      "snapshot_sector": "Materials",
-      "sector": "Basic Materials",
-      "ref_price": 47.73,
-      "stop_loss": 42.83,
-      "confirm": "RSI 回升过 35 且站回 MA20 $57.94",
-      "invalid": "跌破参考止损 $42.83 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 29.1 / Bias -17.6% / ZScore -1.87；ATR 6.8% · 20日量比 1.1994；板块 Materials。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Basic Materials",
-        "industry": "Copper",
-        "pe_ttm": 20.05462,
-        "pe_forward": 11.394181,
-        "pb": 3.2644825,
-        "roe": 0.15719,
-        "profit_margin": 0.13029,
-        "revenue_growth": 0.082,
-        "earnings_growth": 0.761,
-        "market_cap": 68489498624.0,
-        "news": [
-          {
-            "title": "Why Are Freeport McMoRan (FCX) Shares Jumping On AI Driven Copper Demand?",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-25T13:15:03Z"
-          },
-          {
-            "title": "AI fears trigger plunge in copper prices",
-            "publisher": "The Telegraph",
-            "time": "2026-11-25T12:25:04Z"
-          },
-          {
-            "title": "AI fears trigger plunge in copper prices",
-            "publisher": "The Telegraph",
-            "time": "2026-11-25T12:25:04Z"
-          },
-          {
-            "title": "How ETF Selling Will Impact Freeport McMoRan Stock Investors",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-25T12:15:05Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI 29.1已深度超卖，股价低于20日均线17.6%，20日动量-27.6%、60日-37%，相对SPY弱21%，beta1.87、ATR6.8%，波动极高；市场处于PANIC状态，量比1.2显示抛压未衰竭。",
-        "fundamental": "TTM市盈率20.1倍、远期11.4倍，PB3.26，ROE15.7%，净利率13%，营收增8.2%、盈利增76.1%，市值约685亿美元；估值不贵但周期属性强，缺少现金流与债务数据。",
-        "news": "个股消息多空冲突：一说AI铜需求推动股价上涨，一说AI担忧引发铜价暴跌，另有ETF抛售影响；均为市场层面与商品价格传导，无公司自身经营公告，需谨慎对待标题。",
-        "risk": "铜价受AI叙事反转冲击大，高beta放大回撤；PANIC环境下ETF被动抛售或延续；技术面无企稳信号，超卖不等于止跌；商品周期股盈利对铜价高度敏感。",
-        "summary": "深度回撤叠加超卖与恐慌市况，估值有支撑但消息面多空矛盾、波动极高，观察笔记倾向谨慎，等待铜价与量能企稳信号，非投资建议。"
-      }
-    },
     {
       "ticker": "INTU",
       "name": "Intuit",
-      "score": 36.8,
-      "tag": "超跌反弹",
-      "rsi": 32.0,
-      "bias_pct": -14.92,
-      "drawdown_pct": -14.93,
-      "zscore": -2.2,
-      "atr_pct": 5.45,
-      "momentum_60d_pct": -22.23,
-      "volume_ratio_20d": 1.15,
-      "beta": 0.663,
-      "rs_20d_vs_spy": -8.32,
-      "market_regime": "PANIC",
+      "score": 41.0,
+      "tag": "深度超跌",
+      "rsi": 30.0,
+      "bias_pct": -16.55,
+      "drawdown_pct": -17.21,
+      "zscore": -2.18,
+      "atr_pct": 5.49,
+      "momentum_60d_pct": -21.22,
+      "volume_ratio_20d": 1.14,
+      "beta": 0.647,
+      "rs_20d_vs_spy": -10.01,
+      "market_regime": "STRESSED",
       "technical_score": 10.0,
       "event_score": 8.0,
       "quant_score": 28.0,
       "snapshot_sector": "Other",
       "sector": "Technology",
-      "ref_price": 279.42,
-      "stop_loss": 256.58,
-      "confirm": "RSI 回升过 35 且站回 MA20 $328.42",
-      "invalid": "跌破参考止损 $256.58 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 32.0 / Bias -14.9% / ZScore -2.20；ATR 5.5% · 20日量比 1.1476；板块 Other。规则版筛选，未回测。",
+      "ref_price": 271.72,
+      "stop_loss": 249.34,
+      "confirm": "RSI 回升过 35 且站回 MA20 $325.60",
+      "invalid": "跌破参考止损 $249.34 或 RSI 继续下行",
+      "observe_until": "2026-12-07",
+      "reason": "RSI 30.0 / Bias -16.6% / ZScore -2.18；ATR 5.5% · 20日量比 1.1424；板块 Other。规则版筛选，未回测。",
       "enrich": {
         "sector": "Technology",
         "industry": "Software - Application",
-        "pe_ttm": 15.903245,
-        "pe_forward": 10.811167,
-        "pb": 4.0537953,
+        "pe_ttm": 16.507898,
+        "pe_forward": 10.094113,
+        "pb": 3.8398056,
         "roe": 0.25641,
         "profit_margin": 0.21969,
         "revenue_growth": 0.121,
         "earnings_growth": 0.629,
-        "market_cap": 73771073536.0,
+        "market_cap": 71589896192.0,
         "news": [
           {
-            "title": "Can Intuit Stock Jump 50%?",
+            "title": "Which Line In Intuit's Quarter Did The Market Sell?",
             "publisher": "Trefis",
-            "time": "2026-11-25T11:29:44Z"
+            "time": "2026-11-27T12:49:41Z"
           },
           {
-            "title": "AI is crushing software stocks — and a debt wall looms: Chart of the Day",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-25T11:00:00Z"
+            "title": "Investors Heavily Search Intuit Inc. (INTU): Here is What You Need to Know",
+            "publisher": "Zacks",
+            "time": "2026-11-26T13:00:03Z"
           },
           {
-            "title": "AI leadership helps employers attract junior accountants, Intuit study",
-            "publisher": "The Accountant",
-            "time": "2026-11-25T10:26:32Z"
+            "title": "How 2 Quick Calls Sealed Berkshire Hathaway’s $930M Bending Spoons Investment",
+            "publisher": "Barrons.com",
+            "time": "2026-11-25T16:33:00Z"
           },
           {
-            "title": "What Is Intuit (INTU) Telling Investors With Its New AI Tax Workflow Push?",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-25T02:11:05Z"
+            "title": "Intuit Stock Has One Thing Left To Prove",
+            "publisher": "Trefis",
+            "time": "2026-11-25T15:36:17Z"
           }
         ]
       },
       "ai": {
-        "verdict": "观察",
-        "technical": "RSI 32接近超卖，较MA20低14.9%，20日动量-14.9%、60日-22.2%，跑输SPY 8.3个百分点，市场处PANIC状态，技术面明显偏弱。",
-        "fundamental": "PE(TTM)15.9、前瞻10.8，PB 4.05，ROE 25.6%，净利率22%，营收增12.1%，盈利增62.9%，估值与盈利质量相对稳健。",
-        "news": "个股消息混合：有观点讨论能否反弹50%，亦有AI冲击软件股与债务墙担忧；公司推进AI税务工作流。市场层面数据缺失。",
-        "risk": "PANIC市况下趋势下行，AI对软件板块估值形成压制；参考止损256.58，新闻多为观点而非财报数据。",
-        "summary": "技术面弱势与基本面估值优势并存，属超卖观察对象，宜等待企稳信号；本笔记非投资建议。"
+        "verdict": "谨慎",
+        "technical": "RSI14约30接近超卖，价格低于20日均线16.55%，20日动量-17.21%、60日-21.22%，相对SPY落后10个百分点，ATR占比5.49%波动大，技术分仅10/25。",
+        "fundamental": "PE(TTM)16.5、远期10.1、PB3.84，ROE25.6%、净利率22%，营收增12.1%、盈利增62.9%，市值约716亿美元，估值与增长匹配度尚可。",
+        "news": "个股新闻聚焦季度财报后抛售与“尚待证明”的质疑，情绪偏谨慎；无直接公司公告细节，属市场层面解读。",
+        "risk": "市场处于STRESSED状态，趋势向下且波动高，财报后卖压与相对弱势延续风险；参考止损249.34低于现价271.72，缓冲有限。",
+        "summary": "基本面稳健、估值不高，但技术面深度走弱且大盘承压，消息面偏空，宜列入观察并等待企稳信号，非投资建议。"
       }
     },
     {
-      "ticker": "ADM",
-      "name": "Archer Daniels Midland",
-      "score": 34.9,
+      "ticker": "FCX",
+      "name": "Freeport-McMoRan",
+      "score": 31.9,
       "tag": "超跌反弹",
-      "rsi": 24.9,
-      "bias_pct": -8.35,
-      "drawdown_pct": -17.01,
-      "zscore": -1.86,
-      "atr_pct": 3.26,
-      "momentum_60d_pct": -20.16,
-      "volume_ratio_20d": 1.97,
-      "beta": 0.091,
-      "rs_20d_vs_spy": -10.4,
-      "market_regime": "PANIC",
+      "rsi": 31.2,
+      "bias_pct": -14.88,
+      "drawdown_pct": -27.1,
+      "zscore": -1.52,
+      "atr_pct": 6.75,
+      "momentum_60d_pct": -33.01,
+      "volume_ratio_20d": 1.06,
+      "beta": 1.852,
+      "rs_20d_vs_spy": -19.9,
+      "market_regime": "STRESSED",
+      "technical_score": 10.0,
+      "event_score": 8.0,
+      "quant_score": 30.0,
+      "snapshot_sector": "Materials",
+      "sector": "Basic Materials",
+      "ref_price": 48.55,
+      "stop_loss": 43.63,
+      "confirm": "RSI 回升过 35 且站回 MA20 $57.04",
+      "invalid": "跌破参考止损 $43.63 或 RSI 继续下行",
+      "observe_until": "2026-12-07",
+      "reason": "RSI 31.2 / Bias -14.9% / ZScore -1.52；ATR 6.8% · 20日量比 1.0588；板块 Materials。规则版筛选，未回测。",
+      "enrich": {
+        "sector": "Basic Materials",
+        "industry": "Copper",
+        "pe_ttm": 20.399158,
+        "pe_forward": 11.589933,
+        "pb": 3.3205662,
+        "roe": 0.15719,
+        "profit_margin": 0.13029,
+        "revenue_growth": 0.082,
+        "earnings_growth": 0.761,
+        "market_cap": 69666144256.0,
+        "news": [
+          {
+            "title": "ETFs Are Net Sellers of Freeport-McMoRan (FCX) on Nov. 25",
+            "publisher": "GuruFocus.com",
+            "time": "2026-11-27T11:03:10Z"
+          },
+          {
+            "title": "Will Southern Copper Deliver Further Adjusted EBITDA Growth?",
+            "publisher": "Zacks",
+            "time": "2026-11-26T15:34:00Z"
+          },
+          {
+            "title": "Why Is Freeport-McMoRan (FCX) Down 27.1% Since Last Earnings Report?",
+            "publisher": "Zacks",
+            "time": "2026-11-26T15:30:11Z"
+          },
+          {
+            "title": "Copper Miners ETF Is on a 13-Week Losing Streak. When to Buy.",
+            "publisher": "Barrons.com",
+            "time": "2026-11-25T19:55:00Z"
+          }
+        ]
+      },
+      "ai": {
+        "verdict": "谨慎",
+        "technical": "RSI 31.2接近超卖，但20日跌27.1%、偏离MA20 -14.9%、相对SPY -19.9%，ATR 6.75%高波动，市况STRESSED，下行趋势未止。",
+        "fundamental": "PE_TTM 20.4、forward 11.6，PB 3.32，ROE 15.7%，净利率13.0%，营收增8.2%、盈利增76.1%，估值随股价回落。",
+        "news": "ETF净卖出FCX；铜矿ETF现13周连跌；该股自上次财报跌27.1%；仅Southern Copper的EBITDA话题属行业层面，偏空。",
+        "risk": "高beta 1.85放大市场压力，趋势下行叠加资金流出；铜价与宏观数据缺失，超卖不代表止跌，波动风险大。",
+        "summary": "技术面深度弱势、消息偏空，但前瞻估值与盈利增长提供一定缓冲；列为谨慎，待趋势企稳信号。观察笔记，非投资建议。"
+      }
+    },
+    {
+      "ticker": "VLO",
+      "name": "Valero Energy",
+      "score": 28.9,
+      "tag": "超跌反弹",
+      "rsi": 30.7,
+      "bias_pct": -9.89,
+      "drawdown_pct": -16.86,
+      "zscore": -1.79,
+      "atr_pct": 4.81,
+      "momentum_60d_pct": -10.77,
+      "volume_ratio_20d": 0.74,
+      "beta": 0.157,
+      "rs_20d_vs_spy": -9.65,
+      "market_regime": "STRESSED",
       "technical_score": 5.0,
       "event_score": 8.0,
       "quant_score": 25.0,
       "snapshot_sector": "Other",
-      "sector": "Consumer Defensive",
-      "ref_price": 64.9,
-      "stop_loss": 61.73,
-      "confirm": "RSI 回升过 35 且站回 MA20 $70.81",
-      "invalid": "跌破参考止损 $61.73 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 24.9 / Bias -8.3% / ZScore -1.86；ATR 3.3% · 20日量比 1.9712；板块 Other。规则版筛选，未回测。",
+      "sector": "Energy",
+      "ref_price": 323.0,
+      "stop_loss": 299.7,
+      "confirm": "RSI 回升过 35 且站回 MA20 $358.46",
+      "invalid": "跌破参考止损 $299.70 或 RSI 继续下行",
+      "observe_until": "2026-12-07",
+      "reason": "RSI 30.7 / Bias -9.9% / ZScore -1.79；ATR 4.8% · 20日量比 0.7401；板块 Other。规则版筛选，未回测。",
       "enrich": {
-        "sector": "Consumer Defensive",
-        "industry": "Farm Products",
-        "pe_ttm": 12.675782,
-        "pe_forward": 11.555898,
-        "pb": 1.3006794,
-        "roe": 0.10639,
-        "profit_margin": 0.02954,
-        "revenue_growth": 0.096,
-        "earnings_growth": 6.71,
-        "market_cap": 30887157760.0,
+        "sector": "Energy",
+        "industry": "Oil & Gas Refining & Marketing",
+        "pe_ttm": 7.3459177,
+        "pe_forward": 6.3057733,
+        "pb": 3.2201464,
+        "roe": 0.46872002,
+        "profit_margin": 0.08834,
+        "revenue_growth": 0.465,
+        "earnings_growth": 5.768,
+        "market_cap": 90079666176.0,
         "news": [
           {
-            "title": "Bunge (BG) Stock Is Down 7.9% Today Without Company News",
+            "title": "Gasoline Prices Decline for 32nd Straight Day",
+            "publisher": "The Wall Street Journal",
+            "time": "2026-11-25T20:18:18Z"
+          },
+          {
+            "title": "Arko Petroleum (APC) Stock Is Up 5.3% Today Without Company News",
             "publisher": "GuruFocus.com",
-            "time": "2026-11-24T20:46:12Z"
+            "time": "2026-11-25T20:15:15Z"
           },
           {
-            "title": "Best Dividend Stocks to Buy for Dependable Dividend Growth",
-            "publisher": "Kiplinger",
-            "time": "2026-11-24T17:48:39Z"
-          },
-          {
-            "title": "3 AgTech & Food Innovation Stocks to Watch for Long-Term Growth",
+            "title": "Energy Stocks Benefit From Supply Disruptions: Can Momentum Last?",
             "publisher": "Zacks",
-            "time": "2026-11-23T15:18:00Z"
+            "time": "2026-11-25T17:54:00Z"
           },
           {
-            "title": "Why Brown Forman Stock And Other Defensive Dividend Names Matter Now",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-23T06:13:22Z"
+            "title": "Forget Doorbusters: These 3 S&P 500 Dividend Stocks Are Trading at Black Friday Prices",
+            "publisher": "24/7 Wall St.",
+            "time": "2026-11-25T13:37:50Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI 24.9已超卖，股价低于20日均线8.35%，20日动量-17%、60日-20.2%；量比1.97，放量下跌，跑输标普10.4%。市场处于PANIC，技术分5/25。",
-        "fundamental": "PE(TTM)12.7、前瞻11.6、PB1.3，估值不高；ROE10.6%尚可，但净利率仅2.95%偏薄；营收增9.6%，盈利增速口径不明。",
-        "news": "个股无直接新闻；同业Bunge无公司消息却跌7.9%，显示农产品板块承压（板块层面）；另有防御股息、农业食品创新等泛行业评论。公司层面消息缺失。",
-        "risk": "PANIC市况下，放量破位、趋势与相对强弱双弱；净利率薄，对农产品价格敏感；板块同业走弱可能传导；缺公司层面催化。",
-        "summary": "估值偏低，但技术面破位放量、同业承压，属左侧观察对象；宜等跌势止稳、量能收敛。此为观察笔记，非投资建议。"
-      }
-    },
-    {
-      "ticker": "HOOD",
-      "name": "Robinhood Markets",
-      "score": 34.9,
-      "tag": "深度超跌",
-      "rsi": 30.4,
-      "bias_pct": -16.21,
-      "drawdown_pct": -30.57,
-      "zscore": -1.57,
-      "atr_pct": 8.08,
-      "momentum_60d_pct": -37.36,
-      "volume_ratio_20d": 0.68,
-      "beta": 2.526,
-      "rs_20d_vs_spy": -23.96,
-      "market_regime": "PANIC",
-      "technical_score": 10.0,
-      "event_score": 8.0,
-      "quant_score": 25.0,
-      "snapshot_sector": "Other",
-      "sector": "Financial Services",
-      "ref_price": 65.65,
-      "stop_loss": 57.77,
-      "confirm": "RSI 回升过 35 且站回 MA20 $78.35",
-      "invalid": "跌破参考止损 $57.77 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 30.4 / Bias -16.2% / ZScore -1.57；ATR 8.1% · 20日量比 0.6752；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Financial Services",
-        "industry": "Capital Markets",
-        "pe_ttm": 30.253456,
-        "pe_forward": 19.217203,
-        "pb": 5.9144144,
-        "roe": 0.21452999,
-        "profit_margin": 0.39040002,
-        "revenue_growth": 0.118,
-        "earnings_growth": -0.164,
-        "market_cap": 59117252608.0,
-        "news": [
-          {
-            "title": "Can Robinhood's Rothera Expansion Reduce Its Reliance on Kalshi?",
-            "publisher": "Zacks",
-            "time": "2026-11-25T11:09:00Z"
-          },
-          {
-            "title": "HOOD, COIN Get Wedbush Outperform Ratings: Here’s What The Firm Sees In Fintech’s Next Growth Phase",
-            "publisher": "Stocktwits",
-            "time": "2026-11-25T04:33:11Z"
-          },
-          {
-            "title": "Chaince Digital (CD) Stock Is Up 33.8% Today Without Company News",
-            "publisher": "GuruFocus.com",
-            "time": "2026-11-24T21:00:44Z"
-          },
-          {
-            "title": "What Is Behind The Move In Interactive Brokers Stock?",
-            "publisher": "Trefis",
-            "time": "2026-11-24T16:30:49Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI14 30.4，20日动量-30.57%，偏离MA20 -16.21%，beta 2.53，市场PANIC，技术分10",
-        "fundamental": "PE(TTM)30.25、前瞻19.22，PB5.91，ROE21.45%，净利率39.04%，营收增11.8%，盈利增-16.4%",
-        "news": "Wedbush给予HOOD跑赢评级；Rothera扩张或降低对Kalshi依赖；其余新闻关联弱；无市场新闻",
-        "risk": "PANIC下高beta放大波动，20日相对SPY -23.96%，盈利负增长，价格距参考止损约12%",
-        "summary": "技术面极弱且市场恐慌，估值与盈利质量尚可，消息面有正面评级；暂列谨慎观察，不预测价格"
+        "technical": "RSI30.7超卖，但20日跌16.9%、偏离MA20 -9.9%，相对SPY -9.7%，量比0.74，市场处STRESSED，技术分5/25。",
+        "fundamental": "PE TTM 7.35、Forward 6.31，PB 3.22，ROE 46.9%，净利率8.8%，营收增46.5%；估值偏低，周期属性需留意。",
+        "news": "个股新闻：汽油价格连跌32天；能源股受供应扰动提振；有文章称部分标普500股息股处折价位；市场层面数据缺失。",
+        "risk": "技术弱势与STRESSED市场叠加，20日相对SPY落后9.7%；汽油连跌需跟踪；PB 3.22不低；新闻面信息有限。",
+        "summary": "估值低但技术破位、市场压力大，汽油连跌增添不确定性；列为谨慎观察，不构成投资建议。"
       }
     },
     {
       "ticker": "ALB",
       "name": "Albemarle Corporation",
-      "score": 32.6,
+      "score": 24.9,
       "tag": "超跌反弹",
-      "rsi": 30.0,
-      "bias_pct": -11.42,
-      "drawdown_pct": -18.52,
-      "zscore": -1.92,
-      "atr_pct": 4.82,
-      "momentum_60d_pct": -40.26,
-      "volume_ratio_20d": 0.88,
-      "beta": 0.736,
-      "rs_20d_vs_spy": -11.91,
-      "market_regime": "PANIC",
-      "technical_score": 10.0,
+      "rsi": 32.0,
+      "bias_pct": -9.7,
+      "drawdown_pct": -15.94,
+      "zscore": -1.54,
+      "atr_pct": 4.91,
+      "momentum_60d_pct": -39.87,
+      "volume_ratio_20d": 1.1,
+      "beta": 0.742,
+      "rs_20d_vs_spy": -8.74,
+      "market_regime": "STRESSED",
+      "technical_score": 15.0,
       "event_score": 8.0,
-      "quant_score": 30.0,
+      "quant_score": 35.0,
       "snapshot_sector": "Other",
       "sector": "Basic Materials",
-      "ref_price": 80.63,
-      "stop_loss": 74.8,
-      "confirm": "RSI 回升过 35 且站回 MA20 $91.02",
-      "invalid": "跌破参考止损 $74.80 或 RSI 继续下行",
-      "observe_until": "2026-12-05",
-      "reason": "RSI 30.0 / Bias -11.4% / ZScore -1.92；ATR 4.8% · 20日量比 0.8802；板块 Other。规则版筛选，未回测。",
+      "ref_price": 81.5,
+      "stop_loss": 75.5,
+      "confirm": "RSI 回升过 35 且站回 MA20 $90.25",
+      "invalid": "跌破参考止损 $75.50 或 RSI 继续下行",
+      "observe_until": "2026-12-07",
+      "reason": "RSI 32.0 / Bias -9.7% / ZScore -1.54；ATR 4.9% · 20日量比 1.1032；板块 Other。规则版筛选，未回测。",
       "enrich": {
         "sector": "Basic Materials",
         "industry": "Specialty Chemicals",
-        "pe_ttm": 19.428915,
-        "pe_forward": 10.522318,
-        "pb": 1.1455077,
+        "pe_ttm": 19.638554,
+        "pe_forward": 10.635855,
+        "pb": 1.1578678,
         "roe": 0.07047,
         "profit_margin": 0.11078,
         "revenue_growth": 0.188,
         "earnings_growth": null,
-        "market_cap": 9515133952.0,
+        "market_cap": 9617802240.0,
         "news": [
           {
             "title": "Is Albemarle Stock A Buy For Its Cash?",
@@ -483,11 +276,11 @@
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI 30超卖，20日跌18.5%、60日跌40.3%，低于MA20达11.4%，PANIC市况，跑输SPY 11.9%，技术评分仅10。",
-        "fundamental": "前瞻PE 10.5、PB 1.15偏低，营收增18.8%，净利率11.1%，ROE 7.0%；盈利增长率数据缺失。",
-        "news": "Trefis两文质疑现金收益率被忽视，Kiplinger列入分红股名单；个股无明确催化，市场层面新闻数据缺失。",
-        "risk": "PANIC市况叠加趋势破位，ATR 4.8%波动偏高，盈利增长数据缺失，参考止损74.8较现价低约7.2%。",
-        "summary": "深跌超卖且估值偏低，具备观察价值；但趋势与市况恶劣、技术分仅10，宜待企稳信号。此为观察笔记，非投资建议。"
+        "technical": "RSI 32 已近弱势区，价格低于20日均线9.7%，20日跌15.9%、60日跌39.9%，相对SPY落后8.7%，ATR 4.9%波动大，量比1.1无放量止跌迹象。",
+        "fundamental": "市盈率TTM 19.6倍、前瞻10.6倍，市净率1.16，ROE 7.0%，净利率11.1%，营收增18.8%；盈利增速数据缺失，估值偏低但盈利质量待验。",
+        "news": "个股新闻集中于现金流与股息讨论，属观点类文章，无明确业绩或产能消息；市场层面消息面数据缺失。",
+        "risk": "趋势性下跌未止，波动率高，市场处于压力状态，板块beta 0.74虽低但仍随大盘；锂价与盈利预期缺乏数据支撑。",
+        "summary": "技术面明显走弱、估值偏低但缺乏催化，暂列谨慎观察，等待企稳与基本面数据确认。"
       }
     }
   ]
