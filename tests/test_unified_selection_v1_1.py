@@ -31,8 +31,9 @@ def test_page_shows_fiscal_period():
 def test_page_hides_non_comparable_score():
  p=Path("terminal/unified.html").read_text(encoding="utf-8")
  assert 'r.composite_status==="GROUP_COMPARABLE_DISPLAY_ONLY"' in p
- assert '<th>Peer score (display only)</th>' in p
+ assert '<th>Bucket score (display only)</th>' in p
  assert '<option value="composite_score">' not in p
- assert '<th>Peer rank (within group)</th>' in p
+ assert '<th>Bucket rank (within broad category)</th>' in p
  assert '<th data-k="research_rank">' not in p
+ assert 'this is not a true business-model peer ranking' in p
  assert 'id="sort"' not in p
