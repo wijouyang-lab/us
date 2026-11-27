@@ -1,0 +1,196 @@
+ticker,risk,level,evidence
+CRMD,DATA_QUALITY,MEDIUM,Historical ELIMINATE override
+CRMD,VALUATION,MEDIUM,Historical ELIMINATE override
+CRMD,CASH_FLOW,MEDIUM,Historical ELIMINATE override
+CRMD,LEVERAGE,MEDIUM,Historical ELIMINATE override
+CRMD,BUSINESS,MEDIUM,Historical ELIMINATE override
+ALAB,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ALAB,VALUATION,HIGH,Screen candidate; valuation/evidence not sufficient for priority
+ALAB,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ALAB,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ALAB,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+RELY,DATA_QUALITY,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+RELY,VALUATION,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+RELY,CASH_FLOW,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+RELY,LEVERAGE,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+RELY,BUSINESS,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+OPRX,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+OPRX,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+OPRX,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+OPRX,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+OPRX,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+GOLD,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+GOLD,VALUATION,MEDIUM,TTM revenue/FCF unavailable or invalid
+GOLD,CASH_FLOW,MEDIUM,TTM revenue/FCF unavailable or invalid
+GOLD,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+GOLD,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+PHR,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PHR,VALUATION,HIGH,Screen candidate; valuation/evidence not sufficient for priority
+PHR,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PHR,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PHR,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+AG,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+AG,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+AG,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+AG,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+AG,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+GLBE,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+GLBE,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+GLBE,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+GLBE,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+GLBE,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+LIF,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIF,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIF,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIF,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIF,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+FIVE,DATA_QUALITY,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIVE,VALUATION,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIVE,CASH_FLOW,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIVE,LEVERAGE,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIVE,BUSINESS,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+USLM,DATA_QUALITY,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+USLM,VALUATION,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+USLM,CASH_FLOW,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+USLM,LEVERAGE,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+USLM,BUSINESS,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+IDR,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IDR,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IDR,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IDR,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IDR,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+INMD,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+INMD,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+INMD,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+INMD,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+INMD,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+CRDO,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CRDO,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CRDO,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CRDO,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CRDO,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+FIZZ,DATA_QUALITY,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIZZ,VALUATION,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIZZ,CASH_FLOW,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIZZ,LEVERAGE,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+FIZZ,BUSINESS,MEDIUM,"Positive FCF, net cash, P/E <25; business quality to verify"
+IRMD,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IRMD,VALUATION,HIGH,Screen candidate; valuation/evidence not sufficient for priority
+IRMD,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IRMD,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IRMD,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+RIGL,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+RIGL,VALUATION,MEDIUM,TTM revenue/FCF unavailable or invalid
+RIGL,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+RIGL,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+RIGL,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+MU,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+MU,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+MU,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+MU,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+MU,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+SNDK,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+SNDK,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+SNDK,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+SNDK,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+SNDK,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+UTHR,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+UTHR,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+UTHR,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+UTHR,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+UTHR,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IPAR,DATA_QUALITY,MEDIUM,Prior diligence WATCH; needs price/evidence
+IPAR,VALUATION,MEDIUM,Prior diligence WATCH; needs price/evidence
+IPAR,CASH_FLOW,MEDIUM,Prior diligence WATCH; needs price/evidence
+IPAR,LEVERAGE,MEDIUM,Prior diligence WATCH; needs price/evidence
+IPAR,BUSINESS,MEDIUM,Prior diligence WATCH; needs price/evidence
+LIN,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIN,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIN,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIN,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+LIN,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+REYN,DATA_QUALITY,MEDIUM,Prior diligence WATCH; needs price/evidence
+REYN,VALUATION,MEDIUM,Prior diligence WATCH; needs price/evidence
+REYN,CASH_FLOW,MEDIUM,Prior diligence WATCH; needs price/evidence
+REYN,LEVERAGE,MEDIUM,Prior diligence WATCH; needs price/evidence
+REYN,BUSINESS,MEDIUM,Prior diligence WATCH; needs price/evidence
+WDFC,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+WDFC,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+WDFC,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+WDFC,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+WDFC,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+CHD,DATA_QUALITY,MEDIUM,Prior diligence WATCH; needs price/evidence
+CHD,VALUATION,MEDIUM,Prior diligence WATCH; needs price/evidence
+CHD,CASH_FLOW,MEDIUM,Prior diligence WATCH; needs price/evidence
+CHD,LEVERAGE,MEDIUM,Prior diligence WATCH; needs price/evidence
+CHD,BUSINESS,MEDIUM,Prior diligence WATCH; needs price/evidence
+CL,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CL,VALUATION,HIGH,Screen candidate; valuation/evidence not sufficient for priority
+CL,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CL,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+CL,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ECL,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ECL,VALUATION,HIGH,Screen candidate; valuation/evidence not sufficient for priority
+ECL,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ECL,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+ECL,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+MLM,DATA_QUALITY,MEDIUM,Leverage >3x EBITDA
+MLM,VALUATION,MEDIUM,Leverage >3x EBITDA
+MLM,CASH_FLOW,MEDIUM,Leverage >3x EBITDA
+MLM,LEVERAGE,HIGH,Leverage >3x EBITDA
+MLM,BUSINESS,MEDIUM,Leverage >3x EBITDA
+PG,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PG,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PG,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PG,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PG,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+PATK,DATA_QUALITY,MEDIUM,Leverage >3x EBITDA
+PATK,VALUATION,MEDIUM,Leverage >3x EBITDA
+PATK,CASH_FLOW,MEDIUM,Leverage >3x EBITDA
+PATK,LEVERAGE,HIGH,Leverage >3x EBITDA
+PATK,BUSINESS,MEDIUM,Leverage >3x EBITDA
+EBS,DATA_QUALITY,MEDIUM,TTM net loss
+EBS,VALUATION,HIGH,TTM net loss
+EBS,CASH_FLOW,MEDIUM,TTM net loss
+EBS,LEVERAGE,MEDIUM,TTM net loss
+EBS,BUSINESS,MEDIUM,TTM net loss
+NUS,DATA_QUALITY,MEDIUM,TTM net loss
+NUS,VALUATION,HIGH,TTM net loss
+NUS,CASH_FLOW,HIGH,TTM net loss
+NUS,LEVERAGE,MEDIUM,TTM net loss
+NUS,BUSINESS,MEDIUM,TTM net loss
+PSFE,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+PSFE,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+PSFE,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+PSFE,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+PSFE,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+USNA,DATA_QUALITY,MEDIUM,TTM net loss
+USNA,VALUATION,HIGH,TTM net loss
+USNA,CASH_FLOW,MEDIUM,TTM net loss
+USNA,LEVERAGE,MEDIUM,TTM net loss
+USNA,BUSINESS,MEDIUM,TTM net loss
+NATR,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+NATR,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+NATR,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+NATR,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+NATR,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IMMR,DATA_QUALITY,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IMMR,VALUATION,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IMMR,CASH_FLOW,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IMMR,LEVERAGE,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+IMMR,BUSINESS,MEDIUM,Screen candidate; valuation/evidence not sufficient for priority
+DOX,DATA_QUALITY,MEDIUM,TTM revenue/FCF unavailable or invalid
+DOX,VALUATION,HIGH,TTM revenue/FCF unavailable or invalid
+DOX,CASH_FLOW,HIGH,TTM revenue/FCF unavailable or invalid
+DOX,LEVERAGE,MEDIUM,TTM revenue/FCF unavailable or invalid
+DOX,BUSINESS,MEDIUM,TTM revenue/FCF unavailable or invalid
+CCS,DATA_QUALITY,MEDIUM,Negative TTM FCF
+CCS,VALUATION,MEDIUM,Negative TTM FCF
+CCS,CASH_FLOW,HIGH,Negative TTM FCF
+CCS,LEVERAGE,MEDIUM,Negative TTM FCF
+CCS,BUSINESS,MEDIUM,Negative TTM FCF
+ARKO,DATA_QUALITY,MEDIUM,Leverage >3x EBITDA
+ARKO,VALUATION,MEDIUM,Leverage >3x EBITDA
+ARKO,CASH_FLOW,MEDIUM,Leverage >3x EBITDA
+ARKO,LEVERAGE,HIGH,Leverage >3x EBITDA
+ARKO,BUSINESS,MEDIUM,Leverage >3x EBITDA
