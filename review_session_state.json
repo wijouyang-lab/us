@@ -1,24 +1,24 @@
 {
-  "completed_at": "2026-11-25T22:24:55Z",
+  "completed_at": "2026-11-27T22:24:52Z",
   "fingerprint": {
     "ledgers": {
       "option_strategies.csv": "b30e61232d532d924c0142e9a3a70a920740981e6eb7ce4be91601906f379fe0",
-      "portfolio_50000_history.csv": "8daa2877835552940dda10fb024e96c25ef8883a4a73dc56cd6f92c1258e6c75",
+      "portfolio_50000_history.csv": "ef38511c799ffb503b77200273e8c91bef6ea892eb0e32368aadaa15aa671f9e",
       "portfolio_50000_meta.json": "91428f1924ef822ade717b57ae196d156c64a8d83c677b8279863f15dc47dfef",
       "portfolio_50000_positions.csv": "981028a011355d6770c93dd6485b13d5cafcf9cccb3b03c48cfca56ba638ec57",
       "portfolio_50000_transactions.csv": "df7a78cb899940b406dbe4c9b8cd58756ee50422c2dd1c83b774366b489dc27b",
-      "review_history.csv": "27f70ba46089c570c985e3b991a2ff0a275e91f3655c6ba4239cb0b352bce603",
-      "trade_history.csv": "2f3bcff5460cdf2b9055c8ab069e9249ad12bd679655155355c3c9516970a7ff"
+      "review_history.csv": "125e8e7774107fe73b1720a7bb1b38e647f094b15cdfe7e2bbfcb7ff577da8ab",
+      "trade_history.csv": "9d4fb19a34f52777362047ef11fd6fc21da2197b41b8dd7ce49c9cddb8d970df"
     },
     "pending": "fb514fa9817fbcaff8bc4acd5133e0b20a6e6f9aba6788c3eb0ae685150395ef",
     "pending_scope": "all_dates",
     "schema_version": 2,
-    "session_date": "2026-11-25"
+    "session_date": "2026-11-27"
   },
   "metadata": {
-    "github_run_id": "45712764092"
+    "github_run_id": "46076314646"
   },
   "schema_version": 2,
-  "session_date": "2026-11-25",
+  "session_date": "2026-11-27",
   "status": "success"
 }
