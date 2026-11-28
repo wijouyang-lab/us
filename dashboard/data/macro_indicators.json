@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-28T13:16:53Z",
+  "generated_at": "2026-11-28T13:19:19Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -10,32 +10,32 @@
       "name": "美国失业率",
       "value": 4.1,
       "unit": "%",
-      "date": "2026-10-01",
-      "prev": 4.2,
-      "change": -0.1,
-      "source": "FRED UNRATE",
+      "date": null,
+      "prev": null,
+      "change": null,
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null,
-      "source_status": "primary"
+      "source_status": "fallback"
     },
     {
       "key": "nonfarm",
       "name": "季调后非农业就业人口",
       "value": 165.0,
       "unit": "K",
-      "date": "2026-10-01",
-      "prev": 60.0,
-      "change": 165.0,
-      "source": "FRED PAYEMS（月增）",
-      "note": "单位：千人",
-      "source_status": "primary"
+      "date": null,
+      "prev": null,
+      "change": null,
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "cpi_yoy",
       "name": "未季调CPI年率",
       "value": 3.7,
       "unit": "%",
-      "date": "2026-10-01",
-      "prev": 3.74,
+      "date": null,
+      "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null,
@@ -46,8 +46,8 @@
       "name": "核心CPI年率",
       "value": 2.6,
       "unit": "%",
-      "date": "2026-10-01",
-      "prev": 2.57,
+      "date": null,
+      "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null,
@@ -56,26 +56,26 @@
     {
       "key": "cpi_mom",
       "name": "季调后CPI月率",
-      "value": 0.35,
+      "value": 0.4,
       "unit": "%",
-      "date": "2026-10-01",
+      "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED CPIAUCSL",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null,
-      "source_status": "primary"
+      "source_status": "fallback"
     },
     {
       "key": "umich",
       "name": "密歇根大学消费者信心指数终值",
-      "value": 48.0,
+      "value": 51.5,
       "unit": "",
-      "date": "2026-10-01",
-      "prev": 48.1,
-      "change": -0.1,
-      "source": "FRED UMCSENT",
+      "date": null,
+      "prev": null,
+      "change": null,
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null,
-      "source_status": "primary"
+      "source_status": "fallback"
     },
     {
       "key": "ism",
@@ -94,12 +94,12 @@
       "name": "ADP就业人数",
       "value": 86.0,
       "unit": "K",
-      "date": "2026-10-01",
-      "prev": 86.0,
-      "change": 86.0,
-      "source": "FRED ADPMNUSNERSA（月增）",
-      "note": "单位：千人",
-      "source_status": "primary"
+      "date": null,
+      "prev": null,
+      "change": null,
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "eia_crude",
@@ -130,12 +130,12 @@
       "name": "每周初请失业金人数",
       "value": 189.0,
       "unit": "K",
-      "date": "2026-11-21",
-      "prev": 202.0,
-      "change": -13.0,
-      "source": "FRED ICSA",
-      "note": "单位：千人",
-      "source_status": "primary"
+      "date": null,
+      "prev": null,
+      "change": null,
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "note": null,
+      "source_status": "fallback"
     }
   ]
 }
