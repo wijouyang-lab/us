@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-28T05:17:10Z",
-  "asof": "2026-11-28T05:17:03Z",
+  "generated_at": "2026-11-28T05:31:01Z",
+  "asof": "2026-11-28T05:30:48Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -53,7 +53,7 @@
       "key": "cpi_mom_surprise",
       "label": "CPI月率预期差",
       "group": "宏观",
-      "value": 0.2,
+      "value": 0.15,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
